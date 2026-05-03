@@ -555,11 +555,7 @@
                 <nav>
                     <a class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     <a class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
-                    <a class="{{ request()->routeIs('admin.quote-requests.*') ? 'active' : '' }}" href="{{ route('admin.quote-requests.index') }}">Quote Requests</a>
-                    <a class="{{ request()->routeIs('admin.expert-sessions.*') ? 'active' : '' }}" href="{{ route('admin.expert-sessions.index') }}">Free Consultation Requests</a>
-                    <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact Form</a>
-                    <a class="{{ request()->routeIs('admin.newsletters.*') ? 'active' : '' }}" href="{{ route('admin.newsletters.index') }}">Newsletter</a>
-                    <a class="{{ request()->routeIs('admin.newsletter-categories.*') ? 'active' : '' }}" href="{{ route('admin.newsletter-categories.index') }}">Newsletter Categories</a>
+                    <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact</a>
                 </nav>
             </aside>
             <main>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&display=swap');
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -5,7 +7,82 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Brand tokens (site-wide). Geist names kept for @theme; stacks use Outfit + system fonts. */
+:root {
+    --font-geist-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --background: #ffffff;
+    --foreground: #171717;
+    --primary: #e9a70e;
+    --primary-hover: #ecc00d;
+    --primary-soft: #f7f0d8;
+    --secondary: #1e1e6d;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-soft: var(--primary-soft);
+    --color-secondary: var(--secondary);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+    --font-serif: 'Source Serif 4', Georgia, serif;
+}
+
+@layer base {
+    body {
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-geist-sans);
+    }
+
+    /*
+     * Site layout width — use class `site-container` (not `container`: Tailwind v4 reserves .container).
+     */
+    .site-container {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    @media (min-width: 640px) {
+        .site-container {
+            max-width: 640px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .site-container {
+            max-width: 768px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .site-container {
+            max-width: 1024px;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .site-container {
+            max-width: 1280px;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        .site-container {
+            max-width: 1440px;
+        }
+    }
 }

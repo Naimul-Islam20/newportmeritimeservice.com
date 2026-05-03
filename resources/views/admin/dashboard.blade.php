@@ -11,14 +11,6 @@
         <p>{{ $totalUsers }}</p>
     </div>
     <div class="card">
-        <h3>Quote Requests (New)</h3>
-        <p>{{ $newQuoteRequests }}</p>
-    </div>
-    <div class="card">
-        <h3>Free Consultation Requests (New)</h3>
-        <p>{{ $newExpertSessions }}</p>
-    </div>
-    <div class="card">
         <h3>Contact Form (Unread)</h3>
         <p>{{ $unreadContactMessages }}</p>
     </div>

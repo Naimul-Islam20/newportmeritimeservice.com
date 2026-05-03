@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Site;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactMessageRequest;
 use App\Models\ContactMessage;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class ContactFormController extends Controller
+class ContactController extends Controller
 {
     public function create(): View
     {
-        return view('contact.create');
+        return view('site.pages.contact');
     }
 
     public function store(StoreContactMessageRequest $request): RedirectResponse
