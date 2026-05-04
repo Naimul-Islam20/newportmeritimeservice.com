@@ -9,11 +9,9 @@ class PageController extends Controller
 {
     public function shipSupply(): View
     {
-        return view('site.pages.simple', [
+        return view('site.pages.ship-supply', [
             'title' => 'Ship Supply — '.config('app.name'),
             'metaDescription' => 'Provisions, stores, and deck supplies for vessels and port operations.',
-            'heading' => 'Ship Supply',
-            'lead' => 'Reliable sourcing and delivery for your fleet—aligned with port schedules and compliance requirements.',
         ]);
     }
 
@@ -24,6 +22,22 @@ class PageController extends Controller
             'metaDescription' => 'Maritime logistics, documentation, and operational support services.',
             'heading' => 'Our Services',
             'lead' => 'From berth coordination to stakeholder communication, we support the full lifecycle of your port call.',
+        ]);
+    }
+
+    public function aboutUs(): View
+    {
+        return view('site.pages.about-us', [
+            'title' => 'About Us — '.config('app.name'),
+            'metaDescription' => 'Learn more about Newport Maritime Service and our commitment to excellence.',
+        ]);
+    }
+
+    public function whereWeAre(): View
+    {
+        return view('site.pages.where-we-are', [
+            'title' => 'Where We Are — '.config('app.name'),
+            'metaDescription' => 'Our service areas and locations across the region.',
         ]);
     }
 

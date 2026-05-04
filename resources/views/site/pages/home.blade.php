@@ -4,97 +4,373 @@
 ])
 
 @section('content')
-    {{-- Hero --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-secondary via-[#25256f] to-slate-950 text-white">
-        <div class="pointer-events-none absolute inset-0 opacity-40"
-            style="background-image: radial-gradient(circle at 20% 30%, rgba(233, 167, 14, 0.35), transparent 45%),
-                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12), transparent 40%);"></div>
-        <div class="relative site-container py-20 sm:py-28">
-            <div class="max-w-2xl">
-                <p class="text-sm font-semibold uppercase tracking-widest text-primary/90">Maritime &amp; port solutions</p>
-                <h1 class="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl lg:text-[3.25rem]">
-                    Move cargo with clarity and confidence
+    {{-- Hero Carousel (Static) --}}
+    <section class="relative h-[600px] w-full overflow-hidden bg-slate-900 md:h-[700px] lg:h-[800px]">
+        <!-- Background Image -->
+        <div class="absolute inset-0">
+            <!-- Using a placeholder cargo port image from Unsplash. Replace with actual asset if needed. -->
+            <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover opacity-70">
+        </div>
+        
+        <!-- Navigation Arrows (Static) -->
+        <button class="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white/80 transition hover:text-white sm:left-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-8 w-8 sm:h-12 sm:w-12 drop-shadow-md">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+        </button>
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/80 transition hover:text-white sm:right-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-8 w-8 sm:h-12 sm:w-12 drop-shadow-md">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+        </button>
+
+        <!-- Content -->
+        <div class="relative flex h-full items-center justify-center text-center">
+            <div class="px-4 max-w-5xl">
+                <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                    One Partner. Every Need.
                 </h1>
-                <p class="mt-5 text-lg leading-relaxed text-white/90">
-                    End-to-end coordination for port calls, documentation, and stakeholder communication—built for teams that cannot afford downtime.
+                <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                    24/7 maritime solutions across all Bangladeshi ports.
                 </p>
-                <div class="mt-10 flex flex-wrap gap-4">
-                    <a href="{{ route('contact.create') }}"
-                        class="inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-bold text-slate-900 shadow-lg shadow-amber-900/20 transition hover:bg-primary-hover">
-                        Contact us
-                    </a>
-                    <a href="#services"
-                        class="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/10">
-                        Our services
+                <div class="mt-10">
+                    <a href="#services" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                        EXPLORE OUR SERVICES
                     </a>
                 </div>
             </div>
         </div>
-        <div class="h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
     </section>
 
-    {{-- Trust strip --}}
-    <section class="border-b border-foreground/10 bg-background py-8">
-        <div class="site-container flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-center text-sm font-medium text-foreground/70">
-            <span class="text-secondary">24/7 operational awareness</span>
-            <span class="hidden h-4 w-px bg-foreground/20 sm:block" aria-hidden="true"></span>
-            <span>Compliance-focused workflows</span>
-            <span class="hidden h-4 w-px bg-foreground/20 sm:block" aria-hidden="true"></span>
-            <span>Single place for messages &amp; follow-up</span>
-        </div>
-    </section>
-
-    {{-- Services / features --}}
-    <section id="services" class="scroll-mt-20 bg-background py-16 sm:py-24">
+    {{-- Our Services Section --}}
+    <section id="services" class="bg-white py-16 sm:py-24">
         <div class="site-container">
-            <div class="max-w-2xl">
-                <h2 class="font-serif text-3xl font-semibold text-foreground sm:text-4xl">
-                    Built for port ecosystems
-                </h2>
-                <p class="mt-3 text-lg text-foreground/70">
-                    Practical modules that mirror how your teams already work—fewer handoffs, fewer surprises.
-                </p>
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Our Services</h3>
+                <h2 class="mt-2 font-sans text-4xl font-bold text-[#112a6d] sm:text-5xl">What We Do</h2>
             </div>
+        </div>
 
-            <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                <article class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5 transition hover:border-primary/40 hover:shadow-md">
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-lg font-bold text-secondary">1</div>
-                    <h3 class="mt-5 text-lg font-semibold text-foreground">Berth &amp; turnaround</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-foreground/70">
-                        Align schedules and milestones so vessels, cargo, and crews stay on the same timeline.
-                    </p>
-                </article>
-                <article class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5 transition hover:border-primary/40 hover:shadow-md">
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-lg font-bold text-secondary">2</div>
-                    <h3 class="mt-5 text-lg font-semibold text-foreground">Documentation hub</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-foreground/70">
-                        Keep correspondence and requests structured—easy to trace and share with partners.
-                    </p>
-                </article>
-                <article class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5 transition hover:border-primary/40 hover:shadow-md sm:col-span-2 lg:col-span-1">
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-soft text-lg font-bold text-secondary">3</div>
-                    <h3 class="mt-5 text-lg font-semibold text-foreground">Responsive support</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-foreground/70">
-                        Reach out anytime via our contact channel—messages land where your operations team can act.
-                    </p>
-                </article>
+        <div class="mt-10 site-container">
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div class="group relative flex h-[380px] w-full flex-col justify-between overflow-hidden rounded-xl bg-[#01223b] p-8 shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" alt="">
+                    <div class="absolute inset-0 bg-[#01223b]/85 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#01223b]/90 via-[#01223b]/70 to-[#01223b]/90"></div>
+                    
+                    <div class="relative z-10 flex h-full flex-col">
+                        <h4 class="text-2xl font-bold uppercase leading-snug text-white">LIFE RAFT MAINTENANCE</h4>
+                        <div class="mt-4 flex-1"></div>
+                        <a href="#" class="mt-auto font-bold text-white transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group relative flex h-[380px] w-full flex-col justify-between overflow-hidden rounded-xl bg-[#01223b] p-8 shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" alt="">
+                    <div class="absolute inset-0 bg-[#01223b]/85 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#01223b]/90 via-[#01223b]/70 to-[#01223b]/90"></div>
+                    
+                    <div class="relative z-10 flex h-full flex-col">
+                        <h4 class="text-2xl font-bold uppercase leading-snug text-white">BUNKERING SERVICE</h4>
+                        <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-white/90">
+                            Reliable delivery of LSMGO (0.1%), VLSFO (0.5%), and HSFO via our owned barges. De-bunkering: Safe offloading of off-spec or contaminated...
+                        </p>
+                        <a href="#" class="mt-auto font-bold text-white transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group relative flex h-[380px] w-full flex-col justify-between overflow-hidden rounded-xl bg-[#01223b] p-8 shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" alt="">
+                    <div class="absolute inset-0 bg-[#01223b]/85 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#01223b]/90 via-[#01223b]/70 to-[#01223b]/90"></div>
+                    
+                    <div class="relative z-10 flex h-full flex-col">
+                        <h4 class="text-2xl font-bold uppercase leading-snug text-white">WASTE DISPOSAL</h4>
+                        <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-white/90">
+                            Sludge & Garbage Discharge, De-bunkering, De-Slopping. ...
+                        </p>
+                        <a href="#" class="mt-auto font-bold text-white transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    {{-- CTA --}}
-    <section class="border-y border-primary/25 bg-gradient-to-r from-primary-soft via-background to-primary-soft py-16">
-        <div class="site-container text-center">
-            <h2 class="font-serif text-2xl font-semibold text-secondary sm:text-3xl">
-                Ready to simplify your next port call?
-            </h2>
-            <p class="mx-auto mt-3 max-w-xl text-foreground/70">
-                Tell us about your route, cargo, or partnership idea—we’ll follow up with next steps.
-            </p>
-            <a href="{{ route('contact.create') }}"
-                class="mt-8 inline-flex items-center justify-center rounded-xl bg-secondary px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary/20 transition hover:opacity-90">
-                Start a conversation
-            </a>
+    {{-- Ship Supplies Section --}}
+    <section id="supplies" class="bg-white pb-16 sm:pb-24">
+        <div class="site-container">
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Ship Supplies</h3>
+                <h2 class="mt-2 font-sans text-4xl font-bold text-[#112a6d] sm:text-5xl">What We Supply</h2>
+            </div>
+
+            <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div class="flex flex-col rounded-2xl border border-slate-100 bg-[#f7f8f9] p-8 shadow-sm transition hover:shadow-md">
+                    <!-- Icon -->
+                    <div class="mb-6 text-[#3eb0e3]">
+                        <svg viewBox="0 0 100 100" class="h-28 w-28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="50" cy="40" r="22" />
+                            <circle cx="50" cy="62" r="22" />
+                            <line x1="42" y1="84" x2="58" y2="84" />
+                            <line x1="50" y1="84" x2="50" y2="76" />
+                            <line x1="28" y1="62" x2="72" y2="62" opacity="0.3" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-bold uppercase text-[#112a6d]">Chains – Ropes –<br>Shackles</h4>
+                    <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-slate-600">
+                        Environmentally compliant collection and disposal of sludge, slop, and bilge water from vessels, fully certified and in accordance with MARPOL...
+                    </p>
+                    <a href="#" class="mt-8 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flex flex-col rounded-2xl border border-slate-100 bg-[#f7f8f9] p-8 shadow-sm transition hover:shadow-md">
+                    <div class="mb-6 text-[#3eb0e3]">
+                        <svg viewBox="0 0 100 100" class="h-28 w-28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="38" y="38" width="24" height="36" rx="6" />
+                            <path d="M44 38 V28 h12 v10" />
+                            <rect x="47" y="24" width="6" height="4" />
+                            <path d="M50 24 C50 15, 65 15, 70 25" stroke-dasharray="3 3" opacity="0.7" />
+                            <line x1="30" y1="50" x2="38" y2="52" opacity="0.5" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-bold uppercase text-[#112a6d]">Safety Equipment</h4>
+                    <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-slate-600">
+                        Certified inspection, servicing, recharging, and supply of all types of marine fire extinguishers and fire-fighting equipment in compliance with international...
+                    </p>
+                    <a href="#" class="mt-8 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flex flex-col rounded-2xl border border-slate-100 bg-[#f7f8f9] p-8 shadow-sm transition hover:shadow-md">
+                    <div class="mb-6 text-[#3eb0e3]">
+                        <svg viewBox="0 0 100 100" class="h-28 w-28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="50" cy="50" r="28" />
+                            <circle cx="50" cy="50" r="14" />
+                            <line x1="22" y1="50" x2="36" y2="50" />
+                            <line x1="78" y1="50" x2="64" y2="50" />
+                            <line x1="50" y1="22" x2="50" y2="36" />
+                            <line x1="50" y1="78" x2="50" y2="64" />
+                            <circle cx="50" cy="50" r="28" stroke-dasharray="6 6" opacity="0.3" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-bold uppercase text-[#112a6d]">Navigation Equipment</h4>
+                    <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-slate-600">
+                        Life-saving appliances and personal protective equipment including life jackets, immersion suits, life rings, fire suits, helmets, and all SOLAS-compliant safety...
+                    </p>
+                    <a href="#" class="mt-8 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                </div>
+            </div>
         </div>
     </section>
+
+    {{-- About Us Section --}}
+    <section id="about" class="bg-[#f6f8fa] py-16 sm:py-24">
+        <div class="site-container">
+            <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+                <!-- Image Side -->
+                <div class="relative h-[300px] w-full sm:h-[400px] lg:h-[600px]">
+                    <!-- Placeholder warehouse image -->
+                    <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop" class="absolute inset-0 h-full w-full rounded-3xl object-cover shadow-lg" alt="Warehouse">
+                </div>
+                
+                <!-- Text Side -->
+                <div class="flex flex-col justify-center py-6">
+                    <div class="max-w-xl">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">About Us</h3>
+                        <h2 class="mt-4 font-sans text-4xl font-bold leading-tight text-[#112a6d] sm:text-5xl">
+                            Built on Trust.<br>Driven by Excellence.
+                        </h2>
+                        
+                        <p class="mt-6 text-base leading-relaxed text-slate-600">
+                            Founded in 2012, Newport Maritime Service has grown into one of Bangladesh’s most trusted maritime companies. Over more than a decade, we have earned a strong reputation as a dependable General Ship Supplier, Marine Spares Exporter, and Ship Repair Service provider — built on a consistent commitment to quality, efficiency, and client satisfaction.
+                        </p>
+                        
+                        <p class="mt-4 text-base leading-relaxed text-slate-600">
+                            Our global relationships reflect the trust the maritime industry places in us. We understand the demands of vessel operations firsthand, and we deliver comprehensive, tailored solutions designed to keep your fleet running smoothly.
+                        </p>
+                        
+                        <a href="#" class="mt-8 inline-block rounded bg-[#3eb0e3] px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#2b9bc9]">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Mission & Vision Section --}}
+    <section class="bg-white py-16 sm:py-24">
+        <div class="site-container">
+            <div class="grid gap-8 lg:grid-cols-2">
+                <!-- Mission -->
+                <div class="rounded-2xl border border-blue-100 bg-[#f4f7fe] p-8 sm:p-12 shadow-sm hover:shadow-md transition">
+                    <h3 class="font-sans text-3xl font-bold text-[#112a6d]">Our Mission</h3>
+                    <p class="mt-6 text-base leading-relaxed text-slate-600">
+                        At Newport Maritime Service, our mission is to ensure uninterrupted vessel operations across Bangladeshi ports by delivering government-certified, round-the-clock marine solutions. From marine spares and ship supplies to waste management and technical services, we are committed to providing every client with unwavering reliability, competitive value, and full regulatory compliance — because we understand that at sea, there is no room for compromise.
+                    </p>
+                </div>
+
+                <!-- Vision -->
+                <div class="rounded-2xl border border-cyan-100 bg-[#f0f9fb] p-8 sm:p-12 shadow-sm hover:shadow-md transition">
+                    <h3 class="font-sans text-3xl font-bold text-[#112a6d]">Our Vision</h3>
+                    <p class="mt-6 text-base leading-relaxed text-slate-600">
+                        Our vision is to redefine maritime support across South Asia by becoming the most trusted single-source partner for global fleets. We are building a future where operational excellence, environmental responsibility, and long-term client partnerships go hand in hand — driving sustainable growth and establishing Newport Maritime Service as a symbol of industry leadership for generations to come.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Service Areas & Locations Section --}}
+    <section class="relative overflow-hidden bg-slate-900 py-16 sm:py-24">
+        <!-- Background Texture -->
+        <div class="absolute inset-0">
+            <!-- Ocean surface background to match the design -->
+            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop" class="h-full w-full object-cover opacity-20 mix-blend-overlay" alt="Ocean Texture">
+        </div>
+
+        <div class="relative z-10 site-container">
+            <!-- Header -->
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Service Areas</h3>
+                <h2 class="mt-2 font-sans text-4xl font-bold text-white sm:text-5xl">Locations</h2>
+            </div>
+
+            <!-- Map Area Placeholder -->
+            <div class="relative mx-auto mt-12 flex h-[300px] w-full max-w-4xl items-center justify-center sm:h-[400px] lg:h-[500px]">
+                <!-- User will replace this with their actual map graphic -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-8 text-center backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mb-4 h-12 w-12 text-white/50">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+                    </svg>
+                    <p class="font-medium text-white/70">Map graphic will be placed here</p>
+                    <p class="mt-2 text-sm text-white/40">Replace this placeholder with the Europe map image.</p>
+                </div>
+            </div>
+
+            <!-- End to End Supply block -->
+            <div class="mt-16 border-t border-white/10 pt-12 sm:mt-24 md:border-none md:pt-0">
+                <div class="flex flex-col gap-6 md:flex-row md:items-center md:gap-12">
+                    <h3 class="shrink-0 font-sans text-2xl font-bold text-white sm:text-3xl">End to end supply</h3>
+                    <div class="hidden h-12 w-px bg-white/30 md:block"></div>
+                    <div class="h-px w-16 bg-white/30 md:hidden"></div>
+                    <p class="text-base leading-relaxed text-slate-300 md:max-w-3xl">
+                        We pride ourselves on our delivery and operate 365 days, 24 hours non-stop in all of the ports and straits of Turkey and the ARA area.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4 Steps -->
+            <div class="mt-16 grid grid-cols-2 gap-8 text-white sm:grid-cols-4 sm:gap-6 lg:gap-10">
+                <div class="text-base font-medium leading-snug">Getting Order</div>
+                <div class="text-base font-medium leading-snug">Preparing order and<br>packaging process</div>
+                <div class="text-base font-medium leading-snug">Safe delivery service in<br>the refrigerated trucks</div>
+                <div class="text-base font-medium leading-snug">On-time delivery</div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Why Choose Us Section --}}
+    <section class="bg-white py-16 sm:py-24">
+        <div class="site-container">
+            <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+                <!-- Image Side -->
+                <div class="relative h-[400px] w-full sm:h-[600px] lg:h-[750px]">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=1200&auto=format&fit=crop" class="absolute inset-0 h-full w-full rounded-3xl object-cover" alt="Cargo Ship">
+                </div>
+                
+                <!-- Text Side -->
+                <div class="flex flex-col justify-center py-6">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Why Choose Us?</h3>
+                    <h2 class="mt-4 font-sans text-4xl font-bold leading-tight text-[#112a6d] sm:text-5xl lg:text-[3.25rem]">
+                        One partner.<br>Every need.<br>Zero compromise.
+                    </h2>
+                    
+                    <div class="mt-10 space-y-5 text-slate-600">
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">Single-Window Service</span> Everything your vessel needs — supplied, repaired, and managed through one reliable partner.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">24/7 Availability</span> We're always on call. Day or night, your request gets an immediate response.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">Government Certified</span> Fully licensed and compliant with MARPOL, SOLAS, and all port authority regulations.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">4-Port Coverage</span> Chattogram · Mongla · Payra · Matarbari — we're where your fleet needs us.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">12+ Years Experience</span> Trusted by global fleets since 2012, with a proven track record of reliable service.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">Competitive Pricing</span> Premium quality at honest prices, with flexible payment terms that work for you.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">Internationally Recognized</span> IMPA member · MESPAS registered · ProcureShip listed · CCCI member.
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            <span class="font-medium text-slate-800">Guaranteed Quality Parts</span> Every spare — new or reconditioned — undergoes strict quality checks before delivery.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Latest News Section --}}
+    <section class="bg-[#f4f5f7] py-16 sm:py-24">
+        <div class="site-container">
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">The News</h3>
+                <h2 class="mt-2 font-sans text-4xl font-bold text-[#112a6d] sm:text-5xl">Latest News</h2>
+            </div>
+
+            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Marine Spare Parts">
+                    <div class="mt-6 flex flex-1 flex-col">
+                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">The Complete Guide to Marine Spare Parts: New, Reconditioned & What to Choose</h4>
+                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                            One of the most common questions vessel operators ask us is: “Should I go for new parts or reconditioned?” It’s...
+                        </p>
+                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Ship Supply">
+                    <div class="mt-6 flex flex-1 flex-col">
+                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Why 24/7 Ship Supply Matters: Keeping Your Vessel Ready at All Times</h4>
+                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                            At sea, time is money — and unexpected delays at port can cost vessel operators thousands of dollars per hour....
+                        </p>
+                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Crew Welfare">
+                    <div class="mt-6 flex flex-1 flex-col">
+                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Crew Welfare at Sea: Why Provision Quality Is More Important Than You Think</h4>
+                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                            A well-fed, comfortable crew is a productive crew. Yet provision quality is one of the most overlooked aspects of vessel...
+                        </p>
+                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 @endsection

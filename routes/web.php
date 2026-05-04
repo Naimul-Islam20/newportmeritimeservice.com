@@ -13,6 +13,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/ship-supply', [PageController::class, 'shipSupply'])->name('ship-supply');
 Route::get('/our-services', [PageController::class, 'ourServices'])->name('our-services');
+Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
+Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');
 Route::get('/award', [PageController::class, 'award'])->name('award');
 Route::get('/get-a-quote', [PageController::class, 'quote'])->name('quote.request');
 
