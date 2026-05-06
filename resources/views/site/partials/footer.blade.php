@@ -9,32 +9,34 @@
     </div>
 
     {{-- ── Main content ── --}}
-    <div class="relative z-10 site-container py-20">
+    <div class="relative z-10 site-container py-16">
         <div class="flex flex-col justify-between gap-16 lg:flex-row">
 
             {{-- Left column --}}
             <div>
                 <p class="mb-6 text-2xl font-extrabold leading-tight">Newport Maritime Service</p>
 
-                <div class="mt-4 space-y-1 text-[15px] font-normal leading-relaxed text-white/90">
-                    <p>Mabud Chy. Center, 5th Floor, Nur Meah Lane, #3 No.</p>
-                    <p>Fakirhat, Bandar, Chittagong– 4100, Chittagong,</p>
-                    <p>Bangladesh.</p>
-                </div>
+                <div style="margin-left: 50px;" class="mt-8 space-y-3">
+                    <div class="text-[15px] font-normal leading-relaxed text-white/90 space-y-1">
+                        <p>Mabud Chy. Center, 5th Floor, Nur Meah Lane, #3 No.</p>
+                        <p>Fakirhat, Bandar, Chittagong– 4100, Chittagong,</p>
+                        <p>Bangladesh.</p>
+                    </div>
 
-                <div class="mt-5 space-y-1 text-[15px] font-normal text-white/90">
-                    <p><a href="mailto:supply@newportmaritimeservice.com"
-                            class="hover:text-[#3eb0e3]">supply@newportmaritimeservice.com</a></p>
-                    <p><a href="mailto:newportmaritimeservice@gmail.com"
-                            class="hover:text-[#3eb0e3]">newportmaritimeservice@gmail.com</a></p>
-                    <p><a href="mailto:tech@newportmaritimeservice.com"
-                            class="hover:text-[#3eb0e3]">tech@newportmaritimeservice.com</a></p>
-                </div>
+                    <div class="text-[15px] font-normal text-white/90 space-y-1">
+                        <p><a href="mailto:supply@newportmaritimeservice.com"
+                                class="hover:text-[#3eb0e3]">supply@newportmaritimeservice.com</a></p>
+                        <p><a href="mailto:newportmaritimeservice@gmail.com"
+                                class="hover:text-[#3eb0e3]">newportmaritimeservice@gmail.com</a></p>
+                        <p><a href="mailto:tech@newportmaritimeservice.com"
+                                class="hover:text-[#3eb0e3]">tech@newportmaritimeservice.com</a></p>
+                    </div>
 
-                <div class="mt-5 space-y-1 text-[15px] font-normal text-white/90">
-                    <p><a href="tel:+8801321286667" class="hover:text-[#3eb0e3]">+880 1321 28 66 67</a></p>
-                    <p><a href="tel:+8801977434272" class="hover:text-[#3eb0e3]">+880 1977434272</a></p>
-                    <p><a href="tel:+88031724728" class="hover:text-[#3eb0e3]">+880-31-724728</a></p>
+                    <div class="text-[15px] font-normal text-white/90 space-y-1">
+                        <p><a href="tel:+8801321286667" class="hover:text-[#3eb0e3]">+880 1321 28 66 67</a></p>
+                        <p><a href="tel:+8801977434272" class="hover:text-[#3eb0e3]">+880 1977434272</a></p>
+                        <p><a href="tel:+88031724728" class="hover:text-[#3eb0e3]">+880-31-724728</a></p>
+                    </div>
                 </div>
             </div>
 

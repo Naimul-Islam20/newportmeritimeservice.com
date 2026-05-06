@@ -6,11 +6,12 @@
 @push('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        .services-swiper, .supplies-swiper {
-            padding-bottom: 20px !important;
+        .services-swiper, .supplies-swiper, .news-swiper {
+            padding-bottom: 35px !important;
         }
         .supplies-swiper .swiper-slide,
-        .services-swiper .swiper-slide {
+        .services-swiper .swiper-slide,
+        .news-swiper .swiper-slide {
             height: auto !important;
         }
         /* Hero carousel full height */
@@ -18,6 +19,17 @@
         .hero-swiper .swiper-wrapper,
         .hero-swiper .swiper-slide {
             height: 100% !important;
+        }
+        /* Equal-height news cards */
+        .news-swiper .swiper-wrapper {
+            align-items: stretch;
+        }
+        .news-swiper .swiper-slide {
+            display: flex;
+            flex-direction: column;
+        }
+        .news-swiper .swiper-slide > div {
+            flex: 1;
         }
     </style>
 @endpush
@@ -447,51 +459,93 @@
     {{-- Latest News Section --}}
     <section class="bg-[#f4f5f7] py-16 sm:py-24">
         <div class="site-container">
+            {{-- Section Header --}}
             <div>
                 <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">The News</h3>
                 <h2 class="mt-2 font-sans text-4xl font-bold text-[#112a6d] sm:text-5xl">Latest News</h2>
             </div>
 
-            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                <!-- Card 1 -->
-                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Marine Spare Parts">
-                    <div class="mt-6 flex flex-1 flex-col">
-                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
-                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">The Complete Guide to Marine Spare Parts: New, Reconditioned & What to Choose</h4>
-                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
-                            One of the most common questions vessel operators ask us is: “Should I go for new parts or reconditioned?” It’s...
-                        </p>
-                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
-                    </div>
-                </div>
+            {{-- Swiper Carousel --}}
+            <div class="swiper news-swiper mt-10">
+                <div class="swiper-wrapper">
 
-                <!-- Card 2 -->
-                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Ship Supply">
-                    <div class="mt-6 flex flex-1 flex-col">
-                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
-                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Why 24/7 Ship Supply Matters: Keeping Your Vessel Ready at All Times</h4>
-                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
-                            At sea, time is money — and unexpected delays at port can cost vessel operators thousands of dollars per hour....
-                        </p>
-                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                    {{-- Slide 1 --}}
+                    <div class="swiper-slide">
+                        <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                            <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Ship Repair">
+                            <div class="mt-6 flex flex-1 flex-col">
+                                <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                                <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Why 24/7 Ship Supply Matters: Keeping Your Vessel Ready at All Times</h4>
+                                <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                                    At sea, time is money — and unexpected delays at port can cost vessel operators thousands of dollars per hour....
+                                </p>
+                                <a href="#" class="mt-6 text-sm font-bold text-slate-900 transition hover:text-[#3eb0e3]">View details</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Card 3 -->
-                <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Crew Welfare">
-                    <div class="mt-6 flex flex-1 flex-col">
-                        <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
-                        <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Crew Welfare at Sea: Why Provision Quality Is More Important Than You Think</h4>
-                        <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
-                            A well-fed, comfortable crew is a productive crew. Yet provision quality is one of the most overlooked aspects of vessel...
-                        </p>
-                        <a href="#" class="mt-6 text-sm font-bold text-[#112a6d] transition hover:text-[#3eb0e3]">View details</a>
+                    {{-- Slide 2 --}}
+                    <div class="swiper-slide">
+                        <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                            <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Crew Welfare">
+                            <div class="mt-6 flex flex-1 flex-col">
+                                <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                                <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Crew Welfare at Sea: Why Provision Quality Is More Important Than You Think</h4>
+                                <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                                    A well-fed, comfortable crew is a productive crew. Yet provision quality is one of the most overlooked aspects of vessel...
+                                </p>
+                                <a href="#" class="mt-6 text-sm font-bold text-slate-900 transition hover:text-[#3eb0e3]">View details</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+
+                    {{-- Slide 3 --}}
+                    <div class="swiper-slide">
+                        <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                            <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Ship Repair Hub">
+                            <div class="mt-6 flex flex-1 flex-col">
+                                <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                                <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">Ship Repair in Bangladesh: Why Chittagong Is Becoming a Global Maintenance Hub</h4>
+                                <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                                    Bangladesh has long been known as a global ship breaking destination — but increasingly, the country is earning a new...
+                                </p>
+                                <a href="#" class="mt-6 text-sm font-bold text-slate-900 transition hover:text-[#3eb0e3]">View details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Slide 4 --}}
+                    <div class="swiper-slide">
+                        <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="Spare Parts Guide">
+                            <div class="mt-6 flex flex-1 flex-col">
+                                <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                                <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">The Complete Guide to Marine Spare Parts: New, Reconditioned & What to Choose</h4>
+                                <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                                    One of the most common questions vessel operators ask us is: “Should I go for new parts or reconditioned?” It’s...
+                                </p>
+                                <a href="#" class="mt-6 text-sm font-bold text-slate-900 transition hover:text-[#3eb0e3]">View details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Slide 5 --}}
+                    <div class="swiper-slide">
+                        <div class="flex flex-col rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
+                            <img src="https://images.unsplash.com/photo-1566984426547-6be8db51b5ca?q=80&w=800&auto=format&fit=crop" class="h-64 w-full rounded-xl object-cover" alt="MARPOL Compliance">
+                            <div class="mt-6 flex flex-1 flex-col">
+                                <p class="text-sm font-medium text-slate-800">February 26, 2026</p>
+                                <h4 class="mt-4 text-xl font-bold leading-snug text-[#112a6d]">MARPOL Compliance at Bangladeshi Ports: What Every Ship Owner Needs to Know</h4>
+                                <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                                    Understanding MARPOL requirements is essential to avoiding costly delays and ensuring your vessel remains compliant...
+                                </p>
+                                <a href="#" class="mt-6 text-sm font-bold text-slate-900 transition hover:text-[#3eb0e3]">View details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>{{-- /.swiper-wrapper --}}
+            </div>{{-- /.news-swiper --}}
         </div>
     </section>
 
@@ -541,6 +595,22 @@
                 breakpoints: {
                     640: { slidesPerView: 2 },
                     1024: { slidesPerView: 3 },
+                }
+            });
+
+            // Latest News Slider
+            new Swiper('.news-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 28,
+                loop: true,
+                autoplay: {
+                    delay: 4500,
+                    disableOnInteraction: false,
+                },
+                speed: 700,
+                breakpoints: {
+                    640: { slidesPerView: 2, spaceBetween: 24 },
+                    1024: { slidesPerView: 3, spaceBetween: 28 },
                 }
             });
         });
