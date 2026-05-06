@@ -7,6 +7,7 @@
     <meta name="description" content="{{ $metaDescription ?? 'Maritime logistics and port solutions.' }}">
     <title>{{ $title ?? config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body class="min-h-screen bg-background font-sans text-foreground antialiased">
@@ -17,6 +18,7 @@
     </main>
 
     @include('site.partials.footer')
+    @stack('scripts')
 </body>
 
 </html>
