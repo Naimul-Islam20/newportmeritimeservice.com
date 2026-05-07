@@ -556,6 +556,9 @@
                     <a class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     <a class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
                     <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact</a>
+                    <a class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}" href="{{ route('admin.home-sections.index') }}">Home Sections</a>
+                    <a class="{{ request()->routeIs('admin.menus.*') ? 'active' : '' }}" href="{{ route('admin.menus.index') }}">Menus</a>
+                    <a class="{{ request()->routeIs('admin.sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.sub-menus.index') }}">Sub menus</a>
                 </nav>
             </aside>
             <main>

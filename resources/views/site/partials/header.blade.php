@@ -33,42 +33,34 @@
 
             <nav class="flex items-center justify-end gap-6 lg:gap-10"
                 aria-label="Primary">
-                <div class="group relative">
-                    <a href="{{ route('home') }}"
-                        class="flex shrink-0 items-center gap-1 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ request()->routeIs('home') ? 'text-[#3eb0e3]' : '' }}">
-                        Home
-                    </a>
-                    <div class="invisible absolute left-0 top-full z-50 mt-2 w-48 origin-top-left translate-y-2 scale-95 rounded-lg border border-gray-100 bg-white p-2 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:scale-100">
-                        <a href="{{ route('about-us') }}"
-                            class="block rounded-md px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-[#3eb0e3]">
-                            About Us
+                @foreach ($headerMenus as $menu)
+                    @if ($menu->subMenus->isNotEmpty())
+                        <div class="group relative">
+                            <a href="{{ $menu->resolvedHref() }}"
+                                class="flex shrink-0 items-center gap-1 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ $menu->isActiveBranch() ? 'text-[#3eb0e3]' : '' }}">
+                                {{ $menu->label }}
+                                <span aria-hidden="true" class="ml-1 text-xs leading-none">▾</span>
+                            </a>
+                            <div class="invisible absolute left-0 top-full z-50 mt-2 w-48 origin-top-left translate-y-2 scale-95 rounded-lg border border-gray-100 bg-white p-2 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:scale-100">
+                                <a href="{{ $menu->resolvedHref() }}"
+                                    class="block rounded-md px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:bg-gray-50 hover:text-[#3eb0e3] {{ $menu->isCurrent() ? 'text-[#3eb0e3]' : '' }}">
+                                    Parent menu
+                                </a>
+                                @foreach ($menu->subMenus as $child)
+                                    <a href="{{ $child->resolvedHref() }}"
+                                        class="block rounded-md px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-[#3eb0e3] {{ $child->isCurrent() ? 'text-[#3eb0e3]' : '' }}">
+                                        Sub menu — {{ $child->label }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->resolvedHref() }}"
+                            class="shrink-0 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ $menu->isCurrent() ? 'text-[#3eb0e3]' : '' }}">
+                            {{ $menu->label }}
                         </a>
-                        <a href="{{ route('where-we-are') }}"
-                            class="block rounded-md px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-[#3eb0e3]">
-                            WHERE WE ARE
-                        </a>
-                    </div>
-                </div>
-                <a href="{{ route('ship-supply') }}"
-                    class="shrink-0 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ request()->routeIs('ship-supply') ? 'text-[#3eb0e3]' : '' }}">
-                    Ship Supply
-                </a>
-                <a href="{{ route('our-services') }}"
-                    class="shrink-0 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ request()->routeIs('our-services') ? 'text-[#3eb0e3]' : '' }}">
-                    Our Services
-                </a>
-                <a href="{{ route('award') }}"
-                    class="shrink-0 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ request()->routeIs('award') ? 'text-[#3eb0e3]' : '' }}">
-                    Award
-                </a>
-                <a href="{{ route('contact.create') }}"
-                    class="shrink-0 text-base font-medium text-black transition hover:text-[#3eb0e3] {{ request()->routeIs('contact.create') ? 'text-[#3eb0e3]' : '' }}">
-                    Contact
-                </a>
-                <a href="{{ route('quote.request') }}"
-                    class="ml-2 shrink-0 rounded bg-[#3eb0e3] px-6 py-2.5 text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#2b9bc9] {{ request()->routeIs('quote.request') ? 'ring-2 ring-secondary/30 ring-offset-2 ring-offset-background' : '' }}">
-                    GET A QUOTE
-                </a>
+                    @endif
+                @endforeach
             </nav>
         </div>
     </header>

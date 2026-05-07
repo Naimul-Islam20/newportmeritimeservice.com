@@ -39,74 +39,108 @@
     <section class="relative h-[600px] w-full overflow-hidden bg-slate-900 md:h-[700px] lg:h-[800px]">
         <div class="swiper hero-swiper h-full w-full">
             <div class="swiper-wrapper">
-
-                {{-- Slide 1: One Partner. Every Need. --}}
-                <div class="swiper-slide relative">
-                    <div class="absolute inset-0">
-                        <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover opacity-70">
-                    </div>
-                    <div class="relative flex h-full items-center justify-center text-center">
-                        <div class="max-w-5xl px-4">
-                            <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
-                                One Partner. Every Need.
-                            </h1>
-                            <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
-                                24/7 maritime solutions across all Bangladeshi ports.
-                            </p>
-                            <div class="mt-10">
-                                <a href="#services" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
-                                    EXPLORE OUR SERVICES
-                                </a>
+                @if ($heroSlides->isNotEmpty())
+                    @foreach ($heroSlides as $slide)
+                        <div class="swiper-slide relative">
+                            <div class="absolute inset-0">
+                                @if ($slide->imagePublicUrl() !== '')
+                                <img src="{{ $slide->imagePublicUrl() }}" alt="{{ $slide->title }}" class="h-full w-full object-cover opacity-75">
+                                @else
+                                <div class="h-full w-full bg-gradient-to-br from-slate-800 to-[#01223b]" role="img" aria-label="{{ $slide->title }}"></div>
+                                @endif
+                                <div class="absolute inset-0 bg-[#01223b]/45"></div>
+                            </div>
+                            <div class="relative flex h-full items-center justify-center text-center">
+                                <div class="max-w-5xl px-4">
+                                    <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                                        {!! nl2br(e($slide->title)) !!}
+                                    </h1>
+                                    @if (filled($slide->description))
+                                        <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                                            {!! nl2br(e($slide->description)) !!}
+                                        </p>
+                                    @endif
+                                    @if (filled($slide->button_label))
+                                        <div class="mt-10">
+                                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                                                {{ $slide->button_label }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    {{-- Default slides when no hero rows in the database yet --}}
+                    {{-- Slide 1: One Partner. Every Need. --}}
+                    <div class="swiper-slide relative">
+                        <div class="absolute inset-0">
+                            <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover opacity-70">
+                        </div>
+                        <div class="relative flex h-full items-center justify-center text-center">
+                            <div class="max-w-5xl px-4">
+                                <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                                    One Partner. Every Need.
+                                </h1>
+                                <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                                    24/7 maritime solutions across all Bangladeshi ports.
+                                </p>
+                                <div class="mt-10">
+                                    <a href="#services" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                                        EXPLORE OUR SERVICES
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Slide 2: Built on Trust. Delivered with Precision. --}}
-                <div class="swiper-slide relative">
-                    <div class="absolute inset-0">
-                        <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover opacity-80">
-                        <div class="absolute inset-0 bg-[#01223b]/50"></div>
-                    </div>
-                    <div class="relative flex h-full items-center justify-center text-center">
-                        <div class="max-w-5xl px-4">
-                            <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
-                                Built on Trust.<br>Delivered with Precision.
-                            </h1>
-                            <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
-                                Quality ship supplies, spares &amp; repairs — all in one window.
-                            </p>
-                            <div class="mt-10">
-                                <a href="#supplies" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
-                                    VIEW WHAT WE SUPPLY
-                                </a>
+                    {{-- Slide 2: Built on Trust. Delivered with Precision. --}}
+                    <div class="swiper-slide relative">
+                        <div class="absolute inset-0">
+                            <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover opacity-80">
+                            <div class="absolute inset-0 bg-[#01223b]/50"></div>
+                        </div>
+                        <div class="relative flex h-full items-center justify-center text-center">
+                            <div class="max-w-5xl px-4">
+                                <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                                    Built on Trust.<br>Delivered with Precision.
+                                </h1>
+                                <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                                    Quality ship supplies, spares &amp; repairs — all in one window.
+                                </p>
+                                <div class="mt-10">
+                                    <a href="#supplies" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                                        VIEW WHAT WE SUPPLY
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Slide 3: Bangladesh's Maritime Experts Since 2012. --}}
-                <div class="swiper-slide relative">
-                    <div class="absolute inset-0">
-                        <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover opacity-75">
-                        <div class="absolute inset-0 bg-[#01223b]/55"></div>
-                    </div>
-                    <div class="relative flex h-full items-center justify-center text-center">
-                        <div class="max-w-5xl px-4">
-                            <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
-                                Bangladesh's Maritime<br>Experts Since 2012.
-                            </h1>
-                            <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
-                                Serving global fleets with reliability, speed &amp; full compliance.
-                            </p>
-                            <div class="mt-10">
-                                <a href="{{ route('contact.create') }}" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
-                                    GET IN TOUCH
-                                </a>
+                    {{-- Slide 3: Bangladesh's Maritime Experts Since 2012. --}}
+                    <div class="swiper-slide relative">
+                        <div class="absolute inset-0">
+                            <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover opacity-75">
+                            <div class="absolute inset-0 bg-[#01223b]/55"></div>
+                        </div>
+                        <div class="relative flex h-full items-center justify-center text-center">
+                            <div class="max-w-5xl px-4">
+                                <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                                    Bangladesh's Maritime<br>Experts Since 2012.
+                                </h1>
+                                <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                                    Serving global fleets with reliability, speed &amp; full compliance.
+                                </p>
+                                <div class="mt-10">
+                                    <a href="{{ route('contact.create') }}" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                                        GET IN TOUCH
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
             </div>{{-- swiper-wrapper --}}
 
@@ -553,14 +587,16 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Hero Carousel
+            // Hero Carousel (loop only when more than one slide — avoids Swiper glitches)
+            const heroSlideEls = document.querySelectorAll('.hero-swiper .swiper-slide');
+            const heroLoop = heroSlideEls.length > 1;
             const heroSwiper = new Swiper('.hero-swiper', {
                 slidesPerView: 1,
-                loop: true,
-                autoplay: {
+                loop: heroLoop,
+                autoplay: heroLoop ? {
                     delay: 5000,
                     disableOnInteraction: false,
-                },
+                } : false,
                 speed: 800,
                 navigation: {
                     prevEl: '#hero-prev',
