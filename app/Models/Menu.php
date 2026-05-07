@@ -11,6 +11,7 @@ class Menu extends Model
     protected $fillable = [
         'label',
         'url',
+        'description',
         'sort_order',
         'is_active',
     ];

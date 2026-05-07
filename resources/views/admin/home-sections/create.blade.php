@@ -245,7 +245,7 @@
                                 <label><input type="checkbox" name="fields_image[]" value="mini_title" @checked(is_array(old('fields_image')) && in_array('mini_title', old('fields_image', [])))> Mini title</label>
                                 <label><input type="checkbox" name="fields_image[]" value="title" @checked(is_array(old('fields_image')) && in_array('title', old('fields_image', [])))> Title</label>
                                 <label><input type="checkbox" name="fields_image[]" value="description" @checked(is_array(old('fields_image')) && in_array('description', old('fields_image', [])))> Description</label>
-                                <label><input type="checkbox" name="fields_image[]" value="points" @checked(is_array(old('fields_image')) && in_array('points', old('fields_image', [])))> Bullet points</label>
+                                <label><input type="checkbox" name="fields_image[]" value="points" @checked(is_array(old('fields_image')) && in_array('points', old('fields_image', [])))> Point</label>
                                 <label><input type="checkbox" name="fields_image[]" value="button" @checked(is_array(old('fields_image')) && in_array('button', old('fields_image', [])))> Button</label>
                             </div>
                             @error('fields_image') <div class="error" style="margin-top:8px;">{{ $message }}</div> @enderror
@@ -268,7 +268,7 @@
                                         <label><input type="checkbox" name="fields_right[]" value="mini_title" @checked(is_array(old('fields_right')) && in_array('mini_title', old('fields_right', [])))> Mini title</label>
                                         <label><input type="checkbox" name="fields_right[]" value="title" @checked(is_array(old('fields_right')) && in_array('title', old('fields_right', [])))> Title</label>
                                         <label><input type="checkbox" name="fields_right[]" value="description" @checked(is_array(old('fields_right')) && in_array('description', old('fields_right', [])))> Description</label>
-                                        <label><input type="checkbox" name="fields_right[]" value="points" @checked(is_array(old('fields_right')) && in_array('points', old('fields_right', [])))> Bullet points</label>
+                                        <label><input type="checkbox" name="fields_right[]" value="points" @checked(is_array(old('fields_right')) && in_array('points', old('fields_right', [])))> Point</label>
                                         <label><input type="checkbox" name="fields_right[]" value="button" @checked(is_array(old('fields_right')) && in_array('button', old('fields_right', [])))> Button</label>
                                     </div>
                                 </div>
@@ -278,7 +278,7 @@
                                         <label><input type="checkbox" name="fields_left[]" value="mini_title" @checked(is_array(old('fields_left')) && in_array('mini_title', old('fields_left', [])))> Mini title</label>
                                         <label><input type="checkbox" name="fields_left[]" value="title" @checked(is_array(old('fields_left')) && in_array('title', old('fields_left', [])))> Title</label>
                                         <label><input type="checkbox" name="fields_left[]" value="description" @checked(is_array(old('fields_left')) && in_array('description', old('fields_left', [])))> Description</label>
-                                        <label><input type="checkbox" name="fields_left[]" value="points" @checked(is_array(old('fields_left')) && in_array('points', old('fields_left', [])))> Bullet points</label>
+                                        <label><input type="checkbox" name="fields_left[]" value="points" @checked(is_array(old('fields_left')) && in_array('points', old('fields_left', [])))> Point</label>
                                         <label><input type="checkbox" name="fields_left[]" value="button" @checked(is_array(old('fields_left')) && in_array('button', old('fields_left', [])))> Button</label>
                                     </div>
                                 </div>

@@ -6,10 +6,12 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\SiteDetailController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\MenuPageController;
 use App\Http\Controllers\Site\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,10 @@ Route::get('/contact', [ContactController::class, 'create'])->name('contact.crea
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('contact.store');
+
+// Dynamic menu/sub-menu pages (must stay after all explicit site routes above).
+Route::get('/{any}', [MenuPageController::class, 'show'])
+    ->where('any', '^(?!admin($|/)).+');
 
 Route::prefix('admin')->group(function (): void {
     Route::middleware('guest')->group(function (): void {
@@ -69,10 +75,15 @@ Route::prefix('admin')->group(function (): void {
             ->only(['index', 'store', 'destroy'])
             ->names('admin.hero-slides');
 
+        Route::get('site-details', [SiteDetailController::class, 'edit'])->name('admin.site-details.edit');
+        Route::put('site-details/{site_detail}', [SiteDetailController::class, 'update'])->name('admin.site-details.update');
+
         Route::get('home-sections', [HomeSectionController::class, 'index'])->name('admin.home-sections.index');
         Route::get('home-sections/create', [HomeSectionController::class, 'create'])->name('admin.home-sections.create');
         Route::post('home-sections', [HomeSectionController::class, 'store'])->name('admin.home-sections.store');
         Route::get('home-sections/details', [HomeSectionController::class, 'details'])->name('admin.home-sections.details');
         Route::post('home-sections/details', [HomeSectionController::class, 'saveDetails'])->name('admin.home-sections.details.store');
+        Route::get('home-sections/{home_section}/edit', [HomeSectionController::class, 'edit'])->name('admin.home-sections.edit');
+        Route::put('home-sections/{home_section}', [HomeSectionController::class, 'update'])->name('admin.home-sections.update');
     });
 });

@@ -29,7 +29,8 @@ class UpdateMenuRequest extends FormRequest
 
         return [
             'label' => ['required', 'string', 'max:255'],
-            'url' => ['required', 'string', 'max:2048'],
+            'url' => ['nullable', 'string', 'max:2048'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
         ];

@@ -18,22 +18,28 @@
                     <th>Section</th>
                     <th>Type</th>
                     <th>Variant</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($sections as $section)
                 <tr>
-                    <td>{{ $section['id'] }}</td>
-                    <td>{{ $section['title'] }}</td>
-                    <td>{{ $section['type'] }}</td>
-                    <td>{{ $section['variant'] }}</td>
+                    <td>{{ $section->id }}</td>
+                    <td>{{ $section->title ?? '—' }}</td>
+                    <td>{{ $section->block_type }}</td>
+                    <td>{{ $section->variant ?? '—' }}</td>
+                    <td>{{ $section->is_active ? 'Active' : 'Inactive' }}</td>
+                    <td class="actions-cell">
+                        <a class="btn btn-muted" href="{{ route('admin.home-sections.edit', $section) }}">Edit</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
     <div style="margin-top: 10px; color:#64748b; font-size:13px;">
-        This is static UI for now. Later we will connect it to the database so sections can be created/reordered.
+        Home sections are now stored in the database (carousel only for now).
     </div>
 </div>
 @endsection

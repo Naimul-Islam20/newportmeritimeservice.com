@@ -21,7 +21,10 @@ class StoreSubMenuRequest extends FormRequest
         return [
             'menu_id' => ['required', 'integer', Rule::exists('menus', 'id')],
             'label' => ['required', 'string', 'max:255'],
-            'url' => ['required', 'string', 'max:2048'],
+            'url' => ['nullable', 'string', 'max:2048'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+            'published_at' => ['nullable', 'date'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
         ];

@@ -6,7 +6,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.sub-menus.store') }}">
+    <form method="POST" action="{{ route('admin.sub-menus.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-2">
             <div>
@@ -26,8 +26,29 @@
             </div>
             <div>
                 <label for="url">Sub menu URL</label>
-                <input id="url" name="url" value="{{ old('url') }}" placeholder="/about-us or https://…" required>
+                <input id="url" name="url" value="{{ old('url') }}" placeholder="Optional (auto if blank)">
                 @error('url') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description') }}</textarea>
+                @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="cover_image">Cover image</label>
+                <input id="cover_image" name="cover_image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                @error('cover_image') <div class="error">{{ $message }}</div> @enderror
+                <div style="color:#64748b; font-size:12px; margin-top:6px;">
+                    Used on Home page sliders (if set).
+                </div>
+            </div>
+            <div>
+                <label for="published_at">Date</label>
+                <input id="published_at" name="published_at" type="date" value="{{ old('published_at') }}">
+                @error('published_at') <div class="error">{{ $message }}</div> @enderror
+                <div style="color:#64748b; font-size:12px; margin-top:6px;">
+                    Used in News carousel.
+                </div>
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

@@ -16,6 +16,7 @@
                 <th>Menu</th>
                 <th>Label</th>
                 <th>URL</th>
+                <th>Description</th>
                 <th>Sort</th>
                 <th>Active</th>
                 <th>Actions</th>
@@ -27,6 +28,9 @@
                 <td>{{ $sub->menu?->label ?? '—' }}</td>
                 <td>{{ $sub->label }}</td>
                 <td><code style="font-size:12px;">{{ \Illuminate\Support\Str::limit($sub->url, 48) }}</code></td>
+                <td style="white-space: normal; max-width: 320px;">
+                    {{ \Illuminate\Support\Str::limit($sub->description ?? '—', 80) }}
+                </td>
                 <td>{{ $sub->sort_order }}</td>
                 <td>{{ $sub->is_active ? 'Yes' : 'No' }}</td>
                 <td>
@@ -46,7 +50,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6">No sub-menus yet.</td>
+                <td colspan="7">No sub-menus yet.</td>
             </tr>
             @endforelse
         </tbody>

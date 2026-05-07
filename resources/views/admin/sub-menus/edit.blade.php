@@ -6,7 +6,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.sub-menus.update', $subMenu) }}">
+    <form method="POST" action="{{ route('admin.sub-menus.update', $subMenu) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="grid grid-2">
@@ -27,8 +27,28 @@
             </div>
             <div>
                 <label for="url">Sub menu URL</label>
-                <input id="url" name="url" value="{{ old('url', $subMenu->url) }}" required>
+                <input id="url" name="url" value="{{ old('url', $subMenu->url) }}" placeholder="Optional (auto if blank)">
                 @error('url') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description', $subMenu->description) }}</textarea>
+                @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="cover_image">Cover image</label>
+                @if ($subMenu->coverImageUrl() !== '')
+                    <div style="margin-bottom:10px;">
+                        <img src="{{ $subMenu->coverImageUrl() }}" alt="" style="max-width: 260px; width: 100%; height: auto; border-radius: 8px; border:1px solid #e5e7eb;">
+                    </div>
+                @endif
+                <input id="cover_image" name="cover_image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                @error('cover_image') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div>
+                <label for="published_at">Date</label>
+                <input id="published_at" name="published_at" type="date" value="{{ old('published_at', optional($subMenu->published_at)->format('Y-m-d')) }}">
+                @error('published_at') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

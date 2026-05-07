@@ -16,8 +16,13 @@
             </div>
             <div>
                 <label for="url">URL</label>
-                <input id="url" name="url" value="{{ old('url') }}" placeholder="/about-us or https://…" required>
+                <input id="url" name="url" value="{{ old('url') }}" placeholder="Optional (auto if blank)">
                 @error('url') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description') }}</textarea>
+                @error('description') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class SubMenu extends Model
 {
@@ -14,6 +15,9 @@ class SubMenu extends Model
         'menu_id',
         'label',
         'url',
+        'description',
+        'cover_image_path',
+        'published_at',
         'sort_order',
         'is_active',
     ];
@@ -23,7 +27,27 @@ class SubMenu extends Model
         return [
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'published_at' => 'date',
         ];
+    }
+
+    public function coverImageUrl(): string
+    {
+        if (! is_string($this->cover_image_path) || $this->cover_image_path === '') {
+            return '';
+        }
+
+        $path = str_replace('\\', '/', ltrim($this->cover_image_path, '/'));
+
+        if (Storage::disk('public_site')->exists($path)) {
+            return asset($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return asset('storage/'.$path);
+        }
+
+        return '';
     }
 
     public function menu(): BelongsTo

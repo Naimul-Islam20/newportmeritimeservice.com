@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Models\ContactMessage;
 use App\Models\HeroSlide;
 use App\Models\Menu;
+use App\Models\SiteDetail;
 use App\Models\SubMenu;
 use App\Models\User;
 use App\Policies\ContactMessagePolicy;
 use App\Policies\HeroSlidePolicy;
 use App\Policies\MenuPolicy;
+use App\Policies\SiteDetailPolicy;
 use App\Policies\SubMenuPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ContactMessage::class, ContactMessagePolicy::class);
         Gate::policy(HeroSlide::class, HeroSlidePolicy::class);
         Gate::policy(Menu::class, MenuPolicy::class);
+        Gate::policy(SiteDetail::class, SiteDetailPolicy::class);
         Gate::policy(SubMenu::class, SubMenuPolicy::class);
 
         View::composer('site.partials.header', function ($view): void {

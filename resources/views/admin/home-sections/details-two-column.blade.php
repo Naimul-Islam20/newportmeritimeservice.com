@@ -27,8 +27,8 @@
 
         <div class="two-col">
             <div class="panel">
-                <h2>Right side details</h2>
-                <div class="muted">Content for the right column.</div>
+                <h2>Box 2 (right)</h2>
+                <div class="muted">This will render like “Our Vision”.</div>
 
                 @if (in_array('mini_title', $fieldsRight ?? []))
                     <div style="margin-top:12px;">
@@ -53,8 +53,18 @@
 
                 @if (in_array('points', $fieldsRight ?? []))
                     <div style="margin-top:12px;">
-                        <label for="right_points">Bullet points</label>
-                        <textarea id="right_points" name="right_points" rows="4" placeholder="One point per line"></textarea>
+                        <label>Point</label>
+                        <div id="rightPointsWrap" style="display:flex; flex-direction:column; gap:10px;">
+                            <div class="grid-2" style="grid-template-columns: 1fr auto; gap:10px;">
+                                <input name="right_points[]" placeholder="Write a point">
+                                <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <button type="button" class="btn btn-muted" id="rightAddPointBtn">Add another point</button>
+                        </div>
+                        @error('right_points') <div class="error">{{ $message }}</div> @enderror
+                        @error('right_points.*') <div class="error">{{ $message }}</div> @enderror
                     </div>
                 @endif
 
@@ -73,8 +83,8 @@
             </div>
 
             <div class="panel">
-                <h2>Left side details</h2>
-                <div class="muted">Content for the left column.</div>
+                <h2>Box 1 (left)</h2>
+                <div class="muted">This will render like “Our Mission”.</div>
 
                 @if (in_array('mini_title', $fieldsLeft ?? []))
                     <div style="margin-top:12px;">
@@ -99,8 +109,18 @@
 
                 @if (in_array('points', $fieldsLeft ?? []))
                     <div style="margin-top:12px;">
-                        <label for="left_points">Bullet points</label>
-                        <textarea id="left_points" name="left_points" rows="4" placeholder="One point per line"></textarea>
+                        <label>Point</label>
+                        <div id="leftPointsWrap" style="display:flex; flex-direction:column; gap:10px;">
+                            <div class="grid-2" style="grid-template-columns: 1fr auto; gap:10px;">
+                                <input name="left_points[]" placeholder="Write a point">
+                                <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <button type="button" class="btn btn-muted" id="leftAddPointBtn">Add another point</button>
+                        </div>
+                        @error('left_points') <div class="error">{{ $message }}</div> @enderror
+                        @error('left_points.*') <div class="error">{{ $message }}</div> @enderror
                     </div>
                 @endif
 
@@ -125,4 +145,46 @@
         </div>
     </form>
 </div>
+
+@if (in_array('points', $fieldsRight ?? []) || in_array('points', $fieldsLeft ?? []))
+    <script>
+        (() => {
+            const setup = (wrapId, addBtnId, inputName) => {
+                const wrap = document.getElementById(wrapId);
+                const addBtn = document.getElementById(addBtnId);
+                if (!wrap || !addBtn) return;
+
+                const template = () => {
+                    const row = document.createElement('div');
+                    row.className = 'grid-2';
+                    row.style.gridTemplateColumns = '1fr auto';
+                    row.style.gap = '10px';
+                    row.innerHTML = `
+                        <input name="${inputName}" placeholder="Write a point">
+                        <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
+                    `;
+                    return row;
+                };
+
+                const sync = () => {
+                    wrap.querySelectorAll('[data-remove-point]').forEach((btn) => {
+                        btn.onclick = () => {
+                            const row = btn.closest('div');
+                            if (row) row.remove();
+                        };
+                    });
+                };
+
+                sync();
+                addBtn.addEventListener('click', () => {
+                    wrap.appendChild(template());
+                    sync();
+                });
+            };
+
+            setup('leftPointsWrap', 'leftAddPointBtn', 'left_points[]');
+            setup('rightPointsWrap', 'rightAddPointBtn', 'right_points[]');
+        })();
+    </script>
+@endif
 @endsection

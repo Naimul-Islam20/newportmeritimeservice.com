@@ -18,6 +18,12 @@
 /public/storage
 /public/hero-slides/*
 !/public/hero-slides/.gitkeep
+/public/sub-menus/*
+!/public/sub-menus/.gitkeep
+/public/site/*
+!/public/site/.gitkeep
+/public/home-sections/*
+!/public/home-sections/.gitkeep
 /storage/*.key
 /storage/pail
 /vendor

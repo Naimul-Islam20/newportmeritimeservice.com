@@ -42,14 +42,10 @@
                                 <span aria-hidden="true" class="ml-1 text-xs leading-none">▾</span>
                             </a>
                             <div class="invisible absolute left-0 top-full z-50 mt-2 w-48 origin-top-left translate-y-2 scale-95 rounded-lg border border-gray-100 bg-white p-2 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:scale-100">
-                                <a href="{{ $menu->resolvedHref() }}"
-                                    class="block rounded-md px-4 py-2.5 text-sm font-semibold text-gray-900 transition hover:bg-gray-50 hover:text-[#3eb0e3] {{ $menu->isCurrent() ? 'text-[#3eb0e3]' : '' }}">
-                                    Parent menu
-                                </a>
                                 @foreach ($menu->subMenus as $child)
                                     <a href="{{ $child->resolvedHref() }}"
                                         class="block rounded-md px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-[#3eb0e3] {{ $child->isCurrent() ? 'text-[#3eb0e3]' : '' }}">
-                                        Sub menu — {{ $child->label }}
+                                        {{ $child->label }}
                                     </a>
                                 @endforeach
                             </div>
