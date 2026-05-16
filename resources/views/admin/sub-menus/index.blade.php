@@ -36,7 +36,10 @@
                 <td>
                     <div class="action-group">
                         @can('update', $sub)
-                        <a class="btn btn-muted" href="{{ route('admin.sub-menus.edit', $sub) }}">Edit</a>
+                        @if (! $sub->isFormPageLink())
+                        <a class="btn btn-primary" href="{{ route('admin.sub-menus.page-sections.index', $sub) }}">Sections</a>
+                        @endif
+                        <a class="btn btn-muted" href="{{ route('admin.sub-menus.edit', $sub) }}">Details</a>
                         @endcan
                         @can('delete', $sub)
                         <form method="POST" action="{{ route('admin.sub-menus.destroy', $sub) }}" style="display:inline;">

@@ -3,8 +3,28 @@
     'metaDescription' => 'Send us a message — we respond as soon as possible.',
 ])
 
+@push('styles')
+    <style>
+        /* Google Maps embeds ship fixed widths; force full width (full-bleed strip) */
+        .contact-map-embed iframe {
+            display: block;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 280px !important;
+            min-height: 240px;
+            border: 0;
+        }
+    </style>
+@endpush
+
 @section('content')
-    <section class="bg-background py-14 sm:py-20">
+    @php($sd = $siteDetails ?? null)
+    @php($loc = $sd ? trim((string) ($sd->location ?? '')) : '')
+    @php($emails = $sd && is_array($sd->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [])
+    @php($phones = $sd && is_array($sd->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [])
+    @php($mapRaw = $sd ? trim((string) ($sd->map ?? '')) : '')
+
+    <section class="overflow-x-hidden bg-background py-14 sm:py-20">
         <div class="site-container">
             <div class="mx-auto max-w-2xl text-center">
                 <h1 class="font-serif text-4xl font-semibold text-foreground sm:text-5xl">
@@ -18,20 +38,50 @@
             <div class="mt-14 grid gap-12 lg:grid-cols-5 lg:gap-16">
                 <aside class="lg:col-span-2">
                     <div class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5">
-                        <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Direct line</h2>
-                        <p class="mt-4 text-sm leading-relaxed text-foreground/70">
-                            Prefer email first? Use the form—every submission is logged for our operations desk.
-                        </p>
-                        <ul class="mt-8 space-y-4 text-sm text-foreground/80">
-                            <li class="flex gap-3">
-                                <span class="mt-0.5 text-primary" aria-hidden="true">●</span>
-                                <span><strong class="text-foreground">Response time:</strong> typically within one business day.</span>
-                            </li>
-                            <li class="flex gap-3">
-                                <span class="mt-0.5 text-primary" aria-hidden="true">●</span>
-                                <span><strong class="text-foreground">Secure:</strong> your details are used only to handle your request.</span>
-                            </li>
-                        </ul>
+                        <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Contact details</h2>
+                       
+
+                        <div class="mt-8 space-y-6 text-sm text-foreground/80">
+                            @if ($loc !== '')
+                                <div>
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-foreground/60">Location</h3>
+                                    <div class="mt-2 leading-relaxed text-foreground">
+                                        {!! nl2br(e($loc)) !!}
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if (count($emails) > 0)
+                                <div>
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-foreground/60">Email</h3>
+                                    <ul class="mt-2 space-y-2">
+                                        @foreach ($emails as $email)
+                                            <li>
+                                                <a href="mailto:{{ $email }}" class="font-medium text-foreground underline decoration-primary/40 underline-offset-2 transition hover:text-primary">{{ $email }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (count($phones) > 0)
+                                <div>
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-foreground/60">Phone</h3>
+                                    <ul class="mt-2 space-y-2">
+                                        @foreach ($phones as $phone)
+                                            @php($tel = preg_replace('/[^0-9+]/', '', $phone))
+                                            <li>
+                                                <a href="tel:{{ $tel }}" class="font-medium text-foreground underline decoration-primary/40 underline-offset-2 transition hover:text-primary">{{ $phone }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if ($loc === '' && count($emails) === 0 && count($phones) === 0)
+                                <p class="text-foreground/60">Contact information will appear here once it is configured.</p>
+                            @endif
+                        </div>
                     </div>
                 </aside>
 
@@ -106,5 +156,33 @@
                 </div>
             </div>
         </div>
+
+        {{-- Full viewport-width map below the form row (not limited by site-container) --}}
+        @if ($mapRaw !== '')
+            <div class="mt-16 w-full max-w-none border-t border-foreground/10 bg-foreground/[0.02] pt-8">
+                <div class="site-container mb-4">
+                    <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Map</h2>
+                </div>
+                <div class="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
+                    @if (stripos($mapRaw, '<iframe') !== false)
+                        <div class="contact-map-embed w-full min-w-0">
+                            {!! $mapRaw !!}
+                        </div>
+                    @elseif (filter_var($mapRaw, FILTER_VALIDATE_URL))
+                        <iframe
+                            title="Map"
+                            src="{{ $mapRaw }}"
+                            class="block h-[280px] w-full min-w-0 border-0"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen></iframe>
+                    @else
+                        <div class="site-container py-6 text-sm text-foreground/70">
+                            {!! nl2br(e($mapRaw)) !!}
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
     </section>
 @endsection

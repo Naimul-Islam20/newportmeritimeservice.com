@@ -36,6 +36,8 @@ class SiteDetailController extends Controller
 
         return view('admin.site-details.edit', [
             'detail' => $detail,
+            'themeDef' => SiteDetail::defaultThemeFormValues(),
+            'themeHex' => SiteDetail::themeHexInputsForEdit($detail),
         ]);
     }
 
@@ -81,6 +83,58 @@ class SiteDetailController extends Controller
             $defaultImagePath = $path;
         }
 
+        $headerLogoPath = $siteDetail->header_logo_path;
+        if ($request->hasFile('header_logo')) {
+            $path = $request->file('header_logo')->store('site', 'public_site');
+            if (is_string($headerLogoPath) && $headerLogoPath !== '' && Storage::disk('public_site')->exists($headerLogoPath)) {
+                Storage::disk('public_site')->delete($headerLogoPath);
+            }
+            $headerLogoPath = $path;
+        }
+
+        $footerLogoPath = $siteDetail->footer_logo_path;
+        if ($request->hasFile('footer_logo')) {
+            $path = $request->file('footer_logo')->store('site', 'public_site');
+            if (is_string($footerLogoPath) && $footerLogoPath !== '' && Storage::disk('public_site')->exists($footerLogoPath)) {
+                Storage::disk('public_site')->delete($footerLogoPath);
+            }
+            $footerLogoPath = $path;
+        }
+
+        $normalizeHex = function (?string $v): ?string {
+            if ($v === null || $v === '') {
+                return null;
+            }
+
+            return preg_match('/^#[0-9A-Fa-f]{6}$/', $v) ? strtolower($v) : null;
+        };
+
+        $themePayload = [];
+        if (! empty($data['reset_theme_colors'])) {
+            $themePayload = [
+                'theme_brand_navy' => null,
+                'theme_brand_navy_mid' => null,
+                'theme_brand_accent' => null,
+                'theme_brand_accent_hover' => null,
+                'theme_brand_topbar_muted' => null,
+                'theme_footer_overlay_base' => null,
+                'theme_footer_overlay_opacity' => null,
+            ];
+        } else {
+            $overlayBase = $normalizeHex($data['theme_footer_overlay_base'] ?? null);
+            $themePayload = [
+                'theme_brand_navy' => $normalizeHex($data['theme_brand_navy'] ?? null),
+                'theme_brand_navy_mid' => $normalizeHex($data['theme_brand_navy_mid'] ?? null),
+                'theme_brand_accent' => $normalizeHex($data['theme_brand_accent'] ?? null),
+                'theme_brand_accent_hover' => $normalizeHex($data['theme_brand_accent_hover'] ?? null),
+                'theme_brand_topbar_muted' => $normalizeHex($data['theme_brand_topbar_muted'] ?? null),
+                'theme_footer_overlay_base' => $overlayBase,
+                'theme_footer_overlay_opacity' => $overlayBase !== null && isset($data['theme_footer_overlay_opacity']) && $data['theme_footer_overlay_opacity'] !== null
+                    ? max(0, min(100, (int) $data['theme_footer_overlay_opacity']))
+                    : null,
+            ];
+        }
+
         $siteDetail->update([
             'location' => isset($data['location']) && is_string($data['location']) ? trim($data['location']) : null,
             'map' => isset($data['map']) && is_string($data['map']) ? trim($data['map']) : null,
@@ -88,6 +142,9 @@ class SiteDetailController extends Controller
             'phones' => $phones,
             'social_links' => $socialLinks,
             'default_image_path' => $defaultImagePath,
+            'header_logo_path' => $headerLogoPath,
+            'footer_logo_path' => $footerLogoPath,
+            ...$themePayload,
         ]);
 
         return redirect()

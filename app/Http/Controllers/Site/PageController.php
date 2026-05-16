@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\AboutPage;
 use App\Models\Menu;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ class PageController extends Controller
                 'metaDescription' => $sub->description ?: null,
                 'heading' => $sub->label,
                 'lead' => $sub->description ?: null,
+                'pageContent' => $sub->page_content,
+                'pageSections' => $sub->pageSections()->ordered()->where('is_active', true)->get(),
             ]);
         }
 
@@ -49,6 +52,9 @@ class PageController extends Controller
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,
+            'pageContent' => $menu->page_content,
+            'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
+            'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
         ]);
     }
 
@@ -78,15 +84,14 @@ class PageController extends Controller
         ]);
     }
 
-    public function aboutUs(Request $request): View
+    public function aboutUs(): View
     {
-        if ($v = $this->menuPageIfExists($request)) {
-            return $v;
-        }
+        $about = AboutPage::resolvedForPublic();
 
         return view('site.pages.about-us', [
-            'title' => 'About Us — '.config('app.name'),
-            'metaDescription' => 'Learn more about Newport Maritime Service and our commitment to excellence.',
+            'title' => $about->hero_title.' — '.config('app.name'),
+            'metaDescription' => $about->meta_description,
+            'about' => $about,
         ]);
     }
 
@@ -113,18 +118,6 @@ class PageController extends Controller
             'metaDescription' => 'Recognition and milestones from our partners and the industry.',
             'heading' => 'Award',
             'lead' => 'We are proud of the trust our clients place in us. Details and highlights will appear here as we update this section.',
-        ]);
-    }
-
-    public function quote(Request $request): View
-    {
-        if ($v = $this->menuPageIfExists($request)) {
-            return $v;
-        }
-
-        return view('site.pages.quote', [
-            'title' => 'Get a quote — '.config('app.name'),
-            'metaDescription' => 'Request a quote for ship supply, port services, or logistics support.',
         ]);
     }
 }

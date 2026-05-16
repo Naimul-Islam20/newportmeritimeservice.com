@@ -116,7 +116,7 @@ class SubMenuController extends Controller
         ], $request);
 
         return redirect()
-            ->route('admin.sub-menus.edit', $subMenu)
+            ->route('admin.sub-menus.page-sections.index', $subMenu)
             ->with('status', 'Sub-menu created successfully.');
     }
 
@@ -165,7 +165,7 @@ class SubMenuController extends Controller
         $sub_menu->fill($data);
 
         if (! $sub_menu->isDirty()) {
-            return redirect()->route('admin.sub-menus.edit', $sub_menu)->with('warning', 'No changes found. Sub-menu was not updated.');
+            return redirect()->route('admin.sub-menus.page-sections.index', $sub_menu)->with('warning', 'No changes found. Sub-menu was not updated.');
         }
 
         $sub_menu->save();
@@ -175,7 +175,9 @@ class SubMenuController extends Controller
             'menu_id' => $sub_menu->menu_id,
         ], $request);
 
-        return redirect()->route('admin.sub-menus.index')->with('status', 'Sub-menu updated successfully.');
+        return redirect()
+            ->route('admin.sub-menus.page-sections.index', $sub_menu)
+            ->with('status', 'Sub-menu updated successfully.');
     }
 
     public function destroy(SubMenu $sub_menu): RedirectResponse

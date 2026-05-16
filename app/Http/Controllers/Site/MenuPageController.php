@@ -30,6 +30,8 @@ class MenuPageController extends Controller
                 'metaDescription' => $sub->description ?: null,
                 'heading' => $sub->label,
                 'lead' => $sub->description ?: null,
+                'pageContent' => $sub->page_content,
+                'pageSections' => $sub->pageSections()->ordered()->where('is_active', true)->get(),
             ]);
         }
 
@@ -47,6 +49,9 @@ class MenuPageController extends Controller
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,
+            'pageContent' => $menu->page_content,
+            'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
+            'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
         ]);
     }
 }

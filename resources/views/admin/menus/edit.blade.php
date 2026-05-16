@@ -3,6 +3,7 @@
 @section('content')
 <div class="header">
     <h1>Edit menu</h1>
+    <a class="btn btn-primary" href="{{ route('admin.menus.page-sections.index', $menu) }}">Page sections</a>
 </div>
 
 <div class="card">
@@ -10,6 +11,7 @@
         @csrf
         @method('PUT')
         <div class="grid grid-2">
+            @include('admin.menus.partials.show-submenu-pages-toggle', ['defaultShow' => $menu->show_submenus_on_page])
             <div>
                 <label for="label">Label</label>
                 <input id="label" name="label" value="{{ old('label', $menu->label) }}" required>
@@ -22,8 +24,13 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description', $menu->description) }}</textarea>
+                <textarea id="description" name="description" rows="3" placeholder="Short line under the page title (hero)">{{ old('description', $menu->description) }}</textarea>
                 @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="page_content">Page content</label>
+                <textarea id="page_content" name="page_content" rows="10" placeholder="Main text for this page (below the hero)">{{ old('page_content', $menu->page_content) }}</textarea>
+                @error('page_content') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

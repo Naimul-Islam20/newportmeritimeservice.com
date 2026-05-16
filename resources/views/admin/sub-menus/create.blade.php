@@ -31,8 +31,13 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description') }}</textarea>
+                <textarea id="description" name="description" rows="3" placeholder="Short line under the page title (hero)">{{ old('description') }}</textarea>
                 @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="page_content">Page content</label>
+                <textarea id="page_content" name="page_content" rows="10" placeholder="Main text for this page (below the hero)">{{ old('page_content') }}</textarea>
+                @error('page_content') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="cover_image">Cover image</label>
@@ -58,8 +63,8 @@
             <div>
                 <label for="is_active">Status</label>
                 <select id="is_active" name="is_active">
-                    <option value="1" @selected(old('is_active', 1) == 1)>Active</option>
-                    <option value="0" @selected(old('is_active', 1) == 0)>Inactive</option>
+                    <option value="1" @selected(old('is_active', 1)==1)>Active</option>
+                    <option value="0" @selected(old('is_active', 1)==0)>Inactive</option>
                 </select>
                 @error('is_active') <div class="error">{{ $message }}</div> @enderror
             </div>

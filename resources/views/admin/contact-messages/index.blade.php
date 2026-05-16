@@ -1,9 +1,9 @@
-@extends('layouts.admin', ['title' => 'Contact Form'])
+@extends('layouts.admin', ['title' => 'Contact form'])
 
 @section('content')
 <div class="header">
     <div>
-        <h1>Contact Form</h1>
+        <h1>Contact form</h1>
         <p style="margin:6px 0 0;color:#64748b;font-size:14px;">Submissions from the public contact page.</p>
     </div>
 </div>

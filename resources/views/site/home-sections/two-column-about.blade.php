@@ -32,7 +32,7 @@
                     @endif
 
                     @if (filled($section->button_label))
-                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-10 inline-block rounded-sm bg-[#3eb0e3] px-10 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#2b9bc9] hover:shadow-lg">
+                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-10 inline-flex w-fit shrink-0 self-start items-center justify-center rounded-sm bg-[#3eb0e3] px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#2b9bc9] hover:shadow-lg sm:px-10 sm:py-4">
                             {{ $section->button_label }}
                         </a>
                     @endif
@@ -63,7 +63,7 @@
                     </p>
 
                     @if (filled($section->button_label))
-                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-10 inline-block rounded-sm bg-[#3eb0e3] px-10 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#2b9bc9] hover:shadow-lg">
+                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-10 inline-flex w-fit shrink-0 self-start items-center justify-center rounded-sm bg-[#3eb0e3] px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#2b9bc9] hover:shadow-lg sm:px-10 sm:py-4">
                             {{ $section->button_label }}
                         </a>
                     @endif

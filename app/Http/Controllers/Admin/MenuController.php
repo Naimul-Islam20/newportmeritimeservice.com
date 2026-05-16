@@ -95,7 +95,9 @@ class MenuController extends Controller
             'label' => $menu->label,
         ], $request);
 
-        return redirect()->route('admin.menus.index')->with('status', 'Menu created successfully.');
+        return redirect()
+            ->route('admin.menus.page-sections.index', $menu)
+            ->with('status', 'Menu created successfully.');
     }
 
     public function edit(Menu $menu): View
@@ -134,7 +136,9 @@ class MenuController extends Controller
             'label' => $menu->label,
         ], $request);
 
-        return redirect()->route('admin.menus.index')->with('status', 'Menu updated successfully.');
+        return redirect()
+            ->route('admin.menus.page-sections.index', $menu)
+            ->with('status', 'Menu updated successfully.');
     }
 
     public function destroy(Menu $menu): RedirectResponse

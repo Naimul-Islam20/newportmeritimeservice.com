@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\HeroSlide;
 use App\Models\HomeSection;
+use App\Models\HomeServiceAreaSetting;
+use App\Models\HomeVisualFramesSetting;
 use App\Models\SubMenu;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -50,6 +52,8 @@ class HomeController extends Controller
             'heroSlides' => HeroSlide::query()->ordered()->get(),
             'homeSections' => $homeSections,
             'sectionItems' => $sectionItems,
+            'serviceArea' => HomeServiceAreaSetting::displayPayload(),
+            'visualFrames' => HomeVisualFramesSetting::displayPayload(),
         ]);
     }
 }

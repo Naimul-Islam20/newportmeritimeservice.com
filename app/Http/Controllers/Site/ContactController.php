@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactMessageRequest;
 use App\Models\ContactMessage;
+use App\Models\SiteDetail;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -13,7 +14,9 @@ class ContactController extends Controller
 {
     public function create(): View
     {
-        return view('site.pages.contact');
+        return view('site.pages.contact', [
+            'siteDetails' => SiteDetail::query()->first(),
+        ]);
     }
 
     public function store(StoreContactMessageRequest $request): RedirectResponse

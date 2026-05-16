@@ -5,23 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Admin Panel' }}</title>
+    @vite(['resources/css/app.css'])
+    @include('partials.site-theme-css')
     <style>
-        :root {
-            --primary: #e9a70e;
-            --primary-hover: #ecc00d;
-            --primary-soft: #fff4cf;
-            --secondary: #1e1e6d;
-        }
-
         * {
             box-sizing: border-box;
         }
 
         html,
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-geist-sans), Arial, sans-serif;
             margin: 0;
-            background: #f4f7fb;
+            background: var(--admin-page-bg);
             color: #1f2937;
             overflow-x: hidden;
         }
@@ -44,8 +39,8 @@
         }
 
         aside {
-            background: var(--secondary);
-            color: #e2e8f0;
+            background: var(--brand-navy);
+            color: var(--brand-topbar-muted);
             padding: 20px;
             position: relative;
         }
@@ -53,6 +48,49 @@
         aside nav {
             display: grid;
             gap: 10px;
+        }
+
+        .nav-group {
+            border: 1px solid color-mix(in srgb, var(--brand-navy-mid) 55%, white);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--brand-navy-mid) 35%, transparent);
+            overflow: hidden;
+        }
+
+        .nav-group summary {
+            list-style: none;
+            cursor: pointer;
+            user-select: none;
+            padding: 8px 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--brand-topbar-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .nav-group summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .nav-sub {
+            display: grid;
+            gap: 6px;
+            padding: 6px 8px 10px;
+        }
+
+        .nav-sub a {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+            padding: 7px 9px;
+        }
+
+        .nav-sub a.parent-page {
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-close {
@@ -72,26 +110,27 @@
         }
 
         aside a {
-            color: #e2e8f0;
+            color: var(--brand-topbar-muted);
             text-decoration: none;
             display: block;
             padding: 8px 9px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: color-mix(in srgb, white 8%, transparent);
+            border: 1px solid color-mix(in srgb, var(--brand-topbar-muted) 28%, transparent);
         }
 
         aside a:hover {
-            background: color-mix(in srgb, var(--primary) 28%, transparent);
-            border-color: color-mix(in srgb, var(--primary-hover) 45%, white);
+            background: color-mix(in srgb, var(--brand-accent) 32%, transparent);
+            border-color: color-mix(in srgb, var(--brand-accent-hover) 45%, white);
+            color: #fff;
         }
 
         aside a.active {
-            background: var(--primary);
-            border-color: var(--primary-hover);
-            color: #1f2937;
+            background: var(--brand-accent);
+            border-color: var(--brand-accent-hover);
+            color: #fff;
             font-weight: 600;
         }
 
@@ -105,7 +144,7 @@
             justify-content: space-between;
             align-items: center;
             background: #fff;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid color-mix(in srgb, var(--brand-navy-mid) 22%, #e5e7eb);
             padding: 3px 18px;
             position: sticky;
             top: 0;
@@ -134,14 +173,17 @@
         }
 
         .top-header-logo {
-            height: 66px;
+            height: 44px;
             width: auto;
+            max-width: min(200px, 42vw);
+            object-fit: contain;
+            object-position: left center;
             display: block;
         }
 
         .menu-toggle {
             display: none;
-            background: var(--secondary);
+            background: var(--brand-navy);
             color: #fff;
             border: 0;
             border-radius: 6px;
@@ -226,8 +268,12 @@
         }
 
         .btn-primary {
-            background: var(--primary);
-            color: #1f2937;
+            background: var(--brand-accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-accent-hover);
         }
 
         .btn-danger {
@@ -539,8 +585,8 @@
         <div class="top-header">
             <div class="top-header-left">
                 <button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
-                <a href="{{ route('admin.dashboard') }}" class="top-header-title" aria-label="ERP17 dashboard">
-                    <img src="{{ asset('ERP17-header.png') }}" alt="ERP17" class="top-header-logo">
+                <a href="{{ route('admin.dashboard') }}" class="top-header-title" aria-label="{{ config('app.name') }} admin">
+                    <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ config('app.name') }}" class="top-header-logo">
                 </a>
             </div>
             <form method="POST" action="{{ route('admin.logout') }}" class="logout-form">
@@ -555,11 +601,43 @@
                 <nav>
                     <a class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     <a class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
-                    <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact</a>
+                    <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact form</a>
+                    <a class="{{ request()->routeIs('admin.quote-requests.*') ? 'active' : '' }}" href="{{ route('admin.quote-requests.index') }}">Get a quote</a>
                     <a class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}" href="{{ route('admin.home-sections.index') }}">Home Sections</a>
                     <a class="{{ request()->routeIs('admin.site-details.*') ? 'active' : '' }}" href="{{ route('admin.site-details.edit') }}">Site Details</a>
-                    <a class="{{ request()->routeIs('admin.menus.*') ? 'active' : '' }}" href="{{ route('admin.menus.index') }}">Menus</a>
-                    <a class="{{ request()->routeIs('admin.sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.sub-menus.index') }}">Sub menus</a>
+                    <a class="{{ request()->routeIs('admin.about-page.*') ? 'active' : '' }}" href="{{ route('admin.about-page.edit') }}">About Us page</a>
+                    <a class="{{ request()->routeIs('admin.menus.index') || request()->routeIs('admin.menus.create') || request()->routeIs('admin.menus.page-sections.*') ? 'active' : '' }}" href="{{ route('admin.menus.index') }}">All menus (list)</a>
+                    <a class="{{ request()->routeIs('admin.sub-menus.index') || request()->routeIs('admin.sub-menus.create') || request()->routeIs('admin.sub-menus.page-sections.*') ? 'active' : '' }}" href="{{ route('admin.sub-menus.index') }}">All sub-menus (list)</a>
+
+                    @php($routeMenu = request()->route('menu'))
+                    @php($routeSub = request()->route('sub_menu'))
+
+                    @foreach (($adminSidebarMenus ?? collect()) as $sidebarMenu)
+                        @if ($sidebarMenu->subMenus->isEmpty())
+                            <a class="{{ (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '' }}"
+                                href="{{ route('admin.menus.page-sections.index', $sidebarMenu) }}">{{ $sidebarMenu->label }}</a>
+                        @else
+                            @php($openSidebarGroup = (request()->routeIs('admin.menus.edit') && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id)
+                                || (request()->routeIs('admin.menus.page-sections.*') && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id)
+                                || (request()->routeIs('admin.sub-menus.edit') && $routeSub && (int) $routeSub->menu_id === (int) $sidebarMenu->id)
+                                || (request()->routeIs('admin.sub-menus.page-sections.*') && $routeSub && (int) $routeSub->menu_id === (int) $sidebarMenu->id))
+                            <details class="nav-group" @if ($openSidebarGroup) open @endif>
+                                <summary>
+                                    <span>{{ $sidebarMenu->label }}</span>
+                                    <span aria-hidden="true" style="opacity:.85;">▾</span>
+                                </summary>
+                                <div class="nav-sub">
+                                    <a class="parent-page {{ (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '' }}"
+                                        href="{{ route('admin.menus.page-sections.index', $sidebarMenu) }}"
+                                        title="Page sections for this parent menu">{{ $sidebarMenu->label }}</a>
+                                    @foreach ($sidebarMenu->subMenus as $sidebarSub)
+                                        <a class="{{ (request()->routeIs('admin.sub-menus.edit') || request()->routeIs('admin.sub-menus.page-sections.*')) && $routeSub && (int) $routeSub->id === (int) $sidebarSub->id ? 'active' : '' }}"
+                                            href="{{ route('admin.sub-menus.page-sections.index', $sidebarSub) }}">{{ $sidebarSub->label }}</a>
+                                    @endforeach
+                                </div>
+                            </details>
+                        @endif
+                    @endforeach
                 </nav>
             </aside>
             <main>

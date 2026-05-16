@@ -23,6 +23,7 @@ class StoreSubMenuRequest extends FormRequest
             'label' => ['required', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:2048'],
             'description' => ['nullable', 'string', 'max:5000'],
+            'page_content' => ['nullable', 'string', 'max:65535'],
             'cover_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
             'published_at' => ['nullable', 'date'],
             'sort_order' => ['nullable', 'integer', 'min:0'],

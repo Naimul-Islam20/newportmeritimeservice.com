@@ -32,7 +32,10 @@
                 <td>
                     <div class="action-group">
                         @can('update', $menu)
-                        <a class="btn btn-muted" href="{{ route('admin.menus.edit', $menu) }}">Edit</a>
+                        @if (! $menu->isFormPageMenu())
+                        <a class="btn btn-primary" href="{{ route('admin.menus.page-sections.index', $menu) }}">Sections</a>
+                        @endif
+                        <a class="btn btn-muted" href="{{ route('admin.menus.edit', $menu) }}">Details</a>
                         @endcan
                         @can('delete', $menu)
                         <form method="POST" action="{{ route('admin.menus.destroy', $menu) }}" style="display:inline;">

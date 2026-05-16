@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuPageSectionController;
+use App\Http\Controllers\Admin\QuoteRequestController as AdminQuoteRequestController;
 use App\Http\Controllers\Admin\SiteDetailController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UserController;
@@ -13,6 +16,7 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MenuPageController;
 use App\Http\Controllers\Site\PageController;
+use App\Http\Controllers\Site\QuoteRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -34,7 +38,10 @@ Route::get('/our-services', [PageController::class, 'ourServices'])->name('our-s
 Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
 Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');
 Route::get('/award', [PageController::class, 'award'])->name('award');
-Route::get('/get-a-quote', [PageController::class, 'quote'])->name('quote.request');
+Route::get('/get-a-quote', [QuoteRequestController::class, 'create'])->name('quote.request');
+Route::post('/get-a-quote', [QuoteRequestController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('quote.store');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])
@@ -63,13 +70,43 @@ Route::prefix('admin')->group(function (): void {
             ->only(['index', 'show', 'destroy'])
             ->names('admin.contact-messages');
 
+        Route::resource('quote-requests', AdminQuoteRequestController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->names('admin.quote-requests');
+
         Route::resource('menus', MenuController::class)
             ->except(['show'])
             ->names('admin.menus');
 
+        Route::get('menus/{menu}/page-sections', [MenuPageSectionController::class, 'indexMenu'])
+            ->name('admin.menus.page-sections.index');
+        Route::get('menus/{menu}/page-sections/create', [MenuPageSectionController::class, 'createMenu'])
+            ->name('admin.menus.page-sections.create');
+        Route::post('menus/{menu}/page-sections', [MenuPageSectionController::class, 'storeMenu'])
+            ->name('admin.menus.page-sections.store');
+        Route::get('menus/{menu}/page-sections/{section}/edit', [MenuPageSectionController::class, 'editMenu'])
+            ->name('admin.menus.page-sections.edit');
+        Route::put('menus/{menu}/page-sections/{section}', [MenuPageSectionController::class, 'updateMenu'])
+            ->name('admin.menus.page-sections.update');
+        Route::delete('menus/{menu}/page-sections/{section}', [MenuPageSectionController::class, 'destroyMenu'])
+            ->name('admin.menus.page-sections.destroy');
+
         Route::resource('sub-menus', SubMenuController::class)
             ->except(['show'])
             ->names('admin.sub-menus');
+
+        Route::get('sub-menus/{sub_menu}/page-sections', [MenuPageSectionController::class, 'indexSubMenu'])
+            ->name('admin.sub-menus.page-sections.index');
+        Route::get('sub-menus/{sub_menu}/page-sections/create', [MenuPageSectionController::class, 'createSubMenu'])
+            ->name('admin.sub-menus.page-sections.create');
+        Route::post('sub-menus/{sub_menu}/page-sections', [MenuPageSectionController::class, 'storeSubMenu'])
+            ->name('admin.sub-menus.page-sections.store');
+        Route::get('sub-menus/{sub_menu}/page-sections/{section}/edit', [MenuPageSectionController::class, 'editSubMenu'])
+            ->name('admin.sub-menus.page-sections.edit');
+        Route::put('sub-menus/{sub_menu}/page-sections/{section}', [MenuPageSectionController::class, 'updateSubMenu'])
+            ->name('admin.sub-menus.page-sections.update');
+        Route::delete('sub-menus/{sub_menu}/page-sections/{section}', [MenuPageSectionController::class, 'destroySubMenu'])
+            ->name('admin.sub-menus.page-sections.destroy');
 
         Route::resource('hero-slides', HeroSlideController::class)
             ->only(['index', 'store', 'destroy'])
@@ -78,12 +115,20 @@ Route::prefix('admin')->group(function (): void {
         Route::get('site-details', [SiteDetailController::class, 'edit'])->name('admin.site-details.edit');
         Route::put('site-details/{site_detail}', [SiteDetailController::class, 'update'])->name('admin.site-details.update');
 
+        Route::get('about-page', [AboutPageController::class, 'edit'])->name('admin.about-page.edit');
+        Route::put('about-page/{about_page}', [AboutPageController::class, 'update'])->name('admin.about-page.update');
+
         Route::get('home-sections', [HomeSectionController::class, 'index'])->name('admin.home-sections.index');
+        Route::get('home-sections/service-area', [HomeSectionController::class, 'serviceArea'])->name('admin.home-sections.service-area');
+        Route::put('home-sections/service-area', [HomeSectionController::class, 'updateServiceArea'])->name('admin.home-sections.service-area.update');
+        Route::get('home-sections/visual-frames', [HomeSectionController::class, 'visualFrames'])->name('admin.home-sections.visual-frames');
+        Route::put('home-sections/visual-frames', [HomeSectionController::class, 'updateVisualFrames'])->name('admin.home-sections.visual-frames.update');
         Route::get('home-sections/create', [HomeSectionController::class, 'create'])->name('admin.home-sections.create');
         Route::post('home-sections', [HomeSectionController::class, 'store'])->name('admin.home-sections.store');
         Route::get('home-sections/details', [HomeSectionController::class, 'details'])->name('admin.home-sections.details');
         Route::post('home-sections/details', [HomeSectionController::class, 'saveDetails'])->name('admin.home-sections.details.store');
         Route::get('home-sections/{home_section}/edit', [HomeSectionController::class, 'edit'])->name('admin.home-sections.edit');
         Route::put('home-sections/{home_section}', [HomeSectionController::class, 'update'])->name('admin.home-sections.update');
+        Route::delete('home-sections/{home_section}', [HomeSectionController::class, 'destroy'])->name('admin.home-sections.destroy');
     });
 });

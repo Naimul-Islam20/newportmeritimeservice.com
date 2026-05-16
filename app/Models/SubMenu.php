@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 
 class SubMenu extends Model
@@ -16,6 +17,7 @@ class SubMenu extends Model
         'label',
         'url',
         'description',
+        'page_content',
         'cover_image_path',
         'published_at',
         'sort_order',
@@ -55,6 +57,11 @@ class SubMenu extends Model
         return $this->belongsTo(Menu::class, 'menu_id');
     }
 
+    public function pageSections(): MorphMany
+    {
+        return $this->morphMany(MenuPageSection::class, 'sectionable');
+    }
+
     /**
      * @param  Builder<static>  $query
      * @return Builder<static>
@@ -71,6 +78,31 @@ class SubMenu extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function isFormPageLink(): bool
+    {
+        $p = $this->normalizedPath();
+
+        return $p !== null && in_array($p, Menu::formPagePaths(), true);
+    }
+
+    public function isQuoteNavItem(): bool
+    {
+        return $this->normalizedPath() === '/get-a-quote';
+    }
+
+    public function siteNavHref(): string
+    {
+        $path = $this->normalizedPath();
+        if ($path === '/contact') {
+            return route('contact.create');
+        }
+        if ($path === '/get-a-quote') {
+            return route('quote.request');
+        }
+
+        return $this->resolvedHref();
     }
 
     public function resolvedHref(): string

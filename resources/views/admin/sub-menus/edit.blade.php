@@ -3,6 +3,7 @@
 @section('content')
 <div class="header">
     <h1>Edit sub-menu</h1>
+    <a class="btn btn-primary" href="{{ route('admin.sub-menus.page-sections.index', $subMenu) }}">Page sections</a>
 </div>
 
 <div class="card">
@@ -32,15 +33,20 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" rows="3" placeholder="Optional short description">{{ old('description', $subMenu->description) }}</textarea>
+                <textarea id="description" name="description" rows="3" placeholder="Short line under the page title (hero)">{{ old('description', $subMenu->description) }}</textarea>
                 @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="page_content">Page content</label>
+                <textarea id="page_content" name="page_content" rows="10" placeholder="Main text for this page (below the hero)">{{ old('page_content', $subMenu->page_content) }}</textarea>
+                @error('page_content') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="cover_image">Cover image</label>
                 @if ($subMenu->coverImageUrl() !== '')
-                    <div style="margin-bottom:10px;">
-                        <img src="{{ $subMenu->coverImageUrl() }}" alt="" style="max-width: 260px; width: 100%; height: auto; border-radius: 8px; border:1px solid #e5e7eb;">
-                    </div>
+                <div style="margin-bottom:10px;">
+                    <img src="{{ $subMenu->coverImageUrl() }}" alt="" style="max-width: 260px; width: 100%; height: auto; border-radius: 8px; border:1px solid #e5e7eb;">
+                </div>
                 @endif
                 <input id="cover_image" name="cover_image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                 @error('cover_image') <div class="error">{{ $message }}</div> @enderror

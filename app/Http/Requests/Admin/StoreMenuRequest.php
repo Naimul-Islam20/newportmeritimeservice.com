@@ -21,8 +21,10 @@ class StoreMenuRequest extends FormRequest
             'label' => ['required', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:2048'],
             'description' => ['nullable', 'string', 'max:5000'],
+            'page_content' => ['nullable', 'string', 'max:65535'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
+            'show_submenus_on_page' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -30,6 +32,7 @@ class StoreMenuRequest extends FormRequest
     {
         $this->merge([
             'is_active' => $this->boolean('is_active'),
+            'show_submenus_on_page' => $this->boolean('show_submenus_on_page'),
         ]);
     }
 }

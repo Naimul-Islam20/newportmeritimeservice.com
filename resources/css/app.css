@@ -1,22 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&display=swap");
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-/* Brand tokens (site-wide). Geist names kept for @theme; stacks use Outfit + system fonts. */
+/*
+ * Brand palette + layout: public site and admin panel both load this file via Vite.
+ * Use Tailwind `brand-*` / semantic colors on the site; admin inline CSS uses var(--brand-*), var(--admin-*).
+ */
 :root {
-    --font-geist-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-    --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --font-geist-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+    --font-geist-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+
+    /* Maritime brand (header / footer / CTAs / admin sidebar) */
+    --brand-navy: #112a6d;
+    --brand-navy-mid: #213b86;
+    --brand-accent: #3eb0e3;
+    --brand-accent-hover: #2b9bc9;
+    --brand-topbar-muted: #b8c6e6;
+    --brand-footer-overlay: rgba(10, 25, 70, 0.65);
+
+    /* Page surface (Tailwind semantic) */
     --background: #ffffff;
     --foreground: #171717;
     --primary: #e9a70e;
     --primary-hover: #ecc00d;
     --primary-soft: #f7f0d8;
-    --secondary: #1e1e6d;
+    --secondary: var(--brand-navy);
+
+    /* Admin-only surfaces (login + dashboard chrome) */
+    --admin-page-bg: #f4f7fb;
+    --admin-login-border: #dbe4ef;
+    --admin-danger-bg: #fee2e2;
+    --admin-danger-text: #991b1b;
+
+    /* Content width: horizontal padding (scales down on small screens) */
+    --site-padding-x: 1rem;
+    --site-max-width-sm: 640px;
+    --site-max-width-md: 768px;
+    --site-max-width-lg: 980px;
+    --site-max-width-xl: 1200px;
+    --site-max-width-2xl: 1360px;
+}
+
+@media (min-width: 640px) {
+    :root {
+        --site-padding-x: 1.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --site-padding-x: 1.5rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    :root {
+        --site-padding-x: 2rem;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,9 +80,14 @@
     --color-primary-hover: var(--primary-hover);
     --color-primary-soft: var(--primary-soft);
     --color-secondary: var(--secondary);
+    --color-brand-navy: var(--brand-navy);
+    --color-brand-navy-mid: var(--brand-navy-mid);
+    --color-brand-accent: var(--brand-accent);
+    --color-brand-accent-hover: var(--brand-accent-hover);
+    --color-brand-topbar-muted: var(--brand-topbar-muted);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
-    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-serif: "Source Serif 4", Georgia, serif;
 }
 
 @layer base {
@@ -46,43 +98,133 @@
     }
 
     /*
-     * Site layout width — use class `site-container` (not `container`: Tailwind v4 reserves .container).
+     * Site layout width — class `site-container` (not Tailwind’s reserved `container`).
+     * Max-width and padding both driven from :root variables above.
      */
     .site-container {
         width: 100%;
+        max-width: 100%;
         margin-left: auto;
         margin-right: auto;
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
+        padding-left: var(--site-padding-x);
+        padding-right: var(--site-padding-x);
     }
 
     @media (min-width: 640px) {
         .site-container {
-            max-width: 640px;
+            max-width: var(--site-max-width-sm);
         }
     }
 
     @media (min-width: 768px) {
         .site-container {
-            max-width: 768px;
+            max-width: var(--site-max-width-md);
         }
     }
 
     @media (min-width: 1024px) {
         .site-container {
-            max-width: 980px;
+            max-width: var(--site-max-width-lg);
         }
     }
 
     @media (min-width: 1280px) {
         .site-container {
-            max-width: 1200px;
+            max-width: var(--site-max-width-xl);
         }
     }
 
     @media (min-width: 1536px) {
         .site-container {
-            max-width: 1360px;
+            max-width: var(--site-max-width-2xl);
         }
+    }
+}
+
+@layer components {
+    /* Mobile nav <details> / <summary> — hide default marker */
+    .site-mobile-nav > summary {
+        list-style: none;
+    }
+
+    .site-mobile-nav > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .site-mobile-nav__sub > summary {
+        list-style: none;
+        cursor: pointer;
+    }
+
+    .site-mobile-nav__sub > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .site-desktop-nav__trigger:focus-visible,
+    .site-desktop-dropdown-panel a:focus-visible {
+        outline: 2px solid var(--brand-accent);
+        outline-offset: 2px;
+    }
+}
+
+/*
+ * Desktop submenu: closed by default. Open only on real hover (not sticky touch) OR .--open (keyboard/JS).
+ * Do NOT use :focus-within — after clicking the parent <a>, focus stays and the panel would never close.
+ */
+@media (min-width: 1024px) {
+    .site-desktop-nav__item {
+        position: relative;
+        z-index: 2;
+        display: inline-flex;
+        align-items: stretch;
+        vertical-align: middle;
+    }
+
+    .site-desktop-nav__dropdown {
+        position: absolute;
+        left: 0;
+        top: 100%;
+        z-index: 600;
+        box-sizing: border-box;
+        min-width: 13rem;
+        max-width: min(22rem, calc(100vw - 2rem));
+        width: max-content;
+        padding-top: 0.5rem;
+        margin: 0;
+        display: none;
+        pointer-events: none;
+    }
+
+    /* Fine pointer only: avoids “stuck open” after tap on touch laptops */
+    @media (hover: hover) and (pointer: fine) {
+        .site-desktop-nav__item:hover {
+            z-index: 500;
+        }
+
+        .site-desktop-nav__item:hover > .site-desktop-nav__dropdown {
+            display: block;
+            pointer-events: auto;
+        }
+
+        .site-desktop-nav__item:hover .site-desktop-nav__caret {
+            transform: rotate(180deg);
+        }
+    }
+
+    .site-desktop-nav__item.site-desktop-nav__item--open {
+        z-index: 500;
+    }
+
+    .site-desktop-nav__item.site-desktop-nav__item--open > .site-desktop-nav__dropdown {
+        display: block;
+        pointer-events: auto;
+    }
+
+    .site-desktop-nav__item.site-desktop-nav__item--open .site-desktop-nav__caret {
+        transform: rotate(180deg);
+    }
+
+    .site-desktop-nav__caret {
+        transition: transform 0.18s ease;
     }
 }

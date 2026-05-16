@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateHomeServiceAreaSettingRequest;
 use App\Models\HomeSection;
+use App\Models\HomeServiceAreaSetting;
+use App\Models\HomeVisualFramesSetting;
 use App\Models\Menu;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,9 +18,173 @@ class HomeSectionController extends Controller
 {
     public function index(): View
     {
+        $this->authorize('viewAny', HomeSection::class);
+
         return view('admin.home-sections.index', [
             'sections' => HomeSection::query()->ordered()->get(),
         ]);
+    }
+
+    public function serviceArea(): View
+    {
+        $this->authorize('viewAny', HomeServiceAreaSetting::class);
+
+        $setting = HomeServiceAreaSetting::query()->first();
+        if (! $setting) {
+            $setting = new HomeServiceAreaSetting(HomeServiceAreaSetting::defaultAttributes());
+        }
+
+        return view('admin.home-sections.service-area', [
+            'setting' => $setting,
+        ]);
+    }
+
+    public function updateServiceArea(UpdateHomeServiceAreaSettingRequest $request): RedirectResponse
+    {
+        $setting = HomeServiceAreaSetting::query()->first();
+        if (! $setting) {
+            $setting = HomeServiceAreaSetting::create(HomeServiceAreaSetting::defaultAttributes());
+        }
+
+        $this->authorize('update', $setting);
+
+        $data = $request->validated();
+
+        $mapPath = $setting->map_image_path;
+        if ($request->hasFile('map_image')) {
+            $path = $request->file('map_image')->store('home-service-area', 'public_site');
+            if (is_string($mapPath) && $mapPath !== '' && Storage::disk('public_site')->exists($mapPath)) {
+                Storage::disk('public_site')->delete($mapPath);
+            }
+            $mapPath = $path;
+        }
+
+        $steps = collect($data['steps'] ?? [])
+            ->map(fn ($v) => is_string($v) ? trim($v) : '')
+            ->filter(fn ($v) => $v !== '')
+            ->values()
+            ->all();
+
+        $setting->update([
+            'mini_title' => isset($data['mini_title']) && is_string($data['mini_title']) ? trim($data['mini_title']) : null,
+            'title' => isset($data['title']) && is_string($data['title']) ? trim($data['title']) : null,
+            'highlight_title' => isset($data['highlight_title']) && is_string($data['highlight_title']) ? trim($data['highlight_title']) : null,
+            'highlight_description' => isset($data['highlight_description']) && is_string($data['highlight_description']) ? trim($data['highlight_description']) : null,
+            'steps' => $steps,
+            'map_image_path' => $mapPath,
+        ]);
+
+        return redirect()
+            ->route('admin.home-sections.service-area')
+            ->with('status', 'Service area updated.');
+    }
+
+    public function visualFrames(): View
+    {
+        $this->authorize('viewAny', HomeVisualFramesSetting::class);
+
+        $setting = HomeVisualFramesSetting::query()->first();
+        if (! $setting) {
+            $setting = new HomeVisualFramesSetting([
+                ...HomeVisualFramesSetting::defaultHeader(),
+                'gallery' => HomeVisualFramesSetting::defaultGallery(),
+                'is_active' => true,
+            ]);
+        }
+
+        return view('admin.home-sections.visual-frames', [
+            'setting' => $setting,
+            'headerDefaults' => HomeVisualFramesSetting::defaultHeader(),
+            'galleryDefaults' => HomeVisualFramesSetting::defaultGallery(),
+        ]);
+    }
+
+    public function updateVisualFrames(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', HomeVisualFramesSetting::class);
+
+        $validated = $request->validate([
+            'mini_title' => ['nullable', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'is_active' => ['sometimes', 'boolean'],
+            'items' => ['nullable', 'array'],
+            'items.*.url' => ['nullable', 'string', 'max:2048'],
+            'items.*.caption' => ['nullable', 'string', 'max:255'],
+            'items.*.path' => ['nullable', 'string', 'max:2048'],
+            'items.*.file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+            'items.*.remove' => ['nullable', 'in:1,on'],
+        ]);
+
+        $setting = HomeVisualFramesSetting::query()->first();
+        if (! $setting) {
+            $setting = new HomeVisualFramesSetting;
+        }
+
+        $itemsInput = $request->input('items', []);
+        if (! is_array($itemsInput)) {
+            $itemsInput = [];
+        }
+
+        $gallery = [];
+        foreach ($itemsInput as $idx => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            if (! empty($row['remove'])) {
+                $p = isset($row['path']) && is_string($row['path']) ? trim($row['path']) : '';
+                if ($p !== '') {
+                    $this->deleteVisualFrameStoredPath($p);
+                }
+
+                continue;
+            }
+
+            $url = isset($row['url']) && is_string($row['url']) ? trim($row['url']) : '';
+            $caption = isset($row['caption']) && is_string($row['caption']) ? trim($row['caption']) : '';
+            $path = isset($row['path']) && is_string($row['path']) ? trim($row['path']) : '';
+            $path = $path === '' ? null : $path;
+
+            if ($request->hasFile('items.'.$idx.'.file')) {
+                if ($path !== null) {
+                    $this->deleteVisualFrameStoredPath($path);
+                }
+                $path = $request->file('items.'.$idx.'.file')->store('home-visual-frames', 'public_site');
+                $url = '';
+            }
+
+            $urlForDb = $url !== '' ? $url : null;
+
+            if ($path !== null || $urlForDb !== null) {
+                $gallery[] = [
+                    'path' => $path,
+                    'url' => $urlForDb,
+                    'caption' => $caption !== '' ? $caption : null,
+                ];
+            }
+        }
+
+        $setting->fill([
+            'mini_title' => isset($validated['mini_title']) && is_string($validated['mini_title']) ? trim($validated['mini_title']) : null,
+            'title' => isset($validated['title']) && is_string($validated['title']) ? trim($validated['title']) : null,
+            'description' => isset($validated['description']) && is_string($validated['description']) ? trim($validated['description']) : null,
+            'gallery' => $gallery,
+            'is_active' => $request->boolean('is_active'),
+        ]);
+        $setting->save();
+
+        return redirect()
+            ->route('admin.home-sections.visual-frames')
+            ->with('status', 'Visual showcase updated.');
+    }
+
+    private function deleteVisualFrameStoredPath(string $path): void
+    {
+        foreach (['public_site', 'public'] as $disk) {
+            if (Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->delete($path);
+            }
+        }
     }
 
     public function create(): View
@@ -482,5 +649,26 @@ class HomeSectionController extends Controller
         return redirect()
             ->route('admin.home-sections.index')
             ->with('status', 'Home section updated.');
+    }
+
+    public function destroy(HomeSection $home_section): RedirectResponse
+    {
+        $this->authorize('delete', $home_section);
+
+        $path = $home_section->image_path;
+        if (is_string($path) && $path !== '') {
+            if (Storage::disk('public_site')->exists($path)) {
+                Storage::disk('public_site')->delete($path);
+            }
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+
+        $home_section->delete();
+
+        return redirect()
+            ->route('admin.home-sections.index')
+            ->with('status', 'Home section removed.');
     }
 }

@@ -5,19 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    @vite(['resources/css/app.css'])
+    @include('partials.site-theme-css')
     <style>
-        :root {
-            --primary: #e9a70e;
-            --primary-hover: #ecc00d;
-            --secondary: #1e1e6d;
-            --bg-soft: #f4f7fb;
-            --text: #0f172a;
-            --muted: #475569;
-            --border: #dbe4ef;
-            --danger-bg: #fee2e2;
-            --danger-text: #991b1b;
-        }
-
         * {
             box-sizing: border-box;
         }
@@ -29,11 +19,11 @@
             place-items: center;
             padding: 22px;
             background:
-                radial-gradient(circle at 12% 16%, rgba(233, 167, 14, 0.18), transparent 45%),
-                radial-gradient(circle at 88% 85%, rgba(30, 30, 109, 0.18), transparent 42%),
-                var(--bg-soft);
-            font-family: Arial, sans-serif;
-            color: var(--text);
+                radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--brand-accent) 22%, transparent), transparent 45%),
+                radial-gradient(circle at 88% 85%, color-mix(in srgb, var(--brand-navy) 22%, transparent), transparent 42%),
+                var(--admin-page-bg);
+            font-family: var(--font-geist-sans), Arial, sans-serif;
+            color: #0f172a;
         }
 
         .login-shell {
@@ -63,13 +53,13 @@
 
         h2 {
             margin: 0 0 6px;
-            color: var(--text);
+            color: #0f172a;
             font-size: 24px;
         }
 
         .subtext {
             margin: 0 0 18px;
-            color: var(--muted);
+            color: #475569;
             font-size: 14px;
         }
 
@@ -84,7 +74,7 @@
         input[type="password"] {
             width: 100%;
             padding: 11px 12px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--admin-login-border);
             border-radius: 8px;
             margin-bottom: 14px;
             outline: none;
@@ -94,8 +84,8 @@
 
         input[type="email"]:focus,
         input[type="password"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(233, 167, 14, 0.18);
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 28%, transparent);
         }
 
         .remember {
@@ -111,12 +101,12 @@
             margin: 0;
             width: 16px;
             height: 16px;
-            accent-color: var(--primary);
+            accent-color: var(--brand-accent);
         }
 
         .error {
-            background: var(--danger-bg);
-            color: var(--danger-text);
+            background: var(--admin-danger-bg);
+            color: var(--admin-danger-text);
             font-size: 14px;
             margin-bottom: 14px;
             border-radius: 8px;
@@ -129,15 +119,15 @@
             padding: 11px;
             border: 0;
             border-radius: 8px;
-            background: var(--primary);
-            color: #1f2937;
+            background: var(--brand-accent);
+            color: #fff;
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.15s ease, background 0.15s ease;
         }
 
         button:hover {
-            background: var(--primary-hover);
+            background: var(--brand-accent-hover);
             transform: translateY(-1px);
         }
     </style>
@@ -146,7 +136,7 @@
 <body>
     <div class="login-shell">
         <div class="brand">
-            <img src="{{ asset('ERP17-header.png') }}" alt="ERP17">
+            <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ config('app.name') }}">
         </div>
         <form class="card" method="POST" action="{{ route('admin.login.store') }}">
             @csrf

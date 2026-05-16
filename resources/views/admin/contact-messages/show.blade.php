@@ -1,4 +1,4 @@
-@extends('layouts.admin', ['title' => 'Contact Form Message'])
+@extends('layouts.admin', ['title' => 'Contact form message'])
 
 @section('content')
 <div class="header">

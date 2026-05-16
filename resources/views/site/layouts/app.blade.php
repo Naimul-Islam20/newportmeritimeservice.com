@@ -7,10 +7,11 @@
     <meta name="description" content="{{ $metaDescription ?? 'Maritime logistics and port solutions.' }}">
     <title>{{ $title ?? config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.site-theme-css')
     @stack('styles')
 </head>
 
-<body class="min-h-screen bg-background font-sans text-foreground antialiased">
+<body class="min-h-screen overflow-x-clip bg-background font-sans text-foreground antialiased">
     @include('site.partials.header')
 
     <main>

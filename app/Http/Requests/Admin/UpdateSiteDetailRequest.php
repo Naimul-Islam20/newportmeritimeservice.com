@@ -17,6 +17,33 @@ class UpdateSiteDetailRequest extends FormRequest
         return $this->user()?->can('update', $detail) ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $hexKeys = [
+            'theme_brand_navy',
+            'theme_brand_navy_mid',
+            'theme_brand_accent',
+            'theme_brand_accent_hover',
+            'theme_brand_topbar_muted',
+            'theme_footer_overlay_base',
+        ];
+        $merge = [];
+        foreach ($hexKeys as $key) {
+            $v = $this->input($key);
+            if ($v === '' || $v === null) {
+                $merge[$key] = null;
+            }
+        }
+        $op = $this->input('theme_footer_overlay_opacity');
+        if ($op === '' || $op === null) {
+            $merge['theme_footer_overlay_opacity'] = null;
+        }
+        $this->merge($merge);
+        $this->merge([
+            'reset_theme_colors' => $this->boolean('reset_theme_colors'),
+        ]);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -35,6 +62,16 @@ class UpdateSiteDetailRequest extends FormRequest
             'social.youtube' => ['nullable', 'string', 'max:2048'],
             'social.twitter' => ['nullable', 'string', 'max:2048'],
             'default_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+            'header_logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif,svg', 'max:5120'],
+            'footer_logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif,svg', 'max:5120'],
+            'reset_theme_colors' => ['sometimes', 'boolean'],
+            'theme_brand_navy' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_brand_navy_mid' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_brand_accent' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_brand_accent_hover' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_brand_topbar_muted' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_footer_overlay_base' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_footer_overlay_opacity' => ['nullable', 'integer', 'min:0', 'max:100'],
         ];
     }
 }
