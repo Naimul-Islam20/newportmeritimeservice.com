@@ -1,13 +1,13 @@
 {{-- News carousel: The News / Latest News --}}
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-<section class="{{ $stripSectionClass }} py-16 sm:py-24">
+<section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $section->mini_title ?: 'The News' }}</h3>
             <h2 class="mt-2 font-sans text-4xl font-bold {{ $stripTitleClass }} sm:text-5xl">{{ $section->title ?: 'Latest News' }}</h2>
         </div>
 
-        <div class="swiper news-swiper mt-10">
+        <div class="swiper news-swiper site-section-after-title">
             <div class="swiper-wrapper">
                 @forelse ($items as $item)
                     <div class="swiper-slide">

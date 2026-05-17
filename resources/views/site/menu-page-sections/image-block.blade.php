@@ -32,7 +32,7 @@
 @endphp
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
-<section class="{{ $stripSectionClass }} py-16 sm:py-24">
+<section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         @if (filled($mini) || filled($title) || filled($desc))
             <div class="mx-auto max-w-3xl text-center">
@@ -53,7 +53,7 @@
         @endif
 
         @if (count($tiles) > 0)
-            <div class="mt-12 grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="site-section-after-title grid items-start gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
                 @foreach ($tiles as $tile)
                     {{-- Box height follows image (column width, natural aspect); light tinted shadow --}}
                     <figure class="flex w-full flex-col overflow-hidden rounded-lg {{ $stripCardClass }} shadow-lg shadow-secondary/10">

@@ -38,12 +38,22 @@
     .news-swiper .swiper-slide>div {
         flex: 1;
     }
+
+    /* Hero: black shadow directly under each word (text-shadow, not image overlay) */
+    .hero-slide__copy h1,
+    .hero-slide__copy p {
+        text-shadow:
+            0 1px 0 rgba(0, 0, 0, 0.85),
+            0 2px 4px rgba(0, 0, 0, 0.75),
+            0 4px 10px rgba(0, 0, 0, 0.55),
+            0 8px 22px rgba(0, 0, 0, 0.35);
+    }
 </style>
 @endpush
 
 @section('content')
 {{-- Hero Carousel --}}
-<section class="relative h-[600px] w-full overflow-hidden bg-secondary md:h-[700px] lg:h-[800px]">
+<section class="relative h-[300px] w-full overflow-hidden bg-secondary sm:h-[540px] md:h-[700px] lg:h-[800px]">
     <div class="swiper hero-swiper h-full w-full">
         <div class="swiper-wrapper">
             @if ($heroSlides->isNotEmpty())
@@ -51,25 +61,24 @@
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
                     @if ($slide->imagePublicUrl() !== '')
-                    <img src="{{ $slide->imagePublicUrl() }}" alt="{{ $slide->title }}" class="h-full w-full object-cover opacity-75">
+                    <img src="{{ $slide->imagePublicUrl() }}" alt="{{ $slide->title }}" class="h-full w-full object-cover">
                     @else
                     <div class="h-full w-full bg-linear-to-br from-secondary to-secondary" role="img" aria-label="{{ $slide->title }}"></div>
                     @endif
-                    <div class="absolute inset-0 bg-secondary/45"></div>
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                    <div class="hero-slide__copy max-w-5xl px-4">
+                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
                             {!! nl2br(e($slide->title)) !!}
                         </h1>
                         @if (filled($slide->description))
-                        <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
                             {!! nl2br(e($slide->description)) !!}
                         </p>
                         @endif
                         @if (filled($slide->button_label))
-                        <div class="mt-10">
-                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
+                        <div class="mt-6 sm:mt-10">
+                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 {{ $slide->button_label }}
                             </a>
                         </div>
@@ -83,18 +92,18 @@
             {{-- Slide 1: One Partner. Every Need. --}}
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover opacity-70">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                    <div class="hero-slide__copy max-w-5xl px-4">
+                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
                             One Partner. Every Need.
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
                             24/7 maritime solutions across all Bangladeshi ports.
                         </p>
-                        <div class="mt-10">
-                            <a href="#services" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
+                        <div class="mt-6 sm:mt-10">
+                            <a href="#services" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 EXPLORE OUR SERVICES
                             </a>
                         </div>
@@ -105,19 +114,18 @@
             {{-- Slide 2: Built on Trust. Delivered with Precision. --}}
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover opacity-80">
-                    <div class="absolute inset-0 bg-secondary/50"></div>
+                    <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                    <div class="hero-slide__copy max-w-5xl px-4">
+                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
                             Built on Trust.<br>Delivered with Precision.
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
                             Quality ship supplies, spares &amp; repairs — all in one window.
                         </p>
-                        <div class="mt-10">
-                            <a href="#supplies" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
+                        <div class="mt-6 sm:mt-10">
+                            <a href="#supplies" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 VIEW WHAT WE SUPPLY
                             </a>
                         </div>
@@ -128,19 +136,18 @@
             {{-- Slide 3: Bangladesh's Maritime Experts Since 2012. --}}
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover opacity-75">
-                    <div class="absolute inset-0 bg-secondary/55"></div>
+                    <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+                    <div class="hero-slide__copy max-w-5xl px-4">
+                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
                             Bangladesh's Maritime<br>Experts Since 2012.
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white drop-shadow-lg sm:text-lg md:text-xl">
+                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
                             Serving global fleets with reliability, speed &amp; full compliance.
                         </p>
-                        <div class="mt-10">
-                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
+                        <div class="mt-6 sm:mt-10">
+                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 GET IN TOUCH
                             </a>
                         </div>
@@ -185,126 +192,6 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
 @endif
 @endforeach
 
-{{-- Video Showcase Section --}}
-<section class="relative bg-white py-16 sm:py-24">
-    <div class="site-container">
-        <div class="mb-12 text-center">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-primary">Maritime Excellence</h3>
-            <h2 class="mt-2 font-sans text-4xl font-bold text-secondary sm:text-5xl">Our Operations in Action</h2>
-            <div class="mx-auto mt-4 h-1 w-20 bg-primary"></div>
-        </div>
-
-        <div class="relative overflow-hidden rounded-2xl bg-secondary shadow-2xl">
-            {{-- High-quality maritime stock video --}}
-            <video
-                class="h-[260px] w-full object-cover sm:h-[340px] md:h-[420px] lg:h-[480px]"
-                autoplay
-                muted
-                loop
-                playsinline
-                poster="https://images.unsplash.com/photo-1559139225-30071e443546?q=80&w=2070&auto=format&fit=crop">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-large-cargo-ship-in-the-middle-of-the-ocean-40012-large.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-
-            {{-- Overlay for a premium feel --}}
-            <div class="absolute inset-0 bg-linear-to-t from-secondary/60 via-transparent to-transparent"></div>
-
-            <div class="absolute bottom-0 left-0 p-8 text-white">
-                <p class="text-lg font-medium opacity-90">Providing 24/7 reliability across all Bangladeshi ports.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Full Width Video Section --}}
-<section class="relative h-[600px] w-full overflow-hidden sm:h-[700px] md:h-[800px]">
-    {{-- Video Background --}}
-    <video
-        class="absolute inset-0 h-full w-full object-cover"
-        autoplay
-        muted
-        loop
-        playsinline
-        poster="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-cargo-ship-leaving-the-port-40013-large.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    {{-- Cinematic Overlay --}}
-    <div class="absolute inset-0 bg-secondary/40"></div>
-
-    {{-- Content Overlay --}}
-    <div class="relative flex h-full items-center justify-center text-center">
-        <div class="max-w-4xl px-4">
-            <h2 class="font-sans text-3xl font-extrabold text-white drop-shadow-2xl sm:text-5xl md:text-6xl">
-                Global Reach. Local Expertise.
-            </h2>
-            <p class="mt-6 text-lg font-medium text-white/90 drop-shadow-lg sm:text-xl md:text-2xl">
-                Serving the world's leading fleets with unmatched precision since 2012.
-            </p>
-            <div class="mt-10">
-                <a href="#" class="inline-block rounded-full bg-white px-8 py-3 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:bg-primary">
-                    Connect With Us
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-@include('site.home-sections.visual-frames', ['visualFrames' => $visualFrames ?? ['show' => false]])
-
-{{-- Service Areas & Locations Section --}}
-<section class="relative overflow-hidden bg-secondary py-16 sm:py-24">
-    <!-- Background Texture -->
-    <div class="absolute inset-0">
-        <!-- Ocean surface background to match the design -->
-        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop" class="h-full w-full object-cover opacity-20 mix-blend-overlay" alt="Ocean Texture">
-    </div>
-
-    <div class="relative z-10 site-container">
-        <!-- Header -->
-        <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-primary">Service Areas</h3>
-            <h2 class="mt-2 font-sans text-4xl font-bold text-white sm:text-5xl">Locations</h2>
-        </div>
-
-        <!-- Map Area Placeholder -->
-        <div class="relative mx-auto mt-12 flex h-[300px] w-full max-w-4xl items-center justify-center sm:h-[400px] lg:h-[500px]">
-            <!-- User will replace this with their actual map graphic -->
-            <div class="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-8 text-center backdrop-blur-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mb-4 h-12 w-12 text-white/50">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-                </svg>
-                <p class="font-medium text-white/70">Map graphic will be placed here</p>
-                <p class="mt-2 text-sm text-white/40">Replace this placeholder with the Europe map image.</p>
-            </div>
-        </div>
-
-        <!-- End to End Supply block -->
-        <div class="mt-16 border-t border-white/10 pt-12 sm:mt-24 md:border-none md:pt-0">
-            <div class="flex flex-col gap-6 md:flex-row md:items-center md:gap-12">
-                <h3 class="shrink-0 font-sans text-2xl font-bold text-white sm:text-3xl">End to end supply</h3>
-                <div class="hidden h-12 w-px bg-white/30 md:block"></div>
-                <div class="h-px w-16 bg-white/30 md:hidden"></div>
-                <p class="text-base leading-relaxed text-white/70 md:max-w-3xl">
-                    We pride ourselves on our delivery and operate 365 days, 24 hours non-stop in all of the ports and straits of Turkey and the ARA area.
-                </p>
-            </div>
-        </div>
-
-        <!-- 4 Steps -->
-        <div class="mt-16 grid grid-cols-2 gap-8 text-white sm:grid-cols-4 sm:gap-6 lg:gap-10">
-            <div class="text-base font-medium leading-snug">Getting Order</div>
-            <div class="text-base font-medium leading-snug">Preparing order and<br>packaging process</div>
-            <div class="text-base font-medium leading-snug">Safe delivery service in<br>the refrigerated trucks</div>
-            <div class="text-base font-medium leading-snug">On-time delivery</div>
-        </div>
-    </div>
-</section>
-
-
-{{-- Note: “Why Choose Us” is rendered via Home Sections now --}}
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

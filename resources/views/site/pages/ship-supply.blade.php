@@ -22,7 +22,7 @@
     </section>
 
     {{-- Content Area Placeholder --}}
-    <section class="bg-white py-16 sm:py-24">
+    <section class="bg-white site-section">
         <div class="site-container">
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <!-- Card 1 -->

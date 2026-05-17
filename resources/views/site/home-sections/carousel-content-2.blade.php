@@ -1,13 +1,13 @@
 {{-- 2 content carousel: Ship Supplies / What We Supply --}}
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-<section id="supplies" class="{{ $stripSectionClass }} pb-16 pt-16 sm:pb-24 sm:pt-24">
+<section id="supplies" class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $section->mini_title ?: 'Ship Supplies' }}</h3>
             <h2 class="mt-2 font-sans text-4xl font-bold {{ $stripTitleClass }} sm:text-5xl">{{ $section->title ?: 'What We Supply' }}</h2>
         </div>
 
-        <div class="mt-10 swiper supplies-swiper">
+        <div class="site-section-after-title swiper supplies-swiper">
             <div class="swiper-wrapper">
                 @forelse ($items as $item)
                     <div class="swiper-slide">

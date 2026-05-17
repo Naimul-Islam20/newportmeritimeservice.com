@@ -13,7 +13,7 @@
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
 @if ($hasContent)
-<section class="{{ $stripSectionClass }} py-16 sm:py-24">
+<section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         @if ($hasTitleBlock)
             <div class="mx-auto max-w-3xl text-center">

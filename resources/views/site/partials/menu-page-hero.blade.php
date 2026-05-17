@@ -9,13 +9,13 @@
     $heroImage = $heroImageUrl ?? asset('menu-page-cover.jpg');
 @endphp
 
-<section class="menu-page-hero relative h-[300px] w-full overflow-hidden bg-secondary">
+<section class="menu-page-hero relative min-h-[300px] w-full overflow-hidden bg-secondary">
     <div class="pointer-events-none absolute inset-0 z-0">
         <img src="{{ $heroImage }}" alt="" class="h-full w-full object-cover opacity-70">
         <div class="absolute inset-0 bg-secondary/65"></div>
     </div>
 
-    <div class="menu-page-hero__content site-container absolute inset-0 z-10">
+    <div class="menu-page-hero__content site-container relative z-10">
         @if (filled($heroHeading))
             <h1 class="menu-page-hero__title" title="{{ $heroHeading }}">{{ $heroHeading }}</h1>
         @endif

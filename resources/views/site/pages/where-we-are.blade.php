@@ -22,7 +22,7 @@
     </section>
 
     {{-- Main Content Section --}}
-    <section class="bg-white py-16 lg:py-24">
+    <section class="bg-white site-section">
         <div class="site-container">
             <div class="flex flex-col items-start gap-12 lg:flex-row">
                 <!-- Left Image -->

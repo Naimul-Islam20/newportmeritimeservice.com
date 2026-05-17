@@ -1,5 +1,5 @@
 {{-- Submenu grid: same cards as home carousel-simple; no section titles; 3 per row on desktop --}}
-<section class="bg-white py-16 sm:py-24">
+<section class="bg-white site-section">
     <div class="site-container">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             @foreach ($submenuPaginator as $item)
@@ -28,7 +28,7 @@
         </div>
 
         @if ($submenuPaginator->hasPages())
-            <div class="mt-10 flex justify-center">
+            <div class="site-section-after-title flex justify-center">
                 {{ $submenuPaginator->links() }}
             </div>
         @endif

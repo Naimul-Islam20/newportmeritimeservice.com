@@ -13,12 +13,54 @@
 @endphp
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
+@push('styles')
+<style>
+    @media (max-width: 1023px) {
+        .image-details-mobile-image {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+        }
+
+        .image-details-mobile-image img,
+        .image-details-mobile-image__img {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            object-fit: contain !important;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .image-details-mobile-image {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+        }
+
+        .image-details-mobile-image img {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            object-fit: contain !important;
+        }
+    }
+</style>
+@endpush
+
 @if ($layout === 'short')
-    <section class="{{ $stripSectionClass }} py-16 sm:py-24">
+    <section class="{{ $stripSectionClass }} site-section image-details-section">
         <div class="site-container">
-            <div @class(['flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10'])>
+            <div @class(['flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-start lg:gap-10'])>
                 @if ($imageRight)
-                    <div class="flex w-full min-w-0 flex-col justify-start pt-4 flex-1 lg:pt-6">
+                    <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start pt-0 flex-1">
                         <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $mini ?: 'Why Choose Us?' }}</h3>
                         <h2 class="mt-3 font-sans text-3xl font-bold leading-tight {{ $stripTitleClass }} sm:text-4xl lg:text-[2.75rem]">
                             {!! nl2br(e($title ?: "One partner.\nEvery need.\nZero compromise.")) !!}
@@ -34,14 +76,14 @@
                             </ul>
                         @endif
                     </div>
-                    <div class="w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
-                        <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
+                    <div class="image-details-mobile-image w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
+                        <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="image-details-mobile-image__img">
                     </div>
                 @else
-                    <div class="w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
-                        <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
+                    <div class="image-details-mobile-image w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
+                        <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="image-details-mobile-image__img">
                     </div>
-                    <div class="flex w-full min-w-0 flex-col justify-start pt-4 flex-1 lg:pt-6">
+                    <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start pt-0 flex-1">
                         <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $mini ?: 'Why Choose Us?' }}</h3>
                         <h2 class="mt-3 font-sans text-3xl font-bold leading-tight {{ $stripTitleClass }} sm:text-4xl lg:text-[2.75rem]">
                             {!! nl2br(e($title ?: "One partner.\nEvery need.\nZero compromise.")) !!}
@@ -62,10 +104,10 @@
         </div>
     </section>
 @else
-    <section class="{{ $stripSectionClass }} py-16 sm:py-24">
-        <div @class(['flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-6'])>
+    <section class="{{ $stripSectionClass }} site-section image-details-section image-details-full">
+        <div @class(['flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:gap-5'])>
             @if ($imageRight)
-                <div class="flex w-full min-w-0 flex-col justify-start px-6 pb-12 pt-4 sm:px-8 flex-1 lg:pb-14 lg:pl-8 lg:pr-10 lg:pt-6 xl:pl-10 xl:pr-12">
+                <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start px-4 pb-8 pt-0 flex-1 sm:px-8 sm:pb-12 lg:pb-14 lg:pl-10 xl:pl-12">
                     <div class="max-w-xl">
                         <h3 class="text-xs font-bold uppercase tracking-[0.2em] {{ $stripMiniClass }}">{{ $mini ?: 'About Us' }}</h3>
                         <h2 class="mt-3 font-sans text-2xl font-bold leading-tight {{ $stripTitleClass }} sm:text-3xl lg:text-[2.25rem]">
@@ -83,14 +125,14 @@
                         @endif
                     </div>
                 </div>
-                <div class="w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
-                    <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
+                <div class="image-details-mobile-image w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
+                    <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="image-details-mobile-image__img">
                 </div>
             @else
-                <div class="w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
-                    <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
+                <div class="image-details-mobile-image w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
+                    <img src="{{ $imgUrl }}" alt="" loading="lazy" decoding="async" class="image-details-mobile-image__img">
                 </div>
-                <div class="flex w-full min-w-0 flex-col justify-start px-6 pb-12 pt-4 sm:px-8 flex-1 lg:pb-14 lg:pl-8 lg:pr-10 lg:pt-6 xl:pl-10 xl:pr-12">
+                <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start px-4 pb-8 pt-0 flex-1 sm:px-8 sm:pb-12 lg:pb-14 lg:pr-10 xl:pr-12">
                     <div class="max-w-xl">
                         <h3 class="text-xs font-bold uppercase tracking-[0.2em] {{ $stripMiniClass }}">{{ $mini ?: 'About Us' }}</h3>
                         <h2 class="mt-3 font-sans text-2xl font-bold leading-tight {{ $stripTitleClass }} sm:text-3xl lg:text-[2.25rem]">

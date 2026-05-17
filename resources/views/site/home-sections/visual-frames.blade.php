@@ -1,5 +1,5 @@
 @if (! empty($visualFrames['show']))
-<section class="bg-white py-16 sm:py-24">
+<section class="bg-white site-section">
     <div class="site-container">
         @php($vfHasHeader = filled($visualFrames['mini_title'] ?? null) || filled($visualFrames['title'] ?? null) || filled($visualFrames['description'] ?? null))
         @if ($vfHasHeader)
@@ -23,7 +23,7 @@
 
         @php($tiles = $visualFrames['items'] ?? [])
         @if (count($tiles) > 0)
-            <div class="flex flex-col gap-8 sm:gap-10">
+            <div class="flex flex-col gap-5 sm:gap-8 lg:gap-10">
                 @foreach (array_chunk($tiles, 3) as $rowTiles)
                     <div class="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
                         @foreach ($rowTiles as $tile)

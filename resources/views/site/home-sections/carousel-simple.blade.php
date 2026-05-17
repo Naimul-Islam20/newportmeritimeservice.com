@@ -1,6 +1,6 @@
 {{-- Simple carousel: Our Services / What We Do --}}
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-<section id="services" class="{{ $stripSectionClass }} py-16 sm:py-24">
+<section id="services" class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $section->mini_title ?: 'Our Services' }}</h3>
@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="mt-10 site-container">
+    <div class="site-section-after-title site-container">
         <div class="swiper services-swiper">
             <div class="swiper-wrapper">
                 @forelse ($items as $item)

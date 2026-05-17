@@ -6,7 +6,7 @@
 @php($sectionTitle = $section->title)
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
-<section class="{{ $stripSectionClass }} py-16 sm:py-24">
+<section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
         @if (filled($sectionTitle))
             <div class="mb-10">
@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <div class="grid gap-8 lg:grid-cols-2">
+        <div class="site-section-gap grid lg:grid-cols-2">
             <div class="rounded-2xl border p-8 shadow-sm transition hover:shadow-md sm:p-12 {{ $stripCardClass }} {{ $stripCardBorderClass }}">
                 <h3 class="font-sans text-3xl font-bold text-secondary">{{ $leftTitle ?: 'Our Mission' }}</h3>
                 @if (filled($leftDesc))

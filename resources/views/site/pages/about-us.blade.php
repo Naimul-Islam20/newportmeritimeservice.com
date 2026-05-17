@@ -22,7 +22,7 @@
 </section>
 
 {{-- 2. Trust --}}
-<section class="bg-white py-16 lg:py-24">
+<section class="bg-white site-section">
     <div class="site-container">
         <div class="flex flex-col items-center gap-12 lg:flex-row">
             <div class="w-full lg:w-1/2">
