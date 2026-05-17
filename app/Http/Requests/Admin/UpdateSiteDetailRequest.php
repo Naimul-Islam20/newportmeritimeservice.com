@@ -26,6 +26,8 @@ class UpdateSiteDetailRequest extends FormRequest
             'theme_brand_accent_hover',
             'theme_brand_topbar_muted',
             'theme_footer_overlay_base',
+            'theme_section_strip_a',
+            'theme_section_strip_b',
         ];
         $merge = [];
         foreach ($hexKeys as $key) {
@@ -72,6 +74,8 @@ class UpdateSiteDetailRequest extends FormRequest
             'theme_brand_topbar_muted' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'theme_footer_overlay_base' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'theme_footer_overlay_opacity' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'theme_section_strip_a' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_section_strip_b' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ];
     }
 }

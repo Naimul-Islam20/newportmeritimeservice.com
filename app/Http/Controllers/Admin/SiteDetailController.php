@@ -112,26 +112,27 @@ class SiteDetailController extends Controller
         $themePayload = [];
         if (! empty($data['reset_theme_colors'])) {
             $themePayload = [
+                'theme_brand_accent' => null,
                 'theme_brand_navy' => null,
                 'theme_brand_navy_mid' => null,
-                'theme_brand_accent' => null,
                 'theme_brand_accent_hover' => null,
                 'theme_brand_topbar_muted' => null,
                 'theme_footer_overlay_base' => null,
                 'theme_footer_overlay_opacity' => null,
+                'theme_section_strip_a' => null,
+                'theme_section_strip_b' => null,
             ];
         } else {
-            $overlayBase = $normalizeHex($data['theme_footer_overlay_base'] ?? null);
             $themePayload = [
-                'theme_brand_navy' => $normalizeHex($data['theme_brand_navy'] ?? null),
-                'theme_brand_navy_mid' => $normalizeHex($data['theme_brand_navy_mid'] ?? null),
                 'theme_brand_accent' => $normalizeHex($data['theme_brand_accent'] ?? null),
-                'theme_brand_accent_hover' => $normalizeHex($data['theme_brand_accent_hover'] ?? null),
-                'theme_brand_topbar_muted' => $normalizeHex($data['theme_brand_topbar_muted'] ?? null),
-                'theme_footer_overlay_base' => $overlayBase,
-                'theme_footer_overlay_opacity' => $overlayBase !== null && isset($data['theme_footer_overlay_opacity']) && $data['theme_footer_overlay_opacity'] !== null
-                    ? max(0, min(100, (int) $data['theme_footer_overlay_opacity']))
-                    : null,
+                'theme_brand_navy' => $normalizeHex($data['theme_brand_navy'] ?? null),
+                'theme_brand_navy_mid' => null,
+                'theme_brand_accent_hover' => null,
+                'theme_brand_topbar_muted' => null,
+                'theme_footer_overlay_base' => null,
+                'theme_footer_overlay_opacity' => null,
+                'theme_section_strip_a' => $normalizeHex($data['theme_section_strip_a'] ?? null),
+                'theme_section_strip_b' => $normalizeHex($data['theme_section_strip_b'] ?? null),
             ];
         }
 

@@ -5,14 +5,26 @@
 
 @push('styles')
     <style>
-        /* Google Maps embeds ship fixed widths; force full width (full-bleed strip) */
-        .contact-map-embed iframe {
+        /* Full-bleed Google Maps; remove inline-gap below iframe */
+        .contact-map-section {
+            line-height: 0;
+        }
+
+        .contact-map-section__heading {
+            line-height: normal;
+        }
+
+        .contact-map-embed iframe,
+        .contact-map-section__frame {
             display: block;
             width: 100% !important;
             max-width: 100% !important;
-            height: 280px !important;
-            min-height: 240px;
+            height: 360px !important;
+            min-height: 280px;
+            margin: 0;
+            padding: 0;
             border: 0;
+            vertical-align: bottom;
         }
     </style>
 @endpush
@@ -23,8 +35,15 @@
     @php($emails = $sd && is_array($sd->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [])
     @php($phones = $sd && is_array($sd->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [])
     @php($mapRaw = $sd ? trim((string) ($sd->map ?? '')) : '')
+    @php($mapIsIframe = $mapRaw !== '' && stripos($mapRaw, '<iframe') !== false)
+    @php($mapIsUrl = $mapRaw !== '' && ! $mapIsIframe && filter_var($mapRaw, FILTER_VALIDATE_URL))
+    @php($mapEmbedUrl = null)
+    @if ($mapRaw === '' && $loc !== '')
+        @php($mapEmbedUrl = 'https://maps.google.com/maps?q=' . rawurlencode(preg_replace('/\s+/u', ' ', $loc)) . '&output=embed')
+    @endif
+    @php($showMap = $mapIsIframe || $mapIsUrl || filled($mapEmbedUrl))
 
-    <section class="overflow-x-hidden bg-background py-14 sm:py-20">
+    <section class="overflow-x-hidden bg-background pt-14 pb-14 sm:pt-20 {{ $showMap ? 'sm:pb-12' : 'sm:pb-20' }}">
         <div class="site-container">
             <div class="mx-auto max-w-2xl text-center">
                 <h1 class="font-serif text-4xl font-semibold text-foreground sm:text-5xl">
@@ -88,7 +107,7 @@
                 <div class="lg:col-span-3">
                     <div class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5 sm:p-10">
                         @if (session('status'))
-                            <div class="mb-8 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100">
+                            <div class="mb-8 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-secondary">
                                 {{ session('status') }}
                             </div>
                         @endif
@@ -148,7 +167,7 @@
                             </div>
 
                             <button type="submit"
-                                class="w-full rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-slate-900 shadow-md transition hover:bg-primary-hover sm:w-auto sm:min-w-[200px]">
+                                class="w-full rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-secondary shadow-md transition hover:brightness-95 sm:w-auto sm:min-w-[200px]">
                                 Send message
                             </button>
                         </form>
@@ -156,33 +175,28 @@
                 </div>
             </div>
         </div>
-
-        {{-- Full viewport-width map below the form row (not limited by site-container) --}}
-        @if ($mapRaw !== '')
-            <div class="mt-16 w-full max-w-none border-t border-foreground/10 bg-foreground/[0.02] pt-8">
-                <div class="site-container mb-4">
-                    <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Map</h2>
-                </div>
-                <div class="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
-                    @if (stripos($mapRaw, '<iframe') !== false)
-                        <div class="contact-map-embed w-full min-w-0">
-                            {!! $mapRaw !!}
-                        </div>
-                    @elseif (filter_var($mapRaw, FILTER_VALIDATE_URL))
-                        <iframe
-                            title="Map"
-                            src="{{ $mapRaw }}"
-                            class="block h-[280px] w-full min-w-0 border-0"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            allowfullscreen></iframe>
-                    @else
-                        <div class="site-container py-6 text-sm text-foreground/70">
-                            {!! nl2br(e($mapRaw)) !!}
-                        </div>
-                    @endif
-                </div>
-            </div>
-        @endif
     </section>
+
+    @if ($showMap)
+        <section class="contact-map-section w-full border-t border-foreground/10" aria-label="Google Maps">
+            <div class="site-container contact-map-section__heading py-6">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Find us on Google Maps</h2>
+            </div>
+                <div class="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
+                @if ($mapIsIframe)
+                    <div class="contact-map-embed w-full min-w-0">
+                        {!! $mapRaw !!}
+                    </div>
+                @else
+                    <iframe
+                        title="Google Maps"
+                        src="{{ $mapIsUrl ? $mapRaw : $mapEmbedUrl }}"
+                        class="contact-map-section__frame w-full min-w-0"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen></iframe>
+                @endif
+            </div>
+        </section>
+    @endif
 @endsection

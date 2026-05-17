@@ -22,6 +22,8 @@ class SiteDetail extends Model
         'theme_brand_topbar_muted',
         'theme_footer_overlay_base',
         'theme_footer_overlay_opacity',
+        'theme_section_strip_a',
+        'theme_section_strip_b',
     ];
 
     protected function casts(): array
@@ -42,13 +44,10 @@ class SiteDetail extends Model
     public static function defaultThemeFormValues(): array
     {
         return [
+            'theme_brand_accent' => '#e9a70e',
             'theme_brand_navy' => '#112a6d',
-            'theme_brand_navy_mid' => '#213b86',
-            'theme_brand_accent' => '#3eb0e3',
-            'theme_brand_accent_hover' => '#2b9bc9',
-            'theme_brand_topbar_muted' => '#b8c6e6',
-            'theme_footer_overlay_base' => '#0a1946',
-            'theme_footer_overlay_opacity' => 65,
+            'theme_section_strip_a' => '#e0f2fe',
+            'theme_section_strip_b' => '#fefce8',
         ];
     }
 
@@ -61,12 +60,10 @@ class SiteDetail extends Model
     {
         $themeDef = self::defaultThemeFormValues();
         $keys = [
-            'theme_brand_navy',
-            'theme_brand_navy_mid',
             'theme_brand_accent',
-            'theme_brand_accent_hover',
-            'theme_brand_topbar_muted',
-            'theme_footer_overlay_base',
+            'theme_brand_navy',
+            'theme_section_strip_a',
+            'theme_section_strip_b',
         ];
         $out = [];
         foreach ($keys as $key) {
@@ -94,11 +91,10 @@ class SiteDetail extends Model
     public static function themeCssVariableMap(): array
     {
         return [
-            'theme_brand_navy' => '--brand-navy',
-            'theme_brand_navy_mid' => '--brand-navy-mid',
-            'theme_brand_accent' => '--brand-accent',
-            'theme_brand_accent_hover' => '--brand-accent-hover',
-            'theme_brand_topbar_muted' => '--brand-topbar-muted',
+            'theme_brand_accent' => '--primary',
+            'theme_brand_navy' => '--secondary',
+            'theme_section_strip_a' => '--section-strip-a',
+            'theme_section_strip_b' => '--section-strip-b',
         ];
     }
 
@@ -114,22 +110,11 @@ class SiteDetail extends Model
         foreach (self::themeCssVariableMap() as $attr => $var) {
             $out[$var] = is_string($formDefaults[$attr] ?? null) ? strtolower((string) $formDefaults[$attr]) : '';
         }
-        $out['--brand-footer-overlay'] = 'rgba(10, 25, 70, 0.65)';
 
         foreach (self::themeCssVariableMap() as $attr => $var) {
             $v = $this->{$attr};
             if (is_string($v) && preg_match('/^#[0-9A-Fa-f]{6}$/', $v)) {
                 $out[$var] = strtolower($v);
-            }
-        }
-
-        $base = $this->theme_footer_overlay_base;
-        $op = $this->theme_footer_overlay_opacity;
-        if (is_string($base) && preg_match('/^#[0-9A-Fa-f]{6}$/', $base)) {
-            $rgb = self::hexToRgb($base);
-            if ($rgb !== null) {
-                $pct = $op !== null ? max(0, min(100, (int) $op)) : (int) $formDefaults['theme_footer_overlay_opacity'];
-                $out['--brand-footer-overlay'] = self::formatRgba($rgb, $pct / 100);
             }
         }
 

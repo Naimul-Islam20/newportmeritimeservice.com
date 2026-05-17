@@ -108,62 +108,46 @@
                     Reset all theme colors to built-in defaults
                 </label>
                 @error('theme_brand_navy') <div class="error">{{ $message }}</div> @enderror
-                @error('theme_brand_navy_mid') <div class="error">{{ $message }}</div> @enderror
                 @error('theme_brand_accent') <div class="error">{{ $message }}</div> @enderror
-                @error('theme_brand_accent_hover') <div class="error">{{ $message }}</div> @enderror
-                @error('theme_brand_topbar_muted') <div class="error">{{ $message }}</div> @enderror
-                @error('theme_footer_overlay_base') <div class="error">{{ $message }}</div> @enderror
-                @error('theme_footer_overlay_opacity') <div class="error">{{ $message }}</div> @enderror
 
                 <div class="grid grid-2 theme-colors-grid">
                     <div class="theme-color-field">
-                        <label for="theme_brand_navy">Navy (main)</label>
+                        <label for="theme_brand_navy">Secondary</label>
                         <div class="theme-color-row">
                             <input id="theme_brand_navy_picker" type="color" value="{{ $themeHex['theme_brand_navy'] }}" aria-label="Pick navy" class="theme-swatch">
                             <input id="theme_brand_navy" name="theme_brand_navy" type="text" inputmode="text" autocomplete="off" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_brand_navy'] }}" class="theme-hex">
                         </div>
                     </div>
                     <div class="theme-color-field">
-                        <label for="theme_brand_navy_mid">Navy mid (borders)</label>
-                        <div class="theme-color-row">
-                            <input id="theme_brand_navy_mid_picker" type="color" value="{{ $themeHex['theme_brand_navy_mid'] }}" aria-label="Pick navy mid" class="theme-swatch">
-                            <input id="theme_brand_navy_mid" name="theme_brand_navy_mid" type="text" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_brand_navy_mid'] }}" class="theme-hex">
-                        </div>
-                    </div>
-                    <div class="theme-color-field">
-                        <label for="theme_brand_accent">Accent (CTAs, links)</label>
+                        <label for="theme_brand_accent">Primary</label>
                         <div class="theme-color-row">
                             <input id="theme_brand_accent_picker" type="color" value="{{ $themeHex['theme_brand_accent'] }}" aria-label="Pick accent" class="theme-swatch">
                             <input id="theme_brand_accent" name="theme_brand_accent" type="text" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_brand_accent'] }}" class="theme-hex">
                         </div>
                     </div>
-                    <div class="theme-color-field">
-                        <label for="theme_brand_accent_hover">Accent hover</label>
-                        <div class="theme-color-row">
-                            <input id="theme_brand_accent_hover_picker" type="color" value="{{ $themeHex['theme_brand_accent_hover'] }}" aria-label="Pick accent hover" class="theme-swatch">
-                            <input id="theme_brand_accent_hover" name="theme_brand_accent_hover" type="text" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_brand_accent_hover'] }}" class="theme-hex">
-                        </div>
-                    </div>
-                    <div class="theme-color-field">
-                        <label for="theme_brand_topbar_muted">Muted text (top bar / sidebar)</label>
-                        <div class="theme-color-row">
-                            <input id="theme_brand_topbar_muted_picker" type="color" value="{{ $themeHex['theme_brand_topbar_muted'] }}" aria-label="Pick muted" class="theme-swatch">
-                            <input id="theme_brand_topbar_muted" name="theme_brand_topbar_muted" type="text" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_brand_topbar_muted'] }}" class="theme-hex">
-                        </div>
-                    </div>
-                    <div class="theme-color-field">
-                        <label for="theme_footer_overlay_base">Footer overlay (base)</label>
-                        <div class="theme-color-row">
-                            <input id="theme_footer_overlay_base_picker" type="color" value="{{ $themeHex['theme_footer_overlay_base'] }}" aria-label="Pick footer overlay" class="theme-swatch">
-                            <input id="theme_footer_overlay_base" name="theme_footer_overlay_base" type="text" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_footer_overlay_base'] }}" class="theme-hex">
-                        </div>
-                    </div>
                 </div>
-                <div style="margin-top: 12px;">
-                    @php($opOld = old('theme_footer_overlay_opacity'))
-                    @php($opVal = $opOld !== null && $opOld !== '' ? (int) $opOld : ($detail->theme_footer_overlay_opacity ?? $themeDef['theme_footer_overlay_opacity']))
-                    <label for="theme_footer_overlay_opacity">Footer overlay opacity (%)</label>
-                    <input id="theme_footer_overlay_opacity" name="theme_footer_overlay_opacity" type="number" min="0" max="100" value="{{ $opVal }}" style="max-width: 120px;">
+
+                <h3 style="margin: 18px 0 8px 0; font-size: 14px; font-weight: 600;">Alternating section backgrounds</h3>
+                <p style="margin: 0 0 12px 0; color:#64748b; font-size: 13px; line-height: 1.45;">
+                    Home and menu page CMS sections alternate between these two colors (1st / 3rd / … vs 2nd / 4th / …). Defaults match sky-100 and yellow-50.
+                </p>
+                @error('theme_section_strip_a') <div class="error">{{ $message }}</div> @enderror
+                @error('theme_section_strip_b') <div class="error">{{ $message }}</div> @enderror
+                <div class="grid grid-2 theme-colors-grid">
+                    <div class="theme-color-field">
+                        <label for="theme_section_strip_a">Section color A</label>
+                        <div class="theme-color-row">
+                            <input id="theme_section_strip_a_picker" type="color" value="{{ $themeHex['theme_section_strip_a'] }}" aria-label="Pick section color A" class="theme-swatch">
+                            <input id="theme_section_strip_a" name="theme_section_strip_a" type="text" inputmode="text" autocomplete="off" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_section_strip_a'] }}" class="theme-hex">
+                        </div>
+                    </div>
+                    <div class="theme-color-field">
+                        <label for="theme_section_strip_b">Section color B</label>
+                        <div class="theme-color-row">
+                            <input id="theme_section_strip_b_picker" type="color" value="{{ $themeHex['theme_section_strip_b'] }}" aria-label="Pick section color B" class="theme-swatch">
+                            <input id="theme_section_strip_b" name="theme_section_strip_b" type="text" inputmode="text" autocomplete="off" pattern="^#[0-9A-Fa-f]{6}$" maxlength="7" value="{{ $themeHex['theme_section_strip_b'] }}" class="theme-hex">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -282,12 +266,10 @@
 <script>
     (() => {
         const syncPairs = [
-            ['theme_brand_navy_picker', 'theme_brand_navy'],
-            ['theme_brand_navy_mid_picker', 'theme_brand_navy_mid'],
             ['theme_brand_accent_picker', 'theme_brand_accent'],
-            ['theme_brand_accent_hover_picker', 'theme_brand_accent_hover'],
-            ['theme_brand_topbar_muted_picker', 'theme_brand_topbar_muted'],
-            ['theme_footer_overlay_base_picker', 'theme_footer_overlay_base'],
+            ['theme_brand_navy_picker', 'theme_brand_navy'],
+            ['theme_section_strip_a_picker', 'theme_section_strip_a'],
+            ['theme_section_strip_b_picker', 'theme_section_strip_b'],
         ];
         const hexOk = (v) => /^#[0-9A-Fa-f]{6}$/.test((v || '').trim());
         syncPairs.forEach(([pid, tid]) => {

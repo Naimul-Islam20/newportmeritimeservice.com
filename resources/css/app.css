@@ -9,7 +9,7 @@
 
 /*
  * Brand palette + layout: public site and admin panel both load this file via Vite.
- * Use Tailwind `brand-*` / semantic colors on the site; admin inline CSS uses var(--brand-*), var(--admin-*).
+ * Theme tokens: primary, secondary (+ page background/foreground). Admin may override primary/secondary via Site Details.
  */
 :root {
     --font-geist-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
@@ -17,21 +17,13 @@
         ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
 
-    /* Maritime brand (header / footer / CTAs / admin sidebar) */
-    --brand-navy: #112a6d;
-    --brand-navy-mid: #213b86;
-    --brand-accent: #3eb0e3;
-    --brand-accent-hover: #2b9bc9;
-    --brand-topbar-muted: #b8c6e6;
-    --brand-footer-overlay: rgba(10, 25, 70, 0.65);
-
-    /* Page surface (Tailwind semantic) */
+    --primary: #e9a70e;
+    --secondary: #112a6d;
+    /* Alternating CMS section backgrounds (overridable in Site Details) */
+    --section-strip-a: #e0f2fe;
+    --section-strip-b: #fefce8;
     --background: #ffffff;
     --foreground: #171717;
-    --primary: #e9a70e;
-    --primary-hover: #ecc00d;
-    --primary-soft: #f7f0d8;
-    --secondary: var(--brand-navy);
 
     /* Admin-only surfaces (login + dashboard chrome) */
     --admin-page-bg: #f4f7fb;
@@ -77,17 +69,21 @@
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-primary: var(--primary);
-    --color-primary-hover: var(--primary-hover);
-    --color-primary-soft: var(--primary-soft);
     --color-secondary: var(--secondary);
-    --color-brand-navy: var(--brand-navy);
-    --color-brand-navy-mid: var(--brand-navy-mid);
-    --color-brand-accent: var(--brand-accent);
-    --color-brand-accent-hover: var(--brand-accent-hover);
-    --color-brand-topbar-muted: var(--brand-topbar-muted);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
     --font-serif: "Source Serif 4", Georgia, serif;
+}
+
+@layer utilities {
+  /* Alternating CMS sections — colors from --section-strip-a / --section-strip-b */
+  .section-strip-bg-primary {
+    background-color: var(--section-strip-a);
+  }
+
+  .section-strip-bg-secondary {
+    background-color: var(--section-strip-b);
+  }
 }
 
 @layer base {
@@ -142,6 +138,75 @@
 }
 
 @layer components {
+    /*
+     * Menu / submenu page hero: keep text below sticky header; background can fill section.
+     * --site-header-offset matches .site-header (top bar + main bar on lg).
+     */
+    .site-header {
+        --site-header-offset: 4.5rem;
+    }
+
+    @media (min-width: 1024px) {
+        .site-header {
+            --site-header-offset: 7.25rem;
+        }
+    }
+
+    .menu-page-hero {
+        scroll-margin-top: var(--site-header-offset);
+    }
+
+    .menu-page-hero__content {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        width: 100%;
+        height: 100%;
+        max-height: 300px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        gap: 0.75rem;
+    }
+
+    .menu-page-hero__title {
+        margin: 0;
+        max-width: 42rem;
+        font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+        font-size: 2.25rem;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        color: #fff;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @media (min-width: 640px) {
+        .menu-page-hero__title {
+            font-size: 3rem;
+        }
+    }
+
+    .menu-page-hero__lead {
+        margin: 0;
+        max-width: 42rem;
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.625;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+        max-height: calc(1.125rem * 1.625 * 5);
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        line-clamp: 5;
+        text-overflow: ellipsis;
+        overflow-wrap: anywhere;
+    }
+
     /* Mobile nav <details> / <summary> — hide default marker */
     .site-mobile-nav > summary {
         list-style: none;
@@ -162,7 +227,7 @@
 
     .site-desktop-nav__trigger:focus-visible,
     .site-desktop-dropdown-panel a:focus-visible {
-        outline: 2px solid var(--brand-accent);
+        outline: 2px solid var(--primary);
         outline-offset: 2px;
     }
 }
@@ -227,4 +292,29 @@
     .site-desktop-nav__caret {
         transition: transform 0.18s ease;
     }
+}
+
+/* Menu/submenu hero: always 300px — not affected by title/description length */
+section.menu-page-hero {
+    box-sizing: border-box;
+    height: 300px !important;
+    min-height: 300px !important;
+    max-height: 300px !important;
+    overflow: hidden !important;
+}
+
+section.menu-page-hero .menu-page-hero__title {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+section.menu-page-hero .menu-page-hero__lead {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
+    max-height: calc(1.125rem * 1.625 * 5) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }

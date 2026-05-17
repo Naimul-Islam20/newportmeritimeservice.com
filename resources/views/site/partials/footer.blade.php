@@ -9,9 +9,9 @@
         @if ($showFooterPhoto)
             <img src="{{ asset($defaultImg) }}" alt=""
                 class="h-full w-full object-cover object-center">
-            <div class="absolute inset-0" style="background: var(--brand-footer-overlay);"></div>
+            <div class="absolute inset-0" style="background: color-mix(in srgb, var(--secondary) 65%, transparent);"></div>
         @else
-            <div class="absolute inset-0 bg-brand-navy"></div>
+            <div class="absolute inset-0 bg-secondary"></div>
         @endif
     </div>
 
@@ -42,7 +42,7 @@
                         <div class="text-[15px] font-normal text-white/90 space-y-1 break-all sm:break-words">
                             @foreach ($emails as $email)
                                 <p>
-                                    <a href="mailto:{{ $email }}" class="transition hover:text-brand-accent">{{ $email }}</a>
+                                    <a href="mailto:{{ $email }}" class="transition hover:text-primary">{{ $email }}</a>
                                 </p>
                             @endforeach
                         </div>
@@ -53,7 +53,7 @@
                             @foreach ($phones as $phone)
                                 @php($tel = preg_replace('/[^0-9+]/', '', $phone))
                                 <p>
-                                    <a href="tel:{{ $tel }}" class="transition hover:text-brand-accent">{{ $phone }}</a>
+                                    <a href="tel:{{ $tel }}" class="transition hover:text-primary">{{ $phone }}</a>
                                 </p>
                             @endforeach
                         </div>
@@ -64,13 +64,13 @@
             <div class="w-full min-w-0 lg:max-w-xs lg:shrink-0">
                 <p class="mb-4 text-lg font-extrabold leading-tight sm:mb-6 sm:text-xl">Quick Links</p>
                 <ul class="mt-2 space-y-3 text-[15px] font-normal text-white/90">
-                    <li><a href="{{ route('home') }}" class="inline-block py-0.5 transition hover:text-brand-accent">Home</a></li>
-                    <li><a href="{{ route('ship-supply') }}" class="inline-block py-0.5 transition hover:text-brand-accent">Ship Supply</a></li>
-                    <li><a href="#" class="inline-block py-0.5 transition hover:text-brand-accent">Our Services</a></li>
-                    <li><a href="#" class="inline-block py-0.5 transition hover:text-brand-accent">Award</a></li>
-                    <li><a href="{{ route('contact.create') }}" class="inline-block py-0.5 transition hover:text-brand-accent">Contact</a></li>
+                    <li><a href="{{ route('home') }}" class="inline-block py-0.5 transition hover:text-primary">Home</a></li>
+                    <li><a href="{{ route('ship-supply') }}" class="inline-block py-0.5 transition hover:text-primary">Ship Supply</a></li>
+                    <li><a href="#" class="inline-block py-0.5 transition hover:text-primary">Our Services</a></li>
+                    <li><a href="#" class="inline-block py-0.5 transition hover:text-primary">Award</a></li>
+                    <li><a href="{{ route('contact.create') }}" class="inline-block py-0.5 transition hover:text-primary">Contact</a></li>
                     <li class="pt-1">
-                        <a href="{{ route('quote.request') }}" class="inline-block rounded-md bg-brand-accent px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition hover:bg-brand-accent-hover">
+                        <a href="{{ route('quote.request') }}" class="inline-block rounded-md bg-primary px-4 py-2 text-xs font-bold uppercase tracking-widest text-secondary shadow-sm transition hover:brightness-95">
                             Get a quote
                         </a>
                     </li>
@@ -81,10 +81,10 @@
     </div>
 
     {{-- Copyright bar --}}
-    <div class="relative z-10 bg-brand-navy text-brand-topbar-muted text-xs sm:text-sm">
+    <div class="relative z-10 bg-secondary text-xs text-white/70 sm:text-sm">
         <div class="site-container flex flex-wrap items-center justify-center py-2 sm:justify-between sm:py-0">
             <div class="flex w-full items-center justify-center sm:w-auto sm:justify-start">
-                <span class="border-x border-brand-navy-mid px-4 py-2.5 text-center sm:px-6">
+                <span class="border-x border-white/15 px-4 py-2.5 text-center sm:px-6">
                     &copy;{{ date('Y') }} NEWPORT MARITIME SERVICE
                 </span>
             </div>

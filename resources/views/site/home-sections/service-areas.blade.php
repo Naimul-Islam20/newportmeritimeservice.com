@@ -8,14 +8,14 @@
 @php($highlightDescription = $serviceArea['highlight_description'] ?? '')
 @php($steps = is_array($serviceArea['steps'] ?? null) ? $serviceArea['steps'] : [])
 
-<section class="relative overflow-hidden bg-slate-900 py-16 sm:py-24">
+<section class="relative overflow-hidden bg-secondary py-16 sm:py-24">
     <div class="absolute inset-0">
         <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?q=80&w=2070&auto=format&fit=crop" class="h-full w-full object-cover opacity-20 mix-blend-overlay" alt="">
     </div>
 
     <div class="relative z-10 site-container">
         <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">{{ $mini }}</h3>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-primary">{{ $mini }}</h3>
             <h2 class="mt-2 font-sans text-4xl font-bold text-white sm:text-5xl">{{ $title }}</h2>
         </div>
 
@@ -34,7 +34,7 @@
                     <div class="hidden h-12 w-px bg-white/30 md:block"></div>
                     <div class="h-px w-16 bg-white/30 md:hidden"></div>
                     @if (filled($highlightDescription))
-                        <p class="text-base leading-relaxed text-slate-300 md:max-w-3xl">
+                        <p class="text-base leading-relaxed text-white/70 md:max-w-3xl">
                             {!! nl2br(e($highlightDescription)) !!}
                         </p>
                     @endif

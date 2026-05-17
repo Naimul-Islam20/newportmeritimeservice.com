@@ -39,8 +39,8 @@
         }
 
         aside {
-            background: var(--brand-navy);
-            color: var(--brand-topbar-muted);
+            background: var(--secondary);
+            color: color-mix(in srgb, var(--secondary) 35%, white);
             padding: 20px;
             position: relative;
         }
@@ -51,9 +51,9 @@
         }
 
         .nav-group {
-            border: 1px solid color-mix(in srgb, var(--brand-navy-mid) 55%, white);
+            border: 1px solid color-mix(in srgb, var(--secondary) 55%, white);
             border-radius: 8px;
-            background: color-mix(in srgb, var(--brand-navy-mid) 35%, transparent);
+            background: color-mix(in srgb, var(--secondary) 35%, transparent);
             overflow: hidden;
         }
 
@@ -64,7 +64,7 @@
             padding: 8px 9px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--brand-topbar-muted);
+            color: color-mix(in srgb, var(--secondary) 35%, white);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -110,7 +110,7 @@
         }
 
         aside a {
-            color: var(--brand-topbar-muted);
+            color: color-mix(in srgb, var(--secondary) 35%, white);
             text-decoration: none;
             display: block;
             padding: 8px 9px;
@@ -118,19 +118,19 @@
             font-size: 13px;
             font-weight: 600;
             background: color-mix(in srgb, white 8%, transparent);
-            border: 1px solid color-mix(in srgb, var(--brand-topbar-muted) 28%, transparent);
+            border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--secondary) 35%, white) 28%, transparent);
         }
 
         aside a:hover {
-            background: color-mix(in srgb, var(--brand-accent) 32%, transparent);
-            border-color: color-mix(in srgb, var(--brand-accent-hover) 45%, white);
+            background: color-mix(in srgb, var(--primary) 32%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 45%, white);
             color: #fff;
         }
 
         aside a.active {
-            background: var(--brand-accent);
-            border-color: var(--brand-accent-hover);
-            color: #fff;
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--secondary);
             font-weight: 600;
         }
 
@@ -144,7 +144,7 @@
             justify-content: space-between;
             align-items: center;
             background: #fff;
-            border-bottom: 1px solid color-mix(in srgb, var(--brand-navy-mid) 22%, #e5e7eb);
+            border-bottom: 1px solid color-mix(in srgb, var(--secondary) 22%, #e5e7eb);
             padding: 3px 18px;
             position: sticky;
             top: 0;
@@ -183,7 +183,7 @@
 
         .menu-toggle {
             display: none;
-            background: var(--brand-navy);
+            background: var(--secondary);
             color: #fff;
             border: 0;
             border-radius: 6px;
@@ -268,12 +268,12 @@
         }
 
         .btn-primary {
-            background: var(--brand-accent);
-            color: #fff;
+            background: var(--primary);
+            color: var(--secondary);
         }
 
         .btn-primary:hover {
-            background: var(--brand-accent-hover);
+            filter: brightness(0.95);
         }
 
         .btn-danger {
@@ -313,7 +313,7 @@
         }
 
         .status-review {
-            background: var(--primary-soft);
+            background: color-mix(in srgb, var(--primary) 12%, white);
             color: var(--secondary);
         }
 
@@ -326,7 +326,7 @@
         }
 
         .flash-warning {
-            background: var(--primary-soft);
+            background: color-mix(in srgb, var(--primary) 12%, white);
             color: var(--secondary);
             border: 1px solid var(--primary);
             padding: 10px;

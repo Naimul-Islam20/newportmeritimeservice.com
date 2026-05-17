@@ -26,11 +26,14 @@ class PageController extends Controller
             ->first();
 
         if ($sub) {
+            $cover = $sub->coverImageUrl();
+
             return view('site.pages.menu-page', [
                 'title' => $sub->label.' — '.config('app.name'),
                 'metaDescription' => $sub->description ?: null,
                 'heading' => $sub->label,
                 'lead' => $sub->description ?: null,
+                'heroImageUrl' => $cover !== '' ? $cover : null,
                 'pageContent' => $sub->page_content,
                 'pageSections' => $sub->pageSections()->ordered()->where('is_active', true)->get(),
             ]);

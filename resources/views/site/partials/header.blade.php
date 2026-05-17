@@ -1,23 +1,23 @@
-<div class="w-full min-w-0">
+<div class="site-header sticky top-0 z-50 w-full min-w-0">
     <!-- Top Bar (desktop) -->
-    <div class="hidden bg-brand-navy text-brand-topbar-muted text-sm lg:block">
+    <div class="hidden bg-secondary text-white/70 text-sm lg:block">
         <div class="site-container flex flex-wrap items-center justify-between gap-y-2">
             <div class="flex min-w-0 flex-wrap items-center">
-                <a href="tel:+88031724728" class="border-x border-brand-navy-mid px-4 py-2.5 transition hover:text-white sm:px-6">
+                <a href="tel:+88031724728" class="border-x border-white/15 px-4 py-2.5 transition hover:text-white sm:px-6">
                     +880-31-724728
                 </a>
-                <a href="mailto:newportmaritimeservice@gmail.com" class="max-w-[200px] truncate border-r border-brand-navy-mid px-4 py-2.5 transition hover:text-white sm:max-w-none sm:px-6">
+                <a href="mailto:newportmaritimeservice@gmail.com" class="max-w-[200px] truncate border-r border-white/15 px-4 py-2.5 transition hover:text-white sm:max-w-none sm:px-6">
                     newportmaritimeservice@gmail.com
                 </a>
             </div>
             <div class="flex flex-shrink-0 items-center">
-                <a href="{{ route('contact.create') }}" class="border-l border-brand-navy-mid px-4 py-2.5 transition hover:text-white sm:px-6">
+                <a href="{{ route('contact.create') }}" class="border-l border-white/15 px-4 py-2.5 transition hover:text-white sm:px-6">
                     Contact Us
                 </a>
-                <a href="#" class="border-l border-brand-navy-mid px-4 py-2.5 transition hover:text-white sm:px-6">
+                <a href="#" class="border-l border-white/15 px-4 py-2.5 transition hover:text-white sm:px-6">
                     Products
                 </a>
-                <a href="#" class="border-x border-brand-navy-mid px-4 py-2.5 transition hover:text-white sm:px-6">
+                <a href="#" class="border-x border-white/15 px-4 py-2.5 transition hover:text-white sm:px-6">
                     Your Spare Parts
                 </a>
             </div>
@@ -25,14 +25,14 @@
     </div>
 
     <!-- Main Header -->
-    <header class="sticky top-0 z-50 w-full min-w-0 max-w-full overflow-visible bg-white py-3 shadow-sm sm:py-4">
+    <header class="w-full min-w-0 max-w-full overflow-visible bg-white py-3 shadow-sm sm:py-4">
         <div class="site-container flex items-center justify-between gap-3 overflow-visible">
             @php($headerLogo = is_string($siteDetails->header_logo_path ?? null) ? trim($siteDetails->header_logo_path) : '')
             <a href="{{ route('home') }}" class="flex min-w-0 shrink items-center gap-2 no-underline">
                 <img src="{{ $headerLogo !== '' ? asset($headerLogo) : asset('newport-logo.png') }}" alt="{{ config('app.name') }}" class="h-9 w-auto max-w-[min(100%,180px)] object-contain object-left sm:h-10 lg:h-12 lg:max-w-none">
             </a>
 
-            @php($quoteBtnClass = 'inline-flex shrink-0 items-center justify-center rounded-md bg-brand-accent px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm transition hover:bg-brand-accent-hover hover:text-white sm:px-4 sm:py-2.5 sm:text-xs lg:text-sm')
+            @php($quoteBtnClass = 'inline-flex shrink-0 items-center justify-center rounded-md bg-primary px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-secondary shadow-sm transition hover:brightness-95 sm:px-4 sm:py-2.5 sm:text-xs lg:text-sm')
 
             {{-- Mobile menu --}}
             <details id="siteMobileNav" class="site-mobile-nav relative lg:hidden">
@@ -56,8 +56,8 @@
                         <div class="flex flex-col gap-1 border-t border-foreground/5 bg-foreground/[0.02] px-2 py-2">
                             @foreach ($menu->subMenus as $child)
                             <a href="{{ $child->siteNavHref() }}"
-                                @class([ 'block rounded-lg px-3 py-2.5 text-sm font-medium transition' , 'bg-brand-accent font-bold uppercase tracking-wide text-white hover:bg-brand-accent-hover'=> $child->isQuoteNavItem(),
-                                'text-foreground/80 hover:bg-foreground/5 hover:text-brand-accent' => ! $child->isQuoteNavItem(),
+                                @class([ 'block rounded-lg px-3 py-2.5 text-sm font-medium transition' , 'bg-primary font-bold uppercase tracking-wide text-secondary hover:brightness-95'=> $child->isQuoteNavItem(),
+                                'text-foreground/80 hover:bg-foreground/5 hover:text-primary' => ! $child->isQuoteNavItem(),
                                 ])>
                                 {{ $child->label }}
                             </a>
@@ -66,7 +66,7 @@
                     </details>
                     @else
                     <a href="{{ $menu->siteNavHref() }}"
-                        @class([ 'block px-4 py-3.5 text-base font-medium transition' , 'border-b border-foreground/10 text-foreground hover:bg-foreground/5 hover:text-brand-accent'=> ! $menu->isQuoteNavItem(),
+                        @class([ 'block px-4 py-3.5 text-base font-medium transition' , 'border-b border-foreground/10 text-foreground hover:bg-foreground/5 hover:text-primary'=> ! $menu->isQuoteNavItem(),
                         $quoteBtnClass => $menu->isQuoteNavItem(),
                         'mx-3 my-3 w-[calc(100%-1.5rem)]' => $menu->isQuoteNavItem(),
                         ])>
@@ -86,8 +86,8 @@
                         aria-haspopup="true"
                         @class([ 'site-desktop-nav__trigger flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-[0.9375rem] font-semibold tracking-tight transition-colors duration-200' ,
                         $quoteBtnClass=> $menu->isQuoteNavItem(),
-                        'text-foreground/90 hover:bg-slate-100/90 hover:text-brand-accent' => ! $menu->isQuoteNavItem() && ! $menu->isActiveBranch(),
-                        'text-brand-accent hover:bg-slate-100/90' => ! $menu->isQuoteNavItem() && $menu->isActiveBranch(),
+                        'text-foreground/90 hover:bg-foreground/5/90 hover:text-primary' => ! $menu->isQuoteNavItem() && ! $menu->isActiveBranch(),
+                        'text-primary hover:bg-foreground/5/90' => ! $menu->isQuoteNavItem() && $menu->isActiveBranch(),
                         ])>
                         <span class="min-w-0">{{ $menu->label }}</span>
                         <span
@@ -101,12 +101,12 @@
                         </span>
                     </a>
                     <div class="site-desktop-nav__dropdown" role="menu" aria-label="{{ $menu->label }}">
-                        <div class="site-desktop-dropdown-panel flex flex-col gap-0.5 rounded-xl border border-black/[0.08] bg-white p-1.5 shadow-lg shadow-slate-900/10 ring-1 ring-black/[0.04]">
+                        <div class="site-desktop-dropdown-panel flex flex-col gap-0.5 rounded-xl border border-black/[0.08] bg-white p-1.5 shadow-lg shadow-secondary/10 ring-1 ring-black/[0.04]">
                             @foreach ($menu->subMenus as $child)
                             <a href="{{ $child->siteNavHref() }}" role="menuitem"
-                                @class([ 'block rounded-lg px-3 py-2.5 text-left text-[0.875rem] font-medium transition' , 'bg-brand-accent text-center font-bold uppercase tracking-wide text-white hover:bg-brand-accent-hover'=> $child->isQuoteNavItem(),
-                                'text-foreground/90 hover:bg-slate-50 hover:text-brand-accent' => ! $child->isQuoteNavItem() && ! $child->isCurrent(),
-                                'bg-slate-50 font-semibold text-brand-accent' => ! $child->isQuoteNavItem() && $child->isCurrent(),
+                                @class([ 'block rounded-lg px-3 py-2.5 text-left text-[0.875rem] font-medium transition' , 'bg-primary text-center font-bold uppercase tracking-wide text-secondary hover:brightness-95'=> $child->isQuoteNavItem(),
+                                'text-foreground/90 hover:bg-foreground/5 hover:text-primary' => ! $child->isQuoteNavItem() && ! $child->isCurrent(),
+                                'bg-foreground/5 font-semibold text-primary' => ! $child->isQuoteNavItem() && $child->isCurrent(),
                                 ])>
                                 {{ $child->label }}
                             </a>
@@ -118,8 +118,8 @@
                 <a href="{{ $menu->siteNavHref() }}"
                     @class([ 'shrink-0 rounded-lg px-3 py-2.5 text-[0.9375rem] font-semibold tracking-tight transition-colors duration-200' ,
                     $quoteBtnClass=> $menu->isQuoteNavItem(),
-                    'text-foreground/90 hover:bg-slate-100/90 hover:text-brand-accent' => ! $menu->isQuoteNavItem() && ! $menu->isCurrent(),
-                    'text-brand-accent hover:bg-slate-100/90' => ! $menu->isQuoteNavItem() && $menu->isCurrent(),
+                    'text-foreground/90 hover:bg-foreground/5/90 hover:text-primary' => ! $menu->isQuoteNavItem() && ! $menu->isCurrent(),
+                    'text-primary hover:bg-foreground/5/90' => ! $menu->isQuoteNavItem() && $menu->isCurrent(),
                     ])>
                     {{ $menu->label }}
                 </a>

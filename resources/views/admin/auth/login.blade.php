@@ -19,8 +19,8 @@
             place-items: center;
             padding: 22px;
             background:
-                radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--brand-accent) 22%, transparent), transparent 45%),
-                radial-gradient(circle at 88% 85%, color-mix(in srgb, var(--brand-navy) 22%, transparent), transparent 42%),
+                radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 45%),
+                radial-gradient(circle at 88% 85%, color-mix(in srgb, var(--secondary) 22%, transparent), transparent 42%),
                 var(--admin-page-bg);
             font-family: var(--font-geist-sans), Arial, sans-serif;
             color: #0f172a;
@@ -84,8 +84,8 @@
 
         input[type="email"]:focus,
         input[type="password"]:focus {
-            border-color: var(--brand-accent);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 28%, transparent);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 28%, transparent);
         }
 
         .remember {
@@ -101,7 +101,7 @@
             margin: 0;
             width: 16px;
             height: 16px;
-            accent-color: var(--brand-accent);
+            accent-color: var(--primary);
         }
 
         .error {
@@ -119,15 +119,15 @@
             padding: 11px;
             border: 0;
             border-radius: 8px;
-            background: var(--brand-accent);
-            color: #fff;
+            background: var(--primary);
+            color: var(--secondary);
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.15s ease, background 0.15s ease;
         }
 
         button:hover {
-            background: var(--brand-accent-hover);
+            background: var(--primary);
             transform: translateY(-1px);
         }
     </style>

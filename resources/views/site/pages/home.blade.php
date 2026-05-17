@@ -43,7 +43,7 @@
 
 @section('content')
 {{-- Hero Carousel --}}
-<section class="relative h-[480px] w-full overflow-hidden bg-slate-900 md:h-[560px] lg:h-[620px]">
+<section class="relative h-[600px] w-full overflow-hidden bg-secondary md:h-[700px] lg:h-[800px]">
     <div class="swiper hero-swiper h-full w-full">
         <div class="swiper-wrapper">
             @if ($heroSlides->isNotEmpty())
@@ -53,9 +53,9 @@
                     @if ($slide->imagePublicUrl() !== '')
                     <img src="{{ $slide->imagePublicUrl() }}" alt="{{ $slide->title }}" class="h-full w-full object-cover opacity-75">
                     @else
-                    <div class="h-full w-full bg-linear-to-br from-slate-800 to-[#01223b]" role="img" aria-label="{{ $slide->title }}"></div>
+                    <div class="h-full w-full bg-linear-to-br from-secondary to-secondary" role="img" aria-label="{{ $slide->title }}"></div>
                     @endif
-                    <div class="absolute inset-0 bg-[#01223b]/45"></div>
+                    <div class="absolute inset-0 bg-secondary/45"></div>
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
                     <div class="max-w-5xl px-4">
@@ -69,7 +69,7 @@
                         @endif
                         @if (filled($slide->button_label))
                         <div class="mt-10">
-                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
                                 {{ $slide->button_label }}
                             </a>
                         </div>
@@ -94,7 +94,7 @@
                             24/7 maritime solutions across all Bangladeshi ports.
                         </p>
                         <div class="mt-10">
-                            <a href="#services" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                            <a href="#services" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
                                 EXPLORE OUR SERVICES
                             </a>
                         </div>
@@ -106,7 +106,7 @@
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
                     <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover opacity-80">
-                    <div class="absolute inset-0 bg-[#01223b]/50"></div>
+                    <div class="absolute inset-0 bg-secondary/50"></div>
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
                     <div class="max-w-5xl px-4">
@@ -117,7 +117,7 @@
                             Quality ship supplies, spares &amp; repairs — all in one window.
                         </p>
                         <div class="mt-10">
-                            <a href="#supplies" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                            <a href="#supplies" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
                                 VIEW WHAT WE SUPPLY
                             </a>
                         </div>
@@ -129,7 +129,7 @@
             <div class="swiper-slide relative">
                 <div class="absolute inset-0">
                     <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover opacity-75">
-                    <div class="absolute inset-0 bg-[#01223b]/55"></div>
+                    <div class="absolute inset-0 bg-secondary/55"></div>
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
                     <div class="max-w-5xl px-4">
@@ -140,7 +140,7 @@
                             Serving global fleets with reliability, speed &amp; full compliance.
                         </p>
                         <div class="mt-10">
-                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-[#3eb0e3] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 hover:bg-[#2b9bc9]">
+                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-primary px-10 py-4 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:brightness-95">
                                 GET IN TOUCH
                             </a>
                         </div>
@@ -169,18 +169,19 @@
 @foreach (($homeSections ?? []) as $section)
 @php
 $items = $sectionItems[$section->id] ?? collect();
+$sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
 @endphp
 
 @if ($section->block_type === 'carousel' && $section->variant === 'simple')
-@include('site.home-sections.carousel-simple', ['section' => $section, 'items' => $items])
+@include('site.home-sections.carousel-simple', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'carousel' && $section->variant === 'content_2')
-@include('site.home-sections.carousel-content-2', ['section' => $section, 'items' => $items])
+@include('site.home-sections.carousel-content-2', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'carousel' && $section->variant === 'news')
-@include('site.home-sections.carousel-news', ['section' => $section, 'items' => $items])
+@include('site.home-sections.carousel-news', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'image_details')
-@include('site.home-sections.two-column-about', ['section' => $section])
+@include('site.home-sections.two-column-about', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details')
-@include('site.home-sections.two-column-mission-vision', ['section' => $section])
+@include('site.home-sections.two-column-mission-vision', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @endif
 @endforeach
 
@@ -188,12 +189,12 @@ $items = $sectionItems[$section->id] ?? collect();
 <section class="relative bg-white py-16 sm:py-24">
     <div class="site-container">
         <div class="mb-12 text-center">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Maritime Excellence</h3>
-            <h2 class="mt-2 font-sans text-4xl font-bold text-slate-900 sm:text-5xl">Our Operations in Action</h2>
-            <div class="mx-auto mt-4 h-1 w-20 bg-[#3eb0e3]"></div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-primary">Maritime Excellence</h3>
+            <h2 class="mt-2 font-sans text-4xl font-bold text-secondary sm:text-5xl">Our Operations in Action</h2>
+            <div class="mx-auto mt-4 h-1 w-20 bg-primary"></div>
         </div>
 
-        <div class="relative overflow-hidden rounded-2xl bg-slate-900 shadow-2xl">
+        <div class="relative overflow-hidden rounded-2xl bg-secondary shadow-2xl">
             {{-- High-quality maritime stock video --}}
             <video
                 class="h-[260px] w-full object-cover sm:h-[340px] md:h-[420px] lg:h-[480px]"
@@ -207,7 +208,7 @@ $items = $sectionItems[$section->id] ?? collect();
             </video>
 
             {{-- Overlay for a premium feel --}}
-            <div class="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-t from-secondary/60 via-transparent to-transparent"></div>
 
             <div class="absolute bottom-0 left-0 p-8 text-white">
                 <p class="text-lg font-medium opacity-90">Providing 24/7 reliability across all Bangladeshi ports.</p>
@@ -217,7 +218,7 @@ $items = $sectionItems[$section->id] ?? collect();
 </section>
 
 {{-- Full Width Video Section --}}
-<section class="relative h-[480px] w-full overflow-hidden sm:h-[560px] md:h-[620px]">
+<section class="relative h-[600px] w-full overflow-hidden sm:h-[700px] md:h-[800px]">
     {{-- Video Background --}}
     <video
         class="absolute inset-0 h-full w-full object-cover"
@@ -231,7 +232,7 @@ $items = $sectionItems[$section->id] ?? collect();
     </video>
 
     {{-- Cinematic Overlay --}}
-    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="absolute inset-0 bg-secondary/40"></div>
 
     {{-- Content Overlay --}}
     <div class="relative flex h-full items-center justify-center text-center">
@@ -243,7 +244,7 @@ $items = $sectionItems[$section->id] ?? collect();
                 Serving the world's leading fleets with unmatched precision since 2012.
             </p>
             <div class="mt-10">
-                <a href="#" class="inline-block rounded-full bg-white px-8 py-3 text-sm font-bold uppercase tracking-widest text-slate-900 shadow-xl transition-all hover:scale-105 hover:bg-[#3eb0e3] hover:text-white">
+                <a href="#" class="inline-block rounded-full bg-white px-8 py-3 text-sm font-bold uppercase tracking-widest text-secondary shadow-xl transition-all hover:scale-105 hover:bg-primary">
                     Connect With Us
                 </a>
             </div>
@@ -254,7 +255,7 @@ $items = $sectionItems[$section->id] ?? collect();
 @include('site.home-sections.visual-frames', ['visualFrames' => $visualFrames ?? ['show' => false]])
 
 {{-- Service Areas & Locations Section --}}
-<section class="relative overflow-hidden bg-slate-900 py-16 sm:py-24">
+<section class="relative overflow-hidden bg-secondary py-16 sm:py-24">
     <!-- Background Texture -->
     <div class="absolute inset-0">
         <!-- Ocean surface background to match the design -->
@@ -264,7 +265,7 @@ $items = $sectionItems[$section->id] ?? collect();
     <div class="relative z-10 site-container">
         <!-- Header -->
         <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-[#3eb0e3]">Service Areas</h3>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-primary">Service Areas</h3>
             <h2 class="mt-2 font-sans text-4xl font-bold text-white sm:text-5xl">Locations</h2>
         </div>
 
@@ -286,7 +287,7 @@ $items = $sectionItems[$section->id] ?? collect();
                 <h3 class="shrink-0 font-sans text-2xl font-bold text-white sm:text-3xl">End to end supply</h3>
                 <div class="hidden h-12 w-px bg-white/30 md:block"></div>
                 <div class="h-px w-16 bg-white/30 md:hidden"></div>
-                <p class="text-base leading-relaxed text-slate-300 md:max-w-3xl">
+                <p class="text-base leading-relaxed text-white/70 md:max-w-3xl">
                     We pride ourselves on our delivery and operate 365 days, 24 hours non-stop in all of the ports and straits of Turkey and the ARA area.
                 </p>
             </div>
