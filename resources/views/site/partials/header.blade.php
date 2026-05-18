@@ -28,7 +28,7 @@
         <div class="site-container flex items-center justify-between gap-3 overflow-visible">
             @php($headerLogo = is_string($siteDetails->header_logo_path ?? null) ? trim($siteDetails->header_logo_path) : '')
             <a href="{{ route('home') }}" class="site-header__logo-link shrink-0 no-underline">
-                <img src="{{ $headerLogo !== '' ? asset($headerLogo) : asset('newport-logo.png') }}" alt="{{ config('app.name') }}" class="site-header__logo">
+                <img src="{{ $headerLogo !== '' ? asset($headerLogo) : asset('newport-logo.png') }}" alt="{{ $siteMetaName ?? config('app.name') }}" class="site-header__logo">
             </a>
 
             @php($quoteBtnClass = 'inline-flex shrink-0 items-center justify-center rounded-md bg-primary px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-secondary shadow-sm transition hover:brightness-95 sm:px-4 sm:py-2.5 sm:text-xs lg:text-sm')

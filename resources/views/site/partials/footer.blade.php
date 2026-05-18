@@ -31,9 +31,9 @@
         <div class="site-footer__brand">
             <a href="{{ route('home') }}" class="site-footer__logo-link">
                 @if ($footerLogo !== '')
-                <img src="{{ asset($footerLogo) }}" alt="{{ config('app.name') }}" class="site-footer__logo">
+                <img src="{{ asset($footerLogo) }}" alt="{{ $footerSiteName }}" class="site-footer__logo">
                 @else
-                <img src="{{ asset('newport-logo.png') }}" alt="{{ config('app.name') }}" class="site-footer__logo">
+                <img src="{{ asset('newport-logo.png') }}" alt="{{ $footerSiteName }}" class="site-footer__logo">
                 @endif
             </a>
 

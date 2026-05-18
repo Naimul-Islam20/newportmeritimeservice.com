@@ -30,7 +30,7 @@ class PageController extends Controller
             $cover = $sub->coverImageUrl();
 
             return view('site.pages.menu-page', [
-                'title' => $sub->label.' — '.config('app.name'),
+                'title' => SiteDetail::pageTitle($sub->label),
                 'metaDescription' => $sub->description ?: null,
                 'heading' => $sub->label,
                 'lead' => $sub->description ?: null,
@@ -52,7 +52,7 @@ class PageController extends Controller
         }
 
         return view('site.pages.menu-page', [
-            'title' => $menu->label.' — '.config('app.name'),
+            'title' => SiteDetail::pageTitle($menu->label),
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,
@@ -69,7 +69,7 @@ class PageController extends Controller
         }
 
         return view('site.pages.ship-supply', [
-            'title' => 'Ship Supply — '.config('app.name'),
+            'title' => SiteDetail::pageTitle('Ship Supply'),
             'metaDescription' => 'Provisions, stores, and deck supplies for vessels and port operations.',
         ]);
     }
@@ -81,7 +81,7 @@ class PageController extends Controller
         }
 
         return view('site.pages.simple', [
-            'title' => 'Our Services — '.config('app.name'),
+            'title' => SiteDetail::pageTitle('Our Services'),
             'metaDescription' => 'Maritime logistics, documentation, and operational support services.',
             'heading' => 'Our Services',
             'lead' => 'From berth coordination to stakeholder communication, we support the full lifecycle of your port call.',
@@ -96,7 +96,7 @@ class PageController extends Controller
         $pageTitle = filled($about->hero_title ?? null) ? $about->hero_title : 'About Us';
 
         return view('site.pages.about-us', [
-            'title' => $pageTitle.' — '.config('app.name'),
+            'title' => SiteDetail::pageTitle($pageTitle),
             'metaDescription' => $siteDetail?->metaDescriptionForSite(),
             'about' => $about,
             'pageSections' => $aboutPage->pageSections()->ordered()->where('is_active', true)->get(),
@@ -110,7 +110,7 @@ class PageController extends Controller
         }
 
         return view('site.pages.where-we-are', [
-            'title' => 'Where We Are — '.config('app.name'),
+            'title' => SiteDetail::pageTitle('Where We Are'),
             'metaDescription' => 'Our service areas and locations across the region.',
         ]);
     }
@@ -122,7 +122,7 @@ class PageController extends Controller
         }
 
         return view('site.pages.simple', [
-            'title' => 'Award — '.config('app.name'),
+            'title' => SiteDetail::pageTitle('Award'),
             'metaDescription' => 'Recognition and milestones from our partners and the industry.',
             'heading' => 'Award',
             'lead' => 'We are proud of the trust our clients place in us. Details and highlights will appear here as we update this section.',

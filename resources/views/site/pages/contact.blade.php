@@ -1,5 +1,5 @@
 @extends('site.layouts.app', [
-    'title' => 'Contact — ' . config('app.name'),
+    'title' => \App\Models\SiteDetail::pageTitle('Contact'),
     'metaDescription' => 'Send us a message — we respond as soon as possible.',
 ])
 

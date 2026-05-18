@@ -8,6 +8,7 @@ class SiteDetail extends Model
 {
     protected $fillable = [
         'site_name',
+        'favicon_path',
         'meta_description',
         'location',
         'map',
@@ -45,6 +46,22 @@ class SiteDetail extends Model
         return $name !== '' ? $name : (string) config('app.name');
     }
 
+    public static function pageTitle(?string $pageLabel = null, ?self $detail = null): string
+    {
+        $name = ($detail ?? self::query()->first())?->siteNameForMeta() ?? (string) config('app.name');
+        $label = is_string($pageLabel) ? trim($pageLabel) : '';
+
+        return $label !== '' ? "{$label} — {$name}" : $name;
+    }
+
+    public static function faviconAssetUrl(?self $detail = null): ?string
+    {
+        $detail ??= self::query()->first();
+        $path = is_string($detail?->favicon_path ?? null) ? trim($detail->favicon_path) : '';
+
+        return $path !== '' ? asset($path) : null;
+    }
+
     public function metaDescriptionForSite(): ?string
     {
         $desc = is_string($this->meta_description ?? null) ? trim($this->meta_description) : '';
@@ -53,7 +70,7 @@ class SiteDetail extends Model
     }
 
     /**
-     * @return array{siteMetaName: string, siteMetaDescription: string|null}
+     * @return array{siteMetaName: string, siteMetaDescription: string|null, siteFaviconUrl: string|null}
      */
     public static function metaForViews(?self $detail = null): array
     {
@@ -63,12 +80,14 @@ class SiteDetail extends Model
             return [
                 'siteMetaName' => (string) config('app.name'),
                 'siteMetaDescription' => null,
+                'siteFaviconUrl' => null,
             ];
         }
 
         return [
             'siteMetaName' => $detail->siteNameForMeta(),
             'siteMetaDescription' => $detail->metaDescriptionForSite(),
+            'siteFaviconUrl' => self::faviconAssetUrl($detail),
         ];
     }
 

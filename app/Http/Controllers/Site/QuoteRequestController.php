@@ -14,7 +14,7 @@ class QuoteRequestController extends Controller
     public function create(): View
     {
         return view('site.pages.quote', [
-            'title' => 'Get a quote — '.config('app.name'),
+            'title' => \App\Models\SiteDetail::pageTitle('Get a quote'),
             'metaDescription' => 'Request a quote for ship supply, port services, or logistics support.',
         ]);
     }

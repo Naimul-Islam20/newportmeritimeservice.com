@@ -1,6 +1,6 @@
 @extends('site.layouts.app', [
-'title' => config('app.name') . ' — Home',
-'metaDescription' => 'Maritime logistics, port operations, and trusted supply chain support.',
+    'title' => \App\Models\SiteDetail::pageTitle('Home'),
+    'metaDescription' => 'Maritime logistics, port operations, and trusted supply chain support.',
 ])
 
 @push('styles')

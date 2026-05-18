@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
+use App\Models\SiteDetail;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -28,7 +29,7 @@ class MenuPageController extends Controller
             $cover = $sub->coverImageUrl();
 
             return view('site.pages.menu-page', [
-                'title' => $sub->label.' — '.config('app.name'),
+                'title' => SiteDetail::pageTitle($sub->label),
                 'metaDescription' => $sub->description ?: null,
                 'heading' => $sub->label,
                 'lead' => $sub->description ?: null,
@@ -48,7 +49,7 @@ class MenuPageController extends Controller
         abort_if(! $menu, 404);
 
         return view('site.pages.menu-page', [
-            'title' => $menu->label.' — '.config('app.name'),
+            'title' => SiteDetail::pageTitle($menu->label),
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,

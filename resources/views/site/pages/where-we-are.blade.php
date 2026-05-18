@@ -1,5 +1,5 @@
 @extends('site.layouts.app', [
-    'title' => 'Where We Are — ' . config('app.name'),
+    'title' => \App\Models\SiteDetail::pageTitle('Where We Are'),
     'metaDescription' => 'Our service areas and locations across the region.',
 ])
 

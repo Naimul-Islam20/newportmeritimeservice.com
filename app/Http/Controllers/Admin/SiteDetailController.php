@@ -75,6 +75,21 @@ class SiteDetailController extends Controller
             }
         }
 
+        $faviconPath = $siteDetail->favicon_path;
+        if ($request->boolean('remove_favicon')) {
+            if (is_string($faviconPath) && $faviconPath !== '' && Storage::disk('public_site')->exists($faviconPath)) {
+                Storage::disk('public_site')->delete($faviconPath);
+            }
+            $faviconPath = null;
+        }
+        if ($request->hasFile('favicon')) {
+            $path = $request->file('favicon')->store('site', 'public_site');
+            if (is_string($faviconPath) && $faviconPath !== '' && Storage::disk('public_site')->exists($faviconPath)) {
+                Storage::disk('public_site')->delete($faviconPath);
+            }
+            $faviconPath = $path;
+        }
+
         $defaultImagePath = $siteDetail->default_image_path;
         if ($request->hasFile('default_image')) {
             $path = $request->file('default_image')->store('site', 'public_site');
@@ -144,6 +159,7 @@ class SiteDetailController extends Controller
 
         $siteDetail->update([
             'site_name' => $siteName !== '' ? $siteName : null,
+            'favicon_path' => $faviconPath,
             'meta_description' => $metaDescription !== '' ? $metaDescription : null,
             'location' => isset($data['location']) && is_string($data['location']) ? trim($data['location']) : null,
             'map' => isset($data['map']) && is_string($data['map']) ? trim($data['map']) : null,

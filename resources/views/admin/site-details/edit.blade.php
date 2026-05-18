@@ -19,11 +19,31 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="site_name">Site name</label>
-                <input id="site_name" name="site_name" value="{{ old('site_name', $detail->site_name) }}" placeholder="{{ config('app.name') }}">
+                <input id="site_name" name="site_name" value="{{ old('site_name', $detail->site_name) }}" placeholder="e.g. Newport Maritime">
                 <div style="color:#64748b; font-size:12px; margin-top:6px;">
-                    Used in the browser tab when a page does not set its own title.
+                    Shown in the browser tab next to the favicon (not <code>APP_NAME</code> from <code>.env</code>).
                 </div>
                 @error('site_name') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="favicon">Favicon</label>
+                @if (is_string($detail->favicon_path) && $detail->favicon_path !== '')
+                    <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px;">
+                        <img src="{{ asset($detail->favicon_path) }}" alt="" width="32" height="32" style="border-radius:4px; border:1px solid #e5e7eb; background:#fff; object-fit:contain;">
+                        <div style="color:#64748b; font-size:12px;">
+                            Current: <code style="font-size:11px;">{{ $detail->favicon_path }}</code>
+                        </div>
+                    </div>
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:400; margin-bottom:8px;">
+                        <input type="checkbox" name="remove_favicon" value="1" @checked(old('remove_favicon'))>
+                        Remove current favicon
+                    </label>
+                @endif
+                <input id="favicon" name="favicon" type="file" accept=".ico,.png,.jpg,.jpeg,.webp,.svg,image/*">
+                <div style="color:#64748b; font-size:12px; margin-top:6px;">
+                    Small square icon for the browser tab (PNG, ICO, SVG, or WebP; max 1 MB). Recommended 32×32 or 48×48 px.
+                </div>
+                @error('favicon') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="meta_description">Meta description</label>

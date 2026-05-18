@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Admin Panel' }}</title>
+    @include('partials.site-head-meta', ['title' => $title ?? (($siteMetaName ?? config('app.name')) . ' — Admin')])
     @vite(['resources/css/app.css'])
     @include('partials.site-theme-css')
     <style>

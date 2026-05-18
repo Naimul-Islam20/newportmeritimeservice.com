@@ -1,5 +1,5 @@
 @extends('site.layouts.app', [
-    'title' => 'Ship Supply — ' . config('app.name'),
+    'title' => \App\Models\SiteDetail::pageTitle('Ship Supply'),
     'metaDescription' => 'Provisions, stores, and deck supplies for vessels and port operations.',
 ])
 

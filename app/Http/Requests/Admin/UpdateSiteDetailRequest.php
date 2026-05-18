@@ -43,6 +43,7 @@ class UpdateSiteDetailRequest extends FormRequest
         $this->merge($merge);
         $this->merge([
             'reset_theme_colors' => $this->boolean('reset_theme_colors'),
+            'remove_favicon' => $this->boolean('remove_favicon'),
         ]);
     }
 
@@ -66,6 +67,8 @@ class UpdateSiteDetailRequest extends FormRequest
             'social.linkedin' => ['nullable', 'string', 'max:2048'],
             'social.youtube' => ['nullable', 'string', 'max:2048'],
             'social.twitter' => ['nullable', 'string', 'max:2048'],
+            'favicon' => ['nullable', 'file', 'mimes:ico,png,jpg,jpeg,webp,svg', 'max:1024'],
+            'remove_favicon' => ['sometimes', 'boolean'],
             'default_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
             'header_logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif,svg', 'max:5120'],
             'footer_logo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif,svg', 'max:5120'],
