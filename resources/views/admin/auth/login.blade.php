@@ -136,7 +136,7 @@
 <body>
     <div class="login-shell">
         <div class="brand">
-            <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ config('app.name') }}">
+            <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ $siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName() }}">
         </div>
         <form class="card" method="POST" action="{{ route('admin.login.store') }}">
             @csrf

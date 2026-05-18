@@ -1,6 +1,6 @@
 @php
     $sd = $siteDetails ?? null;
-    $footerSiteName = $sd instanceof \App\Models\SiteDetail ? $sd->siteNameForMeta() : (string) config('app.name');
+    $footerSiteName = $siteMetaName ?? ($sd instanceof \App\Models\SiteDetail ? $sd->siteNameForMeta() : \App\Models\SiteDetail::resolvedSiteName());
     $footerLogo = is_string($sd?->footer_logo_path) ? trim($sd->footer_logo_path) : '';
     $loc = trim((string) ($sd?->location ?? ''));
     $emails = is_array($sd?->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [];

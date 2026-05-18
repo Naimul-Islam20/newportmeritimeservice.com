@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @include('partials.site-head-meta', ['title' => $title ?? (($siteMetaName ?? config('app.name')) . ' — Admin')])
+    @php($adminSiteName = $siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName())
+    @include('partials.site-head-meta', ['title' => $title ?? ($adminSiteName !== '' ? $adminSiteName . ' — Admin' : 'Admin')])
     @vite(['resources/css/app.css'])
     @include('partials.site-theme-css')
     <style>
@@ -585,8 +586,8 @@
         <div class="top-header">
             <div class="top-header-left">
                 <button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
-                <a href="{{ route('admin.dashboard') }}" class="top-header-title" aria-label="{{ config('app.name') }} admin">
-                    <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ config('app.name') }}" class="top-header-logo">
+                <a href="{{ route('admin.dashboard') }}" class="top-header-title" aria-label="{{ $adminSiteName !== '' ? $adminSiteName . ' admin' : 'Admin' }}">
+                    <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ $adminSiteName }}" class="top-header-logo">
                 </a>
             </div>
             <form method="POST" action="{{ route('admin.logout') }}" class="logout-form">

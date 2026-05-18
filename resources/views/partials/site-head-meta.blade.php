@@ -1,5 +1,5 @@
 @php
-    $documentTitle = $title ?? ($siteMetaName ?? config('app.name'));
+    $documentTitle = $title ?? ($siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName());
     $faviconHref = $siteFaviconUrl ?? \App\Models\SiteDetail::faviconAssetUrl();
 @endphp
 <title>{{ $documentTitle }}</title>

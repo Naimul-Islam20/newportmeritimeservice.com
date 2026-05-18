@@ -39,19 +39,36 @@ class SiteDetail extends Model
         ];
     }
 
+    /**
+     * Public site name from Site Details (never falls back to APP_NAME / ERP17).
+     */
+    public static function resolvedSiteName(?self $detail = null): string
+    {
+        $detail ??= self::query()->first();
+        if (! $detail) {
+            return '';
+        }
+
+        $name = is_string($detail->site_name ?? null) ? trim($detail->site_name) : '';
+
+        return $name;
+    }
+
     public function siteNameForMeta(): string
     {
-        $name = is_string($this->site_name ?? null) ? trim($this->site_name) : '';
-
-        return $name !== '' ? $name : (string) config('app.name');
+        return self::resolvedSiteName($this);
     }
 
     public static function pageTitle(?string $pageLabel = null, ?self $detail = null): string
     {
-        $name = ($detail ?? self::query()->first())?->siteNameForMeta() ?? (string) config('app.name');
+        $name = self::resolvedSiteName($detail ?? self::query()->first());
         $label = is_string($pageLabel) ? trim($pageLabel) : '';
 
-        return $label !== '' ? "{$label} — {$name}" : $name;
+        if ($label !== '' && $name !== '') {
+            return "{$label} — {$name}";
+        }
+
+        return $label !== '' ? $label : $name;
     }
 
     public static function faviconAssetUrl(?self $detail = null): ?string
@@ -78,14 +95,14 @@ class SiteDetail extends Model
 
         if (! $detail) {
             return [
-                'siteMetaName' => (string) config('app.name'),
+                'siteMetaName' => '',
                 'siteMetaDescription' => null,
                 'siteFaviconUrl' => null,
             ];
         }
 
         return [
-            'siteMetaName' => $detail->siteNameForMeta(),
+            'siteMetaName' => self::resolvedSiteName($detail),
             'siteMetaDescription' => $detail->metaDescriptionForSite(),
             'siteFaviconUrl' => self::faviconAssetUrl($detail),
         ];
