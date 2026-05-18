@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class SiteDetail extends Model
 {
     protected $fillable = [
+        'site_name',
+        'meta_description',
         'location',
         'map',
         'emails',
@@ -33,6 +35,40 @@ class SiteDetail extends Model
             'phones' => 'array',
             'social_links' => 'array',
             'theme_footer_overlay_opacity' => 'integer',
+        ];
+    }
+
+    public function siteNameForMeta(): string
+    {
+        $name = is_string($this->site_name ?? null) ? trim($this->site_name) : '';
+
+        return $name !== '' ? $name : (string) config('app.name');
+    }
+
+    public function metaDescriptionForSite(): ?string
+    {
+        $desc = is_string($this->meta_description ?? null) ? trim($this->meta_description) : '';
+
+        return $desc !== '' ? $desc : null;
+    }
+
+    /**
+     * @return array{siteMetaName: string, siteMetaDescription: string|null}
+     */
+    public static function metaForViews(?self $detail = null): array
+    {
+        $detail ??= self::query()->first();
+
+        if (! $detail) {
+            return [
+                'siteMetaName' => (string) config('app.name'),
+                'siteMetaDescription' => null,
+            ];
+        }
+
+        return [
+            'siteMetaName' => $detail->siteNameForMeta(),
+            'siteMetaDescription' => $detail->metaDescriptionForSite(),
         ];
     }
 

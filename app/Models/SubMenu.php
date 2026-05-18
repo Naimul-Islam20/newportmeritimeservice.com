@@ -52,6 +52,16 @@ class SubMenu extends Model
         return '';
     }
 
+    /**
+     * Same background URL as the submenu page hero (cover upload, else default cover asset).
+     */
+    public function pageHeroBackgroundUrl(): string
+    {
+        $cover = $this->coverImageUrl();
+
+        return $cover !== '' ? $cover : asset('menu-page-cover.jpg');
+    }
+
     public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'menu_id');

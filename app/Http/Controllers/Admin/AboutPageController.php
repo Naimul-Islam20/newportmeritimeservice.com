@@ -18,6 +18,7 @@ class AboutPageController extends Controller
         return view('admin.about-page.edit', [
             'aboutPage' => $aboutPage,
             'defaults' => AboutPage::defaultContent(),
+            'sections' => $aboutPage->pageSections()->ordered()->get(),
         ]);
     }
 
@@ -35,16 +36,27 @@ class AboutPageController extends Controller
             $data['hero_background_file'],
             $data['trust_image_file'],
             $data['cta_background_file'],
+            $data['remove_hero_background'],
+            $data['remove_trust_image'],
+            $data['remove_cta_background'],
         );
 
         if ($request->hasFile('hero_background_file')) {
             $data['hero_background'] = $request->file('hero_background_file')->store('about-page/hero', 'public_site');
+        } elseif ($request->boolean('remove_hero_background')) {
+            $data['hero_background'] = null;
         }
+
         if ($request->hasFile('trust_image_file')) {
             $data['trust_image'] = $request->file('trust_image_file')->store('about-page/trust', 'public_site');
+        } elseif ($request->boolean('remove_trust_image')) {
+            $data['trust_image'] = null;
         }
+
         if ($request->hasFile('cta_background_file')) {
             $data['cta_background'] = $request->file('cta_background_file')->store('about-page/cta', 'public_site');
+        } elseif ($request->boolean('remove_cta_background')) {
+            $data['cta_background'] = null;
         }
 
         $about_page->fill($data);

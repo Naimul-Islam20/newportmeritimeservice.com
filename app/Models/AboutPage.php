@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 
 class AboutPage extends Model
@@ -31,49 +32,41 @@ class AboutPage extends Model
     ];
 
     /**
-     * Default copy and assets when DB fields are empty (matches original static page).
+     * Empty placeholders for admin form hints only (not used on the public site).
      *
      * @return array<string, string>
      */
     public static function defaultContent(): array
     {
-        return [
-            'hero_title' => 'About Us',
-            'hero_background' => 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2000&auto=format&fit=crop',
-            'meta_description' => 'Learn more about Newport Maritime Service and our commitment to excellence.',
-            'trust_image' => 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=1000&auto=format&fit=crop',
-            'trust_title' => "Built on Trust.\nDriven by Excellence.",
-            'trust_description' => "Founded in 2012, Newport Maritime Service has grown into one of Bangladesh's most trusted maritime companies. Over more than a decade, we have earned a strong reputation as a dependable General Ship Supplier, Marine Spares Exporter, and Ship Repair Service provider — built on a consistent commitment to quality, efficiency, and client satisfaction.\n\nOur global relationships reflect the trust the maritime industry places in us. We understand the demands of vessel operations firsthand, and we deliver comprehensive, tailored solutions designed to keep your fleet running smoothly.",
-            'stat1_value' => '6',
-            'stat1_label' => 'Offices & Warehouses',
-            'stat2_value' => '150+',
-            'stat2_label' => 'Employees',
-            'stat3_value' => '25',
-            'stat3_label' => 'Trucks',
-            'mission_title' => 'Our Mission',
-            'mission_body' => 'At Newport Maritime Service, our mission is to ensure uninterrupted vessel operations across Bangladeshi ports by delivering government-certified, round-the-clock marine solutions. From marine spares and ship supplies to waste management and technical services, we are committed to providing every client with unwavering reliability, competitive value, and full regulatory compliance.',
-            'vision_title' => 'Our Vision',
-            'vision_body' => 'Our vision is to redefine maritime support across South Asia by becoming the most trusted single-source partner for global fleets. We are building a future where operational excellence, environmental responsibility, and long-term client partnerships go hand in hand — driving sustainable growth and establishing Newport Maritime Service as a symbol of industry leadership.',
-            'cta_eyebrow' => '13 Years of Experience',
-            'cta_heading' => "We're NewPort, a ship supply company with a proud history.",
-            'cta_background' => 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2000&auto=format&fit=crop',
-            'cta_button_label' => 'Watch our story',
-            'cta_video_url' => '',
-        ];
+        $placeholders = [];
+        foreach ((new self)->getFillable() as $key) {
+            $placeholders[$key] = '';
+        }
+
+        return $placeholders;
     }
 
+    /** Public site: database values only — no static fallbacks. */
     public static function resolvedForPublic(): \stdClass
     {
-        $defaults = self::defaultContent();
         $row = self::query()->first();
+        $out = [];
 
-        $out = $defaults;
-        if ($row) {
-            foreach (array_keys($defaults) as $key) {
-                $v = $row->{$key};
-                if (is_string($v) && $v !== '') {
-                    $out[$key] = $v;
-                }
+        foreach ((new self)->getFillable() as $key) {
+            $out[$key] = null;
+        }
+
+        if (! $row) {
+            return (object) $out;
+        }
+
+        foreach ((new self)->getFillable() as $key) {
+            $v = $row->{$key};
+            if (is_string($v)) {
+                $trimmed = trim($v);
+                $out[$key] = $trimmed !== '' ? $trimmed : null;
+            } elseif ($v !== null && $v !== '') {
+                $out[$key] = $v;
             }
         }
 
@@ -144,14 +137,11 @@ class AboutPage extends Model
 
     public static function singleton(): self
     {
-        $first = self::query()->first();
-        if ($first) {
-            return $first;
-        }
+        return self::query()->firstOrCreate([]);
+    }
 
-        $defaults = self::defaultContent();
-        unset($defaults['meta_description']);
-
-        return self::query()->create($defaults);
+    public function pageSections(): MorphMany
+    {
+        return $this->morphMany(MenuPageSection::class, 'sectionable');
     }
 }

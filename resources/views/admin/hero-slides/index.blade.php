@@ -45,6 +45,9 @@
                     </td>
                     <td>{{ $slide->sort_order }}</td>
                     <td class="actions-cell">
+                        @can('update', $slide)
+                        <a href="{{ route('admin.hero-slides.edit', $slide) }}" class="btn btn-muted">Edit</a>
+                        @endcan
                         @can('delete', $slide)
                         <form method="POST" action="{{ route('admin.hero-slides.destroy', $slide) }}" style="display:inline;">
                             @csrf

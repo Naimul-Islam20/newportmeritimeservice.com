@@ -3,11 +3,15 @@
 @section('content')
 <div class="header">
     <h1>About Us page</h1>
-    <a class="btn btn-muted" href="{{ route('about-us') }}" target="_blank" rel="noopener">View on site</a>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <a class="btn btn-primary" href="{{ route('admin.about-page.page-sections.create', $aboutPage) }}">Create section</a>
+        <a class="btn btn-muted" href="{{ route('admin.about-page.page-sections.index', $aboutPage) }}">All sections</a>
+        <a class="btn btn-muted" href="{{ route('about-us') }}" target="_blank" rel="noopener">View on site</a>
+    </div>
 </div>
 
 <p style="color:#64748b; font-size:14px; max-width:52rem; margin:0 0 16px 0;">
-    Everything on the public About Us page is controlled from this form. Leave a field empty only when you want the built-in fallback for that spot. <strong>Hero, intro side image, and banner background: upload images only.</strong> Video: <strong>YouTube link only</strong> (modal on the site).
+    Everything on the public About Us page comes from this form and extra sections below. Empty fields are hidden on the site (no default text or stock images). <strong>Hero, intro side image, and banner background: upload images only.</strong> Video: <strong>YouTube link only</strong> (modal on the site).
 </p>
 
 <div class="card">
@@ -19,7 +23,7 @@
         <div class="grid grid-2">
             <div style="grid-column: 1 / -1;">
                 <label for="hero_title">Page title (H1)</label>
-                <input id="hero_title" name="hero_title" value="{{ old('hero_title', $aboutPage->hero_title) }}" placeholder="{{ $defaults['hero_title'] }}">
+                <input id="hero_title" name="hero_title" value="{{ old('hero_title', $aboutPage->hero_title) }}" placeholder="Optional">
                 @error('hero_title') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
@@ -27,7 +31,13 @@
                 <input id="hero_background_file" name="hero_background_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                 @error('hero_background_file') <div class="error">{{ $message }}</div> @enderror
                 @if (filled($aboutPage->hero_background))
-                    <div style="margin-top:8px;"><img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->hero_background) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;"></div>
+                    <div style="margin-top:8px;">
+                        <img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->hero_background) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
+                            <input type="checkbox" name="remove_hero_background" value="1" @checked(old('remove_hero_background'))>
+                            Remove current hero image
+                        </label>
+                    </div>
                 @endif
             </div>
         </div>
@@ -39,7 +49,13 @@
                 <input id="trust_image_file" name="trust_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                 @error('trust_image_file') <div class="error">{{ $message }}</div> @enderror
                 @if (filled($aboutPage->trust_image))
-                    <div style="margin-top:8px;"><img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->trust_image) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;"></div>
+                    <div style="margin-top:8px;">
+                        <img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->trust_image) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
+                            <input type="checkbox" name="remove_trust_image" value="1" @checked(old('remove_trust_image'))>
+                            Remove current side image
+                        </label>
+                    </div>
                 @endif
             </div>
             <div style="grid-column: 1 / -1;">
@@ -58,32 +74,32 @@
         <div class="grid grid-2">
             <div>
                 <label for="stat1_value">Stat 1 — number</label>
-                <input id="stat1_value" name="stat1_value" value="{{ old('stat1_value', $aboutPage->stat1_value) }}" placeholder="{{ $defaults['stat1_value'] }}">
+                <input id="stat1_value" name="stat1_value" value="{{ old('stat1_value', $aboutPage->stat1_value) }}" placeholder="Optional">
                 @error('stat1_value') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="stat1_label">Stat 1 — label</label>
-                <input id="stat1_label" name="stat1_label" value="{{ old('stat1_label', $aboutPage->stat1_label) }}" placeholder="{{ $defaults['stat1_label'] }}">
+                <input id="stat1_label" name="stat1_label" value="{{ old('stat1_label', $aboutPage->stat1_label) }}" placeholder="Optional">
                 @error('stat1_label') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="stat2_value">Stat 2 — number</label>
-                <input id="stat2_value" name="stat2_value" value="{{ old('stat2_value', $aboutPage->stat2_value) }}" placeholder="{{ $defaults['stat2_value'] }}">
+                <input id="stat2_value" name="stat2_value" value="{{ old('stat2_value', $aboutPage->stat2_value) }}" placeholder="Optional">
                 @error('stat2_value') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="stat2_label">Stat 2 — label</label>
-                <input id="stat2_label" name="stat2_label" value="{{ old('stat2_label', $aboutPage->stat2_label) }}" placeholder="{{ $defaults['stat2_label'] }}">
+                <input id="stat2_label" name="stat2_label" value="{{ old('stat2_label', $aboutPage->stat2_label) }}" placeholder="Optional">
                 @error('stat2_label') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="stat3_value">Stat 3 — number</label>
-                <input id="stat3_value" name="stat3_value" value="{{ old('stat3_value', $aboutPage->stat3_value) }}" placeholder="{{ $defaults['stat3_value'] }}">
+                <input id="stat3_value" name="stat3_value" value="{{ old('stat3_value', $aboutPage->stat3_value) }}" placeholder="Optional">
                 @error('stat3_value') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="stat3_label">Stat 3 — label</label>
-                <input id="stat3_label" name="stat3_label" value="{{ old('stat3_label', $aboutPage->stat3_label) }}" placeholder="{{ $defaults['stat3_label'] }}">
+                <input id="stat3_label" name="stat3_label" value="{{ old('stat3_label', $aboutPage->stat3_label) }}" placeholder="Optional">
                 @error('stat3_label') <div class="error">{{ $message }}</div> @enderror
             </div>
         </div>
@@ -92,12 +108,12 @@
         <div class="grid grid-2">
             <div>
                 <label for="mission_title">Mission title</label>
-                <input id="mission_title" name="mission_title" value="{{ old('mission_title', $aboutPage->mission_title) }}" placeholder="{{ $defaults['mission_title'] }}">
+                <input id="mission_title" name="mission_title" value="{{ old('mission_title', $aboutPage->mission_title) }}" placeholder="Optional">
                 @error('mission_title') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="vision_title">Vision title</label>
-                <input id="vision_title" name="vision_title" value="{{ old('vision_title', $aboutPage->vision_title) }}" placeholder="{{ $defaults['vision_title'] }}">
+                <input id="vision_title" name="vision_title" value="{{ old('vision_title', $aboutPage->vision_title) }}" placeholder="Optional">
                 @error('vision_title') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
@@ -116,12 +132,12 @@
         <div class="grid grid-2">
             <div>
                 <label for="cta_eyebrow">Small uppercase line</label>
-                <input id="cta_eyebrow" name="cta_eyebrow" value="{{ old('cta_eyebrow', $aboutPage->cta_eyebrow) }}" placeholder="{{ $defaults['cta_eyebrow'] }}">
+                <input id="cta_eyebrow" name="cta_eyebrow" value="{{ old('cta_eyebrow', $aboutPage->cta_eyebrow) }}" placeholder="Optional">
                 @error('cta_eyebrow') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="cta_button_label">Button label</label>
-                <input id="cta_button_label" name="cta_button_label" value="{{ old('cta_button_label', $aboutPage->cta_button_label) }}" placeholder="{{ $defaults['cta_button_label'] }}">
+                <input id="cta_button_label" name="cta_button_label" value="{{ old('cta_button_label', $aboutPage->cta_button_label) }}" placeholder="Optional">
                 @error('cta_button_label') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
@@ -134,7 +150,13 @@
                 <input id="cta_background_file" name="cta_background_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                 @error('cta_background_file') <div class="error">{{ $message }}</div> @enderror
                 @if (filled($aboutPage->cta_background))
-                    <div style="margin-top:8px;"><img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->cta_background) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;"></div>
+                    <div style="margin-top:8px;">
+                        <img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->cta_background) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
+                            <input type="checkbox" name="remove_cta_background" value="1" @checked(old('remove_cta_background'))>
+                            Remove current banner image
+                        </label>
+                    </div>
                 @endif
             </div>
             <div style="grid-column: 1 / -1;">
@@ -148,5 +170,62 @@
             <button type="submit" class="btn btn-primary">Save About Us page</button>
         </div>
     </form>
+</div>
+
+<div class="card" style="margin-top:16px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+        <div>
+            <h2 style="margin:0; font-size:16px;">Extra sections (below main content)</h2>
+            <p style="margin:6px 0 0 0; color:#64748b; font-size:13px;">These appear on the site after Mission &amp; Vision, before the video banner.</p>
+        </div>
+        <a class="btn btn-primary" href="{{ route('admin.about-page.page-sections.create', $aboutPage) }}">Create section</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th class="actions-cell">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse (($sections ?? []) as $s)
+                    <tr>
+                        <td>{{ $s->sort_order }}</td>
+                        <td>
+                            <div style="font-weight:700;">{{ filled($s->title) ? $s->title : '—' }}</div>
+                            <div style="margin-top:4px; font-size:12px; color:#64748b;">
+                                Type: <code style="font-size:11px;">{{ $s->type ?? 'unknown' }}</code>
+                            </div>
+                        </td>
+                        <td>
+                            @if ($s->is_active)
+                                <span class="status status-unread">Active</span>
+                            @else
+                                <span class="status status-read">Inactive</span>
+                            @endif
+                        </td>
+                        <td class="actions-cell">
+                            <div class="action-group">
+                                <a class="btn btn-muted" href="{{ route('admin.about-page.page-sections.edit', [$aboutPage, $s]) }}">Edit</a>
+                                <form method="POST" action="{{ route('admin.about-page.page-sections.destroy', [$aboutPage, $s]) }}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger" type="submit" onclick="return confirm('Delete this section?')">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" style="white-space: normal;">No extra sections yet. Click <strong>Create section</strong> above.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

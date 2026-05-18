@@ -606,6 +606,11 @@
                     <a class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}" href="{{ route('admin.home-sections.index') }}">Home Sections</a>
                     <a class="{{ request()->routeIs('admin.site-details.*') ? 'active' : '' }}" href="{{ route('admin.site-details.edit') }}">Site Details</a>
                     <a class="{{ request()->routeIs('admin.about-page.*') ? 'active' : '' }}" href="{{ route('admin.about-page.edit') }}">About Us page</a>
+                    @php($sidebarAboutPage = \App\Models\AboutPage::query()->first())
+                    @if ($sidebarAboutPage)
+                        <a class="{{ request()->routeIs('admin.about-page.page-sections.*') ? 'active' : '' }}"
+                            href="{{ route('admin.about-page.page-sections.index', $sidebarAboutPage) }}">About Us — sections</a>
+                    @endif
                     <a class="{{ request()->routeIs('admin.menus.index') || request()->routeIs('admin.menus.create') || request()->routeIs('admin.menus.page-sections.*') ? 'active' : '' }}" href="{{ route('admin.menus.index') }}">All menus (list)</a>
                     <a class="{{ request()->routeIs('admin.sub-menus.index') || request()->routeIs('admin.sub-menus.create') || request()->routeIs('admin.sub-menus.page-sections.*') ? 'active' : '' }}" href="{{ route('admin.sub-menus.index') }}">All sub-menus (list)</a>
 
@@ -613,11 +618,16 @@
                     @php($routeSub = request()->route('sub_menu'))
 
                     @foreach (($adminSidebarMenus ?? collect()) as $sidebarMenu)
+                        @php($isHomeMenu = $sidebarMenu->normalizedPath() === '/')
                         @if ($sidebarMenu->subMenus->isEmpty())
-                            <a class="{{ (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '' }}"
-                                href="{{ route('admin.menus.page-sections.index', $sidebarMenu) }}">{{ $sidebarMenu->label }}</a>
+                            <a class="{{ $isHomeMenu
+                                ? (request()->routeIs('admin.home-sections.*') ? 'active' : '')
+                                : ((request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '') }}"
+                                href="{{ $isHomeMenu ? route('admin.home-sections.index') : route('admin.menus.page-sections.index', $sidebarMenu) }}">{{ $sidebarMenu->label }}</a>
                         @else
-                            @php($openSidebarGroup = (request()->routeIs('admin.menus.edit') && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id)
+                            @php($openSidebarGroup = ($isHomeMenu && request()->routeIs('admin.home-sections.*'))
+                                || ($isHomeMenu && request()->routeIs('admin.about-page.*'))
+                                || (request()->routeIs('admin.menus.edit') && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id)
                                 || (request()->routeIs('admin.menus.page-sections.*') && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id)
                                 || (request()->routeIs('admin.sub-menus.edit') && $routeSub && (int) $routeSub->menu_id === (int) $sidebarMenu->id)
                                 || (request()->routeIs('admin.sub-menus.page-sections.*') && $routeSub && (int) $routeSub->menu_id === (int) $sidebarMenu->id))
@@ -627,12 +637,17 @@
                                     <span aria-hidden="true" style="opacity:.85;">▾</span>
                                 </summary>
                                 <div class="nav-sub">
-                                    <a class="parent-page {{ (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '' }}"
-                                        href="{{ route('admin.menus.page-sections.index', $sidebarMenu) }}"
-                                        title="Page sections for this parent menu">{{ $sidebarMenu->label }}</a>
+                                    <a class="parent-page {{ $isHomeMenu
+                                        ? (request()->routeIs('admin.home-sections.*') ? 'active' : '')
+                                        : ((request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '') }}"
+                                        href="{{ $isHomeMenu ? route('admin.home-sections.index') : route('admin.menus.page-sections.index', $sidebarMenu) }}"
+                                        title="{{ $isHomeMenu ? 'Home page sections' : 'Page sections for this parent menu' }}">{{ $sidebarMenu->label }}</a>
                                     @foreach ($sidebarMenu->subMenus as $sidebarSub)
-                                        <a class="{{ (request()->routeIs('admin.sub-menus.edit') || request()->routeIs('admin.sub-menus.page-sections.*')) && $routeSub && (int) $routeSub->id === (int) $sidebarSub->id ? 'active' : '' }}"
-                                            href="{{ route('admin.sub-menus.page-sections.index', $sidebarSub) }}">{{ $sidebarSub->label }}</a>
+                                        @php($isAboutSubmenu = $sidebarSub->normalizedPath() === '/about-us')
+                                        <a class="{{ $isAboutSubmenu
+                                            ? (request()->routeIs('admin.about-page.*') ? 'active' : '')
+                                            : ((request()->routeIs('admin.sub-menus.edit') || request()->routeIs('admin.sub-menus.page-sections.*')) && $routeSub && (int) $routeSub->id === (int) $sidebarSub->id ? 'active' : '') }}"
+                                            href="{{ $isAboutSubmenu ? route('admin.about-page.edit') : route('admin.sub-menus.page-sections.index', $sidebarSub) }}">{{ $sidebarSub->label }}</a>
                                     @endforeach
                                 </div>
                             </details>

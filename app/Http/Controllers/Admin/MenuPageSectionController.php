@@ -3,20 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AboutPage;
 use App\Models\Menu;
 use App\Models\MenuPageSection;
 use App\Models\SubMenu;
+use App\Support\ImageUploadRules;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
- * CRUD for morph MenuPageSection on Menu and SubMenu.
+ * CRUD for morph MenuPageSection on Menu, SubMenu, and AboutPage.
  */
 class MenuPageSectionController extends Controller
 {
-    private function assertOwner(Menu|SubMenu $owner, MenuPageSection $section): void
+    private function assertOwner(Menu|SubMenu|AboutPage $owner, MenuPageSection $section): void
     {
         abort_unless(
             $section->sectionable_type === $owner::class && (int) $section->sectionable_id === (int) $owner->id,
@@ -24,7 +29,7 @@ class MenuPageSectionController extends Controller
         );
     }
 
-    private function nextSortOrderFor(Menu|SubMenu $owner): int
+    private function nextSortOrderFor(Menu|SubMenu|AboutPage $owner): int
     {
         $max = (int) ($owner->pageSections()->max('sort_order') ?? 0);
 
@@ -34,21 +39,58 @@ class MenuPageSectionController extends Controller
     /**
      * @return list<array{path: string, title: string|null}>
      */
+    private function validateExtraGalleryUploads(Request $request, string $inputKey = 'extra_images'): void
+    {
+        $uploaded = $request->file($inputKey);
+        if (! is_array($uploaded)) {
+            return;
+        }
+
+        $rules = [];
+        foreach ($uploaded as $i => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $file = $row['file'] ?? null;
+            if (! $file instanceof UploadedFile) {
+                continue;
+            }
+
+            if (! $file->isValid()) {
+                throw ValidationException::withMessages([
+                    $inputKey.'.'.$i.'.file' => [ImageUploadRules::invalidUploadMessage($file)],
+                ]);
+            }
+
+            $rules[$inputKey.'.'.$i.'.file'] = ImageUploadRules::rules(required: true);
+        }
+
+        if ($rules !== []) {
+            Validator::make($request->all(), $rules)->validate();
+        }
+    }
+
     private function collectNewExtraGalleryFiles(Request $request, string $inputKey = 'extra_images'): array
     {
         $out = [];
-        $rows = $request->input($inputKey, []);
-        if (! is_array($rows)) {
+        $uploaded = $request->file($inputKey);
+        if (! is_array($uploaded)) {
             return $out;
         }
 
-        foreach (array_keys($rows) as $i) {
-            if (! $request->hasFile($inputKey.'.'.$i.'.file')) {
+        foreach ($uploaded as $i => $row) {
+            if (! is_array($row)) {
                 continue;
             }
-            $path = $request->file($inputKey.'.'.$i.'.file')->store('page-sections/images', 'public_site');
-            $row = is_array($rows[$i] ?? null) ? $rows[$i] : [];
-            $title = trim((string) ($row['title'] ?? ''));
+
+            $file = $row['file'] ?? null;
+            if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                continue;
+            }
+
+            $path = $file->store('page-sections/images', 'public_site');
+            $title = trim((string) $request->input($inputKey.'.'.$i.'.title', ''));
 
             $out[] = ['path' => $path, 'title' => $title !== '' ? $title : null];
         }
@@ -76,6 +118,13 @@ class MenuPageSectionController extends Controller
         $side = strtolower(trim((string) $value));
 
         return in_array($side, ['right', '1', 'true', 'on'], true) ? 'right' : 'left';
+    }
+
+    private function resolveSectionTitle(mixed $title): ?string
+    {
+        $title = is_string($title) ? trim($title) : '';
+
+        return $title !== '' ? $title : null;
     }
 
     private function deleteStoredPath(mixed $path): void
@@ -108,7 +157,7 @@ class MenuPageSectionController extends Controller
                 'points' => ['nullable', 'array'],
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'image_side' => ['required', 'in:left,right'],
-                'image_file' => ['required', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(required: true),
                 'is_active' => ['sometimes', 'boolean'],
                 'sort_order' => ['nullable', 'integer', 'min:0'],
             ],
@@ -128,9 +177,8 @@ class MenuPageSectionController extends Controller
                 'title' => ['nullable', 'string', 'max:255'],
                 'description' => ['nullable', 'string', 'max:5000'],
                 'image_caption' => ['nullable', 'string', 'max:255'],
-                'image_file' => ['required', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(required: true),
                 'extra_images' => ['nullable', 'array'],
-                'extra_images.*.file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
                 'extra_images.*.title' => ['nullable', 'string', 'max:255'],
                 'is_active' => ['sometimes', 'boolean'],
                 'sort_order' => ['nullable', 'integer', 'min:0'],
@@ -140,7 +188,7 @@ class MenuPageSectionController extends Controller
                 'mini_title' => ['nullable', 'string', 'max:255'],
                 'title' => ['nullable', 'string', 'max:255'],
                 'description' => ['nullable', 'string', 'max:5000'],
-                'image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(),
                 'points' => ['nullable', 'array'],
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'bottom_description' => ['nullable', 'string', 'max:5000'],
@@ -154,6 +202,10 @@ class MenuPageSectionController extends Controller
 
         $validated = $request->validate($rules);
         $resolvedType = (string) ($validated['type'] ?? $type);
+
+        if ($resolvedType === 'image') {
+            $this->validateExtraGalleryUploads($request);
+        }
 
         if ($resolvedType === 'two_column_image_details') {
             $data = collect($validated)->except(['type', 'title', 'is_active', 'image_file'])->all();
@@ -196,7 +248,7 @@ class MenuPageSectionController extends Controller
 
         return [
             'type' => $resolvedType,
-            'title' => $title !== '' ? $title : strtoupper(str_replace('_', ' ', $resolvedType)),
+            'title' => $this->resolveSectionTitle($title),
             'is_active' => $request->boolean('is_active'),
             'data' => $data,
             'sort_order' => (int) ($validated['sort_order'] ?? 0),
@@ -221,7 +273,7 @@ class MenuPageSectionController extends Controller
                 'points' => ['nullable', 'array'],
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'image_side' => ['required', 'in:left,right'],
-                'image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(),
             ]);
 
             $data = collect($validated)->except(['title', 'is_active', 'sort_order', 'image_file'])->all();
@@ -239,7 +291,7 @@ class MenuPageSectionController extends Controller
 
             return [
                 'type' => $type,
-                'title' => $title !== '' ? $title : strtoupper(str_replace('_', ' ', $type)),
+                'title' => $this->resolveSectionTitle($title),
                 'is_active' => $request->boolean('is_active'),
                 'data' => $data,
                 'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
@@ -254,15 +306,16 @@ class MenuPageSectionController extends Controller
                 'title' => ['nullable', 'string', 'max:255'],
                 'description' => ['nullable', 'string', 'max:5000'],
                 'image_caption' => ['nullable', 'string', 'max:255'],
-                'image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(),
                 'extra_images' => ['nullable', 'array'],
-                'extra_images.*.file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
                 'extra_images.*.title' => ['nullable', 'string', 'max:255'],
                 'extra_remove' => ['nullable', 'array'],
                 'extra_remove.*' => ['integer', 'min:0'],
                 'extra_gallery_titles' => ['nullable', 'array'],
                 'extra_gallery_titles.*' => ['nullable', 'string', 'max:255'],
             ]);
+
+            $this->validateExtraGalleryUploads($request);
 
             $current = is_array($section->data) ? $section->data : [];
             $gallery = data_get($current, 'extra_gallery', []);
@@ -311,7 +364,7 @@ class MenuPageSectionController extends Controller
 
             return [
                 'type' => $type,
-                'title' => $title !== '' ? $title : strtoupper(str_replace('_', ' ', $type)),
+                'title' => $this->resolveSectionTitle($title),
                 'is_active' => $request->boolean('is_active'),
                 'data' => $data,
                 'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
@@ -325,7 +378,7 @@ class MenuPageSectionController extends Controller
                 'mini_title' => ['nullable', 'string', 'max:255'],
                 'title' => ['nullable', 'string', 'max:255'],
                 'description' => ['nullable', 'string', 'max:5000'],
-                'image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120'],
+                'image_file' => ImageUploadRules::rules(),
                 'points' => ['nullable', 'array'],
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'bottom_description' => ['nullable', 'string', 'max:5000'],
@@ -353,7 +406,7 @@ class MenuPageSectionController extends Controller
 
             return [
                 'type' => $type,
-                'title' => $title !== '' ? $title : strtoupper(str_replace('_', ' ', $type)),
+                'title' => $this->resolveSectionTitle($title),
                 'is_active' => $request->boolean('is_active'),
                 'data' => $data,
                 'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
@@ -583,6 +636,101 @@ class MenuPageSectionController extends Controller
 
         return redirect()
             ->route('admin.sub-menus.page-sections.index', $sub_menu)
+            ->with('status', 'Section deleted.');
+    }
+
+    public function indexAbout(AboutPage $about_page): View
+    {
+        $this->authorize('update', $about_page);
+
+        return view('admin.menu-page-sections.index', [
+            'pageTitle' => 'About Us — extra sections',
+            'ownerLabel' => 'About Us page',
+            'backUrl' => route('admin.about-page.edit'),
+            'createUrl' => route('admin.about-page.page-sections.create', $about_page),
+            'detailsUrl' => route('admin.about-page.edit'),
+            'sections' => $about_page->pageSections()->ordered()->get(),
+            'owner' => $about_page,
+            'editRouteName' => 'admin.about-page.page-sections.edit',
+            'deleteRouteName' => 'admin.about-page.page-sections.destroy',
+            'showCreateBottom' => true,
+        ]);
+    }
+
+    public function createAbout(AboutPage $about_page): View
+    {
+        $this->authorize('update', $about_page);
+
+        return view('admin.menu-page-sections.create', [
+            'pageTitle' => 'Create section',
+            'ownerLabel' => 'About Us page',
+            'backUrl' => route('admin.about-page.page-sections.index', $about_page),
+            'postUrl' => route('admin.about-page.page-sections.store', $about_page),
+        ]);
+    }
+
+    public function storeAbout(Request $request, AboutPage $about_page): RedirectResponse
+    {
+        $this->authorize('update', $about_page);
+
+        $payload = $this->buildSectionPayload($request);
+        $payload['sort_order'] = $payload['sort_order'] ?: $this->nextSortOrderFor($about_page);
+
+        $about_page->pageSections()->create($payload);
+
+        return redirect()
+            ->route('admin.about-page.page-sections.index', $about_page)
+            ->with('status', 'Section added.');
+    }
+
+    public function editAbout(AboutPage $about_page, MenuPageSection $section): View
+    {
+        $this->authorize('update', $about_page);
+        $this->assertOwner($about_page, $section);
+
+        return view('admin.menu-page-sections.edit', [
+            'pageTitle' => 'Edit section',
+            'ownerLabel' => 'About Us page',
+            'backUrl' => route('admin.about-page.page-sections.index', $about_page),
+            'updateUrl' => route('admin.about-page.page-sections.update', [$about_page, $section]),
+            'section' => $section,
+        ]);
+    }
+
+    public function updateAbout(Request $request, AboutPage $about_page, MenuPageSection $section): RedirectResponse
+    {
+        $this->authorize('update', $about_page);
+        $this->assertOwner($about_page, $section);
+
+        $payload = $this->buildSectionPayloadForUpdate($request, $section);
+
+        if ($section->type === 'two_column_image_details' && $request->hasFile('image_file')) {
+            $this->deletePrimaryStoredImage($section);
+        }
+        if ($section->type === 'image' && $request->hasFile('image_file')) {
+            $this->deletePrimaryStoredImage($section);
+        }
+        if ($section->type === 'text_input' && $request->hasFile('image_file')) {
+            $this->deletePrimaryStoredImage($section);
+        }
+
+        $section->update($payload);
+
+        return redirect()
+            ->route('admin.about-page.page-sections.index', $about_page)
+            ->with('status', 'Section updated.');
+    }
+
+    public function destroyAbout(AboutPage $about_page, MenuPageSection $section): RedirectResponse
+    {
+        $this->authorize('update', $about_page);
+        $this->assertOwner($about_page, $section);
+
+        $this->deleteSectionFiles($section);
+        $section->delete();
+
+        return redirect()
+            ->route('admin.about-page.page-sections.index', $about_page)
             ->with('status', 'Section deleted.');
     }
 }

@@ -26,10 +26,20 @@
             </thead>
             <tbody>
                 @forelse ($sections as $section)
+                @php
+                    $sectionTypeLabel = match (true) {
+                        $section->block_type === 'carousel' => 'Carousel ('.($section->variant ?? '').')',
+                        $section->block_type === 'image' => 'Image',
+                        $section->block_type === 'text_input' => 'Text & points',
+                        $section->block_type === 'two_column' && $section->two_column_mode === 'image_details' => 'Image and details',
+                        $section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details' => '2 side details',
+                        default => $section->block_type,
+                    };
+                @endphp
                 <tr>
                     <td>{{ $section->id }}</td>
                     <td>{{ $section->title ?? '—' }}</td>
-                    <td>{{ $section->block_type }}</td>
+                    <td>{{ $sectionTypeLabel }}</td>
                     <td>{{ $section->variant ?? '—' }}</td>
                     <td>{{ $section->is_active ? 'Active' : 'Inactive' }}</td>
                     <td class="actions-cell">
@@ -52,7 +62,7 @@
         </table>
     </div>
     <div style="margin-top: 10px; color:#64748b; font-size:13px;">
-        Home sections are now stored in the database (carousel only for now).
+        Sections: carousel, image, image &amp; details, 2 side details, text &amp; points.
     </div>
 </div>
 @endsection

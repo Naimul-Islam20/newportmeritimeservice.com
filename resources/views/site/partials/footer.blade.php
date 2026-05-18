@@ -1,94 +1,115 @@
-@php($sd = $siteDetails ?? null)
-@php($defaultImg = is_string($sd?->default_image_path) ? trim($sd->default_image_path) : '')
-@php($showFooterPhoto = $defaultImg !== '')
+@php
+    $sd = $siteDetails ?? null;
+    $footerSiteName = $sd instanceof \App\Models\SiteDetail ? $sd->siteNameForMeta() : (string) config('app.name');
+    $footerLogo = is_string($sd?->footer_logo_path) ? trim($sd->footer_logo_path) : '';
+    $loc = trim((string) ($sd?->location ?? ''));
+    $emails = is_array($sd?->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [];
+    $phones = is_array($sd?->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [];
+    $social = is_array($sd?->social_links ?? null) ? $sd->social_links : [];
+    $footerSocialUrl = static function (?string $raw): ?string {
+        $url = trim((string) ($raw ?? ''));
+        if ($url === '') {
+            return null;
+        }
+        if (preg_match('#^https?://#i', $url)) {
+            return $url;
+        }
 
-<footer class="relative mt-auto min-w-0 overflow-hidden text-white">
+        return 'https://'.ltrim($url, '/');
+    };
+    $socialNetworks = [
+        'facebook' => ['label' => 'Facebook', 'url' => $footerSocialUrl($social['facebook'] ?? null)],
+        'instagram' => ['label' => 'Instagram', 'url' => $footerSocialUrl($social['instagram'] ?? null)],
+        'twitter' => ['label' => 'Twitter', 'url' => $footerSocialUrl($social['twitter'] ?? null)],
+        'linkedin' => ['label' => 'LinkedIn', 'url' => $footerSocialUrl($social['linkedin'] ?? null)],
+    ];
+@endphp
 
-    {{-- Background: site default image (if set) or solid brand navy --}}
-    <div class="absolute inset-0">
-        @if ($showFooterPhoto)
-            <img src="{{ asset($defaultImg) }}" alt=""
-                class="h-full w-full object-cover object-center">
-            <div class="absolute inset-0" style="background: color-mix(in srgb, var(--secondary) 65%, transparent);"></div>
-        @else
-            <div class="absolute inset-0 bg-secondary"></div>
-        @endif
-    </div>
+<footer class="site-footer relative mt-auto min-w-0 overflow-hidden text-white">
 
-    {{-- Main content --}}
-    <div class="relative z-10 site-container py-12 sm:py-16 lg:py-16">
-        <div class="flex flex-col justify-between gap-12 sm:gap-14 lg:flex-row lg:gap-16">
-
-            <div class="min-w-0 lg:max-w-xl">
-                @php($footerLogo = is_string($sd?->footer_logo_path) ? trim($sd->footer_logo_path) : '')
+    <div class="site-footer__inner site-container">
+        <div class="site-footer__brand">
+            <a href="{{ route('home') }}" class="site-footer__logo-link">
                 @if ($footerLogo !== '')
-                    <img src="{{ asset($footerLogo) }}" alt="{{ config('app.name') }}" class="mb-6 h-10 w-auto sm:h-12">
+                <img src="{{ asset($footerLogo) }}" alt="{{ config('app.name') }}" class="site-footer__logo">
                 @else
-                    <p class="mb-6 text-xl font-extrabold leading-tight sm:text-2xl">Newport Maritime Service</p>
+                <img src="{{ asset('newport-logo.png') }}" alt="{{ config('app.name') }}" class="site-footer__logo">
                 @endif
+            </a>
 
-                <div class="mt-6 space-y-3 pl-0 sm:mt-8 sm:pl-4 lg:ml-8 lg:pl-0 xl:ml-[50px]">
-                    @php($loc = trim((string) ($sd?->location ?? '')))
-                    @php($emails = is_array($sd?->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [])
-                    @php($phones = is_array($sd?->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [])
-
-                    @if ($loc !== '')
-                        <div class="text-[15px] font-normal leading-relaxed text-white/90 space-y-1 break-words">
-                            {!! nl2br(e($loc)) !!}
-                        </div>
-                    @endif
-
-                    @if (count($emails) > 0)
-                        <div class="text-[15px] font-normal text-white/90 space-y-1 break-all sm:break-words">
-                            @foreach ($emails as $email)
-                                <p>
-                                    <a href="mailto:{{ $email }}" class="transition hover:text-primary">{{ $email }}</a>
-                                </p>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if (count($phones) > 0)
-                        <div class="text-[15px] font-normal text-white/90 space-y-1">
-                            @foreach ($phones as $phone)
-                                @php($tel = preg_replace('/[^0-9+]/', '', $phone))
-                                <p>
-                                    <a href="tel:{{ $tel }}" class="transition hover:text-primary">{{ $phone }}</a>
-                                </p>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <div class="w-full min-w-0 lg:max-w-xs lg:shrink-0">
-                <p class="mb-4 text-lg font-extrabold leading-tight sm:mb-6 sm:text-xl">Quick Links</p>
-                <ul class="mt-2 space-y-3 text-[15px] font-normal text-white/90">
-                    <li><a href="{{ route('home') }}" class="inline-block py-0.5 transition hover:text-primary">Home</a></li>
-                    <li><a href="{{ route('ship-supply') }}" class="inline-block py-0.5 transition hover:text-primary">Ship Supply</a></li>
-                    <li><a href="#" class="inline-block py-0.5 transition hover:text-primary">Our Services</a></li>
-                    <li><a href="#" class="inline-block py-0.5 transition hover:text-primary">Award</a></li>
-                    <li><a href="{{ route('contact.create') }}" class="inline-block py-0.5 transition hover:text-primary">Contact</a></li>
-                    <li class="pt-1">
-                        <a href="{{ route('quote.request') }}" class="inline-block rounded-md bg-primary px-4 py-2 text-xs font-bold uppercase tracking-widest text-secondary shadow-sm transition hover:brightness-95">
-                            Get a quote
+            <div class="site-footer__socials">
+                @foreach ($socialNetworks as $key => $network)
+                    @if (filled($network['url']))
+                        <a href="{{ $network['url'] }}" target="_blank" rel="noopener noreferrer" class="site-footer__social" aria-label="{{ $network['label'] }}" title="{{ $network['label'] }}">
+                            @include('site.partials.footer-social-icon', ['icon' => $key])
                         </a>
+                    @else
+                        <span class="site-footer__social site-footer__social--inactive" title="{{ $network['label'] }}">
+                            @include('site.partials.footer-social-icon', ['icon' => $key])
+                        </span>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+
+        <div class="site-footer__info">
+            @if ($loc !== '')
+            <div class="site-footer__info-item">
+                <span class="site-footer__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10.5 12 3l9 7.5" />
+                        <path d="M5 9.5V20h14V9.5" />
+                        <path d="M10 20v-6h4v6" />
+                    </svg>
+                </span>
+                <div class="site-footer__info-text">{!! nl2br(e($loc)) !!}</div>
+            </div>
+            @endif
+
+            @if (count($emails) > 0)
+            <div class="site-footer__info-item site-footer__info-item--border">
+                <span class="site-footer__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <path d="m3 7 9 6 9-6" />
+                    </svg>
+                </span>
+                <ul class="site-footer__info-text site-footer__info-list">
+                    @foreach ($emails as $email)
+                    <li>
+                        <a href="mailto:{{ $email }}">{{ $email }}</a>
                     </li>
+                    @endforeach
                 </ul>
             </div>
+            @endif
 
-        </div>
-    </div>
-
-    {{-- Copyright bar --}}
-    <div class="relative z-10 bg-secondary text-xs text-white/70 sm:text-sm">
-        <div class="site-container flex flex-wrap items-center justify-center py-2 sm:justify-between sm:py-0">
-            <div class="flex w-full items-center justify-center sm:w-auto sm:justify-start">
-                <span class="border-x border-white/15 px-4 py-2.5 text-center sm:px-6">
-                    &copy;{{ date('Y') }} NEWPORT MARITIME SERVICE
+            @if (count($phones) > 0)
+            <div class="site-footer__info-item site-footer__info-item--border">
+                <span class="site-footer__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A15 15 0 015 6a2 2 0 012-2z" />
+                    </svg>
                 </span>
+                <ul class="site-footer__info-text site-footer__info-list">
+                    @foreach ($phones as $phone)
+                        @php($tel = preg_replace('/[^0-9+]/', '', $phone))
+                        <li><a href="tel:{{ $tel }}">{{ $phone }}</a></li>
+                    @endforeach
+                </ul>
             </div>
+            @endif
         </div>
+        <nav class="site-footer__nav" aria-label="Footer">
+            @foreach (($footerMenus ?? collect()) as $menu)
+                <a href="{{ $menu->siteNavHref() }}" class="site-footer__nav-link">{{ $menu->label }}</a>
+            @endforeach
+        </nav>
     </div>
 
+    <div class="site-footer__copy border-t border-white/10">
+        <div class="site-container py-4 text-center text-sm text-white/65 sm:py-5 sm:text-base">
+            &copy; {{ date('Y') }} {{ strtoupper($footerSiteName) }}
+        </div>
+    </div>
 </footer>

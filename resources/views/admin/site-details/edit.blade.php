@@ -12,6 +12,28 @@
 
         <div class="grid grid-2">
             <div style="grid-column: 1 / -1;">
+                <h2 style="margin: 0 0 10px 0; font-size: 15px;">Site name &amp; meta (SEO)</h2>
+                <p style="margin: 0 0 12px 0; color:#64748b; font-size: 13px; line-height: 1.45;">
+                    Default site title and meta description for public pages. Individual pages can still override these when set.
+                </p>
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="site_name">Site name</label>
+                <input id="site_name" name="site_name" value="{{ old('site_name', $detail->site_name) }}" placeholder="{{ config('app.name') }}">
+                <div style="color:#64748b; font-size:12px; margin-top:6px;">
+                    Used in the browser tab when a page does not set its own title.
+                </div>
+                @error('site_name') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="meta_description">Meta description</label>
+                <textarea id="meta_description" name="meta_description" rows="3" placeholder="Short summary for search engines and social previews">{{ old('meta_description', $detail->meta_description) }}</textarea>
+                <div style="color:#64748b; font-size:12px; margin-top:6px;">
+                    Default meta description when a page does not provide one (about 150–160 characters is ideal).
+                </div>
+                @error('meta_description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
                 <label for="location">Location</label>
                 <textarea id="location" name="location" rows="3" placeholder="Office address / location">{{ old('location', $detail->location) }}</textarea>
                 @error('location') <div class="error">{{ $message }}</div> @enderror
@@ -79,6 +101,11 @@
                         <label for="facebook">Facebook</label>
                         <input id="facebook" name="social[facebook]" value="{{ $social['facebook'] ?? '' }}" placeholder="https://facebook.com/...">
                         @error('social.facebook') <div class="error">{{ $message }}</div> @enderror
+                    </div>
+                    <div>
+                        <label for="instagram">Instagram</label>
+                        <input id="instagram" name="social[instagram]" value="{{ $social['instagram'] ?? '' }}" placeholder="https://instagram.com/...">
+                        @error('social.instagram') <div class="error">{{ $message }}</div> @enderror
                     </div>
                     <div>
                         <label for="linkedin">LinkedIn</label>

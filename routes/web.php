@@ -109,7 +109,7 @@ Route::prefix('admin')->group(function (): void {
             ->name('admin.sub-menus.page-sections.destroy');
 
         Route::resource('hero-slides', HeroSlideController::class)
-            ->only(['index', 'store', 'destroy'])
+            ->only(['index', 'store', 'edit', 'update', 'destroy'])
             ->names('admin.hero-slides');
 
         Route::get('site-details', [SiteDetailController::class, 'edit'])->name('admin.site-details.edit');
@@ -117,6 +117,19 @@ Route::prefix('admin')->group(function (): void {
 
         Route::get('about-page', [AboutPageController::class, 'edit'])->name('admin.about-page.edit');
         Route::put('about-page/{about_page}', [AboutPageController::class, 'update'])->name('admin.about-page.update');
+
+        Route::get('about-page/{about_page}/page-sections', [MenuPageSectionController::class, 'indexAbout'])
+            ->name('admin.about-page.page-sections.index');
+        Route::get('about-page/{about_page}/page-sections/create', [MenuPageSectionController::class, 'createAbout'])
+            ->name('admin.about-page.page-sections.create');
+        Route::post('about-page/{about_page}/page-sections', [MenuPageSectionController::class, 'storeAbout'])
+            ->name('admin.about-page.page-sections.store');
+        Route::get('about-page/{about_page}/page-sections/{section}/edit', [MenuPageSectionController::class, 'editAbout'])
+            ->name('admin.about-page.page-sections.edit');
+        Route::put('about-page/{about_page}/page-sections/{section}', [MenuPageSectionController::class, 'updateAbout'])
+            ->name('admin.about-page.page-sections.update');
+        Route::delete('about-page/{about_page}/page-sections/{section}', [MenuPageSectionController::class, 'destroyAbout'])
+            ->name('admin.about-page.page-sections.destroy');
 
         Route::get('home-sections', [HomeSectionController::class, 'index'])->name('admin.home-sections.index');
         Route::get('home-sections/service-area', [HomeSectionController::class, 'serviceArea'])->name('admin.home-sections.service-area');

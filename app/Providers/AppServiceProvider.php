@@ -63,13 +63,18 @@ class AppServiceProvider extends ServiceProvider
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderBy('id')
-                ->with(['subMenus' => fn ($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('id')])
+                ->with(['subMenus' => fn($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('id')])
                 ->get());
             $view->with('siteDetails', SiteDetail::query()->first());
         });
 
         View::composer('site.partials.footer', function ($view): void {
             $view->with('siteDetails', SiteDetail::query()->first());
+            $view->with('footerMenus', Menu::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get());
         });
 
         View::composer([
@@ -83,13 +88,14 @@ class AppServiceProvider extends ServiceProvider
                 $detail ? $detail->themeVariablesForCss() : (new SiteDetail)->themeVariablesForCss(),
             );
             $view->with('adminHeaderLogoUrl', SiteDetail::headerLogoAssetUrl($detail));
+            $view->with(SiteDetail::metaForViews($detail));
         });
 
         View::composer('layouts.admin', function ($view): void {
             $menus = Menu::query()
                 ->orderBy('sort_order')
                 ->orderBy('id')
-                ->with(['subMenus' => fn ($q) => $q->orderBy('sort_order')->orderBy('id')])
+                ->with(['subMenus' => fn($q) => $q->orderBy('sort_order')->orderBy('id')])
                 ->get()
                 ->map(function (Menu $menu): ?Menu {
                     if ($menu->isFormPageMenu()) {
@@ -98,11 +104,8 @@ class AppServiceProvider extends ServiceProvider
                     if ($menu->normalizedPath() === '/about-us') {
                         return null;
                     }
-                    if ($menu->normalizedPath() === '/') {
-                        return null;
-                    }
                     $subs = $menu->subMenus
-                        ->filter(fn (SubMenu $s) => ! $s->isFormPageLink() && $s->normalizedPath() !== '/')
+                        ->filter(fn (SubMenu $s) => ! $s->isFormPageLink())
                         ->values();
                     $menu->setRelation('subMenus', $subs);
 

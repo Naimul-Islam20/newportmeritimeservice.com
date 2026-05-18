@@ -18,6 +18,8 @@ class SiteDetailController extends Controller
 
         if (! $detail) {
             $detail = SiteDetail::create([
+                'site_name' => null,
+                'meta_description' => null,
                 'location' => null,
                 'map' => null,
                 'emails' => [],
@@ -62,6 +64,7 @@ class SiteDetailController extends Controller
         $social = $data['social'] ?? [];
         $socialLinks = [
             'facebook' => isset($social['facebook']) && is_string($social['facebook']) ? trim($social['facebook']) : null,
+            'instagram' => isset($social['instagram']) && is_string($social['instagram']) ? trim($social['instagram']) : null,
             'linkedin' => isset($social['linkedin']) && is_string($social['linkedin']) ? trim($social['linkedin']) : null,
             'youtube' => isset($social['youtube']) && is_string($social['youtube']) ? trim($social['youtube']) : null,
             'twitter' => isset($social['twitter']) && is_string($social['twitter']) ? trim($social['twitter']) : null,
@@ -136,7 +139,12 @@ class SiteDetailController extends Controller
             ];
         }
 
+        $siteName = isset($data['site_name']) && is_string($data['site_name']) ? trim($data['site_name']) : '';
+        $metaDescription = isset($data['meta_description']) && is_string($data['meta_description']) ? trim($data['meta_description']) : '';
+
         $siteDetail->update([
+            'site_name' => $siteName !== '' ? $siteName : null,
+            'meta_description' => $metaDescription !== '' ? $metaDescription : null,
             'location' => isset($data['location']) && is_string($data['location']) ? trim($data['location']) : null,
             'map' => isset($data['map']) && is_string($data['map']) ? trim($data['map']) : null,
             'emails' => $emails,

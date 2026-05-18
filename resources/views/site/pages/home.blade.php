@@ -25,6 +25,20 @@
         height: 100% !important;
     }
 
+    .supplies-swiper .swiper-wrapper {
+        align-items: stretch;
+    }
+
+    .supplies-swiper .swiper-slide {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .supplies-swiper .swiper-slide > div {
+        flex: 1;
+        min-height: 0;
+    }
+
     /* Equal-height news cards */
     .news-swiper .swiper-wrapper {
         align-items: stretch;
@@ -48,12 +62,25 @@
             0 4px 10px rgba(0, 0, 0, 0.55),
             0 8px 22px rgba(0, 0, 0, 0.35);
     }
+
+    /* Mobile: title max 2 lines, description max 3 lines (ellipsis) */
+    @media (max-width: 639px) {
+        .hero-slide__copy h1 br {
+            display: none;
+        }
+
+        .hero-slide__copy h1,
+        .hero-slide__copy p {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+    }
 </style>
 @endpush
 
 @section('content')
 {{-- Hero Carousel --}}
-<section class="relative h-[300px] w-full overflow-hidden bg-secondary sm:h-[540px] md:h-[700px] lg:h-[800px]">
+<section class="relative h-[260px] w-full overflow-hidden bg-secondary sm:h-[460px] md:h-[580px] lg:h-[660px]">
     <div class="swiper hero-swiper h-full w-full">
         <div class="swiper-wrapper">
             @if ($heroSlides->isNotEmpty())
@@ -67,18 +94,26 @@
                     @endif
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="hero-slide__copy max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
-                            {!! nl2br(e($slide->title)) !!}
+                    <div class="hero-slide__copy max-w-5xl px-3 sm:px-4">
+                        @php
+                            $heroTitlePlain = preg_replace('/\s+/u', ' ', trim($slide->title));
+                            $heroDescPlain = filled($slide->description)
+                                ? preg_replace('/\s+/u', ' ', trim($slide->description))
+                                : '';
+                        @endphp
+                        <h1 class="line-clamp-2 font-sans text-3xl font-extrabold leading-tight tracking-tight text-white sm:line-clamp-none sm:text-6xl sm:leading-none md:text-7xl" title="{{ $heroTitlePlain }}">
+                            <span class="sm:hidden">{{ $heroTitlePlain }}</span>
+                            <span class="hidden sm:block">{!! nl2br(e($slide->title)) !!}</span>
                         </h1>
                         @if (filled($slide->description))
-                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
-                            {!! nl2br(e($slide->description)) !!}
+                        <p class="mt-3 line-clamp-3 text-sm font-bold tracking-normal text-white sm:mt-6 sm:line-clamp-none sm:text-lg md:text-xl" title="{{ $heroDescPlain }}">
+                            <span class="sm:hidden">{{ $heroDescPlain }}</span>
+                            <span class="hidden sm:block">{!! nl2br(e($slide->description)) !!}</span>
                         </p>
                         @endif
                         @if (filled($slide->button_label))
-                        <div class="mt-6 sm:mt-10">
-                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
+                        <div class="mt-4 sm:mt-10">
+                            <a href="{{ $slide->resolvedButtonHref() }}" class="inline-block rounded bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-secondary shadow-md transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 {{ $slide->button_label }}
                             </a>
                         </div>
@@ -95,15 +130,15 @@
                     <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop" alt="Cargo Port" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="hero-slide__copy max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
+                    <div class="hero-slide__copy max-w-5xl px-3 sm:px-4">
+                        <h1 class="line-clamp-2 font-sans text-3xl font-extrabold leading-tight tracking-tight text-white sm:line-clamp-none sm:text-6xl sm:leading-none md:text-7xl">
                             One Partner. Every Need.
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
+                        <p class="mt-3 line-clamp-3 text-sm font-bold tracking-normal text-white sm:mt-6 sm:line-clamp-none sm:text-lg md:text-xl">
                             24/7 maritime solutions across all Bangladeshi ports.
                         </p>
-                        <div class="mt-6 sm:mt-10">
-                            <a href="#services" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
+                        <div class="mt-4 sm:mt-10">
+                            <a href="#services" class="inline-block rounded bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-secondary shadow-md transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 EXPLORE OUR SERVICES
                             </a>
                         </div>
@@ -117,15 +152,16 @@
                     <img src="https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop" alt="Container Ship" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="hero-slide__copy max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
-                            Built on Trust.<br>Delivered with Precision.
+                    <div class="hero-slide__copy max-w-5xl px-3 sm:px-4">
+                        <h1 class="line-clamp-2 font-sans text-3xl font-extrabold leading-tight tracking-tight text-white sm:line-clamp-none sm:text-6xl sm:leading-none md:text-7xl">
+                            <span class="sm:hidden">Built on Trust. Delivered with Precision.</span>
+                            <span class="hidden sm:block">Built on Trust.<br>Delivered with Precision.</span>
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
+                        <p class="mt-3 line-clamp-3 text-sm font-bold tracking-normal text-white sm:mt-6 sm:line-clamp-none sm:text-lg md:text-xl">
                             Quality ship supplies, spares &amp; repairs — all in one window.
                         </p>
-                        <div class="mt-6 sm:mt-10">
-                            <a href="#supplies" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
+                        <div class="mt-4 sm:mt-10">
+                            <a href="#supplies" class="inline-block rounded bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-secondary shadow-md transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 VIEW WHAT WE SUPPLY
                             </a>
                         </div>
@@ -139,15 +175,16 @@
                     <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop" alt="Warehouse" class="h-full w-full object-cover">
                 </div>
                 <div class="relative flex h-full items-center justify-center text-center">
-                    <div class="hero-slide__copy max-w-5xl px-4">
-                        <h1 class="font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
-                            Bangladesh's Maritime<br>Experts Since 2012.
+                    <div class="hero-slide__copy max-w-5xl px-3 sm:px-4">
+                        <h1 class="line-clamp-2 font-sans text-3xl font-extrabold leading-tight tracking-tight text-white sm:line-clamp-none sm:text-6xl sm:leading-none md:text-7xl">
+                            <span class="sm:hidden">Bangladesh's Maritime Experts Since 2012.</span>
+                            <span class="hidden sm:block">Bangladesh's Maritime<br>Experts Since 2012.</span>
                         </h1>
-                        <p class="mt-6 text-base font-bold tracking-normal text-white sm:text-lg md:text-xl">
+                        <p class="mt-3 line-clamp-3 text-sm font-bold tracking-normal text-white sm:mt-6 sm:line-clamp-none sm:text-lg md:text-xl">
                             Serving global fleets with reliability, speed &amp; full compliance.
                         </p>
-                        <div class="mt-6 sm:mt-10">
-                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-secondary shadow-lg transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
+                        <div class="mt-4 sm:mt-10">
+                            <a href="{{ route('contact.create') }}" class="inline-block rounded bg-primary px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-secondary shadow-md transition-all hover:scale-105 hover:brightness-95 sm:px-10 sm:py-4 sm:text-sm sm:tracking-widest sm:shadow-xl">
                                 GET IN TOUCH
                             </a>
                         </div>
@@ -160,12 +197,12 @@
 
         {{-- Navigation Arrows --}}
         <button id="hero-prev" class="absolute left-4 top-1/2 z-10 -translate-y-1/2 p-2 text-white/80 transition hover:text-white sm:left-8">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-8 w-8 drop-shadow-md sm:h-12 sm:w-12">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-6 w-6 drop-shadow-md sm:h-12 sm:w-12">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
         </button>
         <button id="hero-next" class="absolute right-4 top-1/2 z-10 -translate-y-1/2 p-2 text-white/80 transition hover:text-white sm:right-8">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-8 w-8 drop-shadow-md sm:h-12 sm:w-12">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="h-6 w-6 drop-shadow-md sm:h-12 sm:w-12">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
         </button>
@@ -189,6 +226,10 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
 @include('site.home-sections.two-column-about', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details')
 @include('site.home-sections.two-column-mission-vision', ['section' => $section, 'sectionStrip' => $sectionStrip])
+@elseif ($section->block_type === 'image')
+@include('site.menu-page-sections.image-block', ['section' => $section, 'sectionStrip' => $sectionStrip])
+@elseif ($section->block_type === 'text_input')
+@include('site.menu-page-sections.text-input', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @endif
 @endforeach
 

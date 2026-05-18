@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
 use App\Models\Menu;
+use App\Models\SiteDetail;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -89,12 +90,16 @@ class PageController extends Controller
 
     public function aboutUs(): View
     {
+        $aboutPage = AboutPage::singleton();
         $about = AboutPage::resolvedForPublic();
+        $siteDetail = SiteDetail::query()->first();
+        $pageTitle = filled($about->hero_title ?? null) ? $about->hero_title : 'About Us';
 
         return view('site.pages.about-us', [
-            'title' => $about->hero_title.' — '.config('app.name'),
-            'metaDescription' => $about->meta_description,
+            'title' => $pageTitle.' — '.config('app.name'),
+            'metaDescription' => $siteDetail?->metaDescriptionForSite(),
             'about' => $about,
+            'pageSections' => $aboutPage->pageSections()->ordered()->where('is_active', true)->get(),
         ]);
     }
 

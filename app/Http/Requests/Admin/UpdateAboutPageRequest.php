@@ -44,6 +44,9 @@ class UpdateAboutPageRequest extends FormRequest
             'hero_background_file' => ['nullable', 'image', 'max:5120'],
             'trust_image_file' => ['nullable', 'image', 'max:5120'],
             'cta_background_file' => ['nullable', 'image', 'max:5120'],
+            'remove_hero_background' => ['sometimes', 'boolean'],
+            'remove_trust_image' => ['sometimes', 'boolean'],
+            'remove_cta_background' => ['sometimes', 'boolean'],
         ];
     }
 

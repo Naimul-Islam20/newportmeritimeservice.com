@@ -1,12 +1,93 @@
 import "./bootstrap";
 
-/** Close mobile header drawer when a link is chosen (frontend). */
+/** Mobile sidebar: smooth open/close, backdrop, scroll lock, escape */
 const mobileNav = document.getElementById("siteMobileNav");
+const mobileNavPanel = mobileNav?.querySelector(".site-mobile-nav__panel");
+const mobileNavSummary = mobileNav?.querySelector(".site-mobile-nav__toggle");
+
+const mobileNavDurationMs = 400;
+
+function setMobileNavBodyLock(open) {
+    document.body.classList.toggle("site-mobile-nav-open", open);
+}
+
+function finishMobileNavClose() {
+    if (!mobileNav) {
+        return;
+    }
+    mobileNav.classList.remove("site-mobile-nav--closing");
+    mobileNav.open = false;
+    setMobileNavBodyLock(false);
+}
+
+function closeMobileNavAnimated() {
+    if (!mobileNav?.open || mobileNav.classList.contains("site-mobile-nav--closing")) {
+        return;
+    }
+
+    mobileNav.classList.add("site-mobile-nav--closing");
+
+    let finished = false;
+    const finish = () => {
+        if (finished) {
+            return;
+        }
+        finished = true;
+        mobileNavPanel?.removeEventListener("transitionend", onTransitionEnd);
+        finishMobileNavClose();
+    };
+
+    const onTransitionEnd = (event) => {
+        if (event.target !== mobileNavPanel || event.propertyName !== "transform") {
+            return;
+        }
+        finish();
+    };
+
+    mobileNavPanel?.addEventListener("transitionend", onTransitionEnd);
+    window.setTimeout(finish, mobileNavDurationMs + 80);
+}
+
+function openMobileNav() {
+    if (!mobileNav) {
+        return;
+    }
+    mobileNav.classList.remove("site-mobile-nav--closing");
+    mobileNav.open = true;
+    setMobileNavBodyLock(true);
+}
+
 if (mobileNav) {
-    mobileNav.querySelectorAll("a[href]").forEach((link) => {
-        link.addEventListener("click", () => {
-            mobileNav.open = false;
+    mobileNavSummary?.addEventListener("click", (event) => {
+        if (mobileNav.open) {
+            event.preventDefault();
+            closeMobileNavAnimated();
+        }
+    });
+
+    mobileNav.querySelectorAll("[data-mobile-nav-close]").forEach((el) => {
+        el.addEventListener("click", (event) => {
+            event.preventDefault();
+            closeMobileNavAnimated();
         });
+    });
+
+    mobileNav.querySelectorAll("a[href]").forEach((link) => {
+        link.addEventListener("click", () => closeMobileNavAnimated());
+    });
+
+    mobileNav.addEventListener("toggle", () => {
+        if (mobileNav.open) {
+            openMobileNav();
+        } else if (!mobileNav.classList.contains("site-mobile-nav--closing")) {
+            setMobileNavBodyLock(false);
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && mobileNav.open) {
+            closeMobileNavAnimated();
+        }
     });
 }
 

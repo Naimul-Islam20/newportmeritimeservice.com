@@ -4,13 +4,21 @@
     $imgUrl = (is_string($section->image_path) && $section->image_path !== '')
         ? asset($section->image_path)
         : 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop';
-    $mini = $section->mini_title;
-    $title = $section->title;
-    $desc = $section->description;
+    $mini = filled($section->mini_title) ? trim($section->mini_title) : null;
+    $title = filled($section->title) ? trim($section->title) : null;
+    $desc = filled($section->description) ? trim($section->description) : null;
     $points = is_array($section->points ?? null)
         ? array_values(array_filter($section->points, fn ($v) => is_string($v) && trim($v) !== ''))
         : [];
-    $detailsBodyClass = 'text-base leading-relaxed text-foreground/85 sm:text-lg';
+    $detailsBodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
+    $hasHeadings = filled($mini) || filled($title);
+    $descMargin = $hasHeadings ? 'mt-3' : 'mt-0';
+    $pointsMargin = ($hasHeadings || filled($desc)) ? 'mt-3' : 'mt-0';
+    $buttonMargin = ($hasHeadings || filled($desc) || count($points) > 0) ? 'mt-8' : 'mt-0';
+    $stackTextFirstOnMobile = ! $hasHeadings;
+    $sectionData = is_array($section->data ?? null) ? $section->data : [];
+    $imageSide = strtolower(trim((string) ($sectionData['image_side'] ?? 'left')));
+    $imageOnRight = $imageSide === 'right';
 @endphp
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
@@ -57,63 +65,67 @@
 @endpush
 
 @if ($layout === 'short')
-    <section class="{{ $stripSectionClass }} site-section image-details-section">
+    <section class="{{ $stripSectionClass }} site-section image-details-section image-details-short">
         <div class="site-container">
-            <div @class(['flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-start lg:gap-10'])>
+            <div @class([
+                'flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-start lg:gap-10',
+                'flex-col-reverse' => $stackTextFirstOnMobile,
+                'lg:flex-row-reverse' => $imageOnRight && ! $stackTextFirstOnMobile,
+            ])>
                 <div class="image-details-mobile-image w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
                     <img src="{{ $imgUrl }}" alt="{{ $section->image_alt ?: '' }}" loading="lazy" decoding="async" class="image-details-mobile-image__img">
                 </div>
-                <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start pt-0 flex-1">
-                    <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $mini ?: 'Why Choose Us?' }}</h3>
-                    <h2 class="mt-3 font-sans text-3xl font-bold leading-tight {{ $stripTitleClass }} sm:text-4xl lg:text-[2.75rem]">
-                        {!! nl2br(e($title ?: "One partner.\nEvery need.\nZero compromise.")) !!}
-                    </h2>
-                    @if (filled($desc))
-                        <p class="mt-3 max-w-2xl {{ $detailsBodyClass }}">{!! nl2br(e($desc)) !!}</p>
-                    @endif
-                    @if (count($points) > 0)
-                        <ul class="mt-3 max-w-2xl list-disc space-y-2 pl-5 {{ $detailsBodyClass }}">
-                            @foreach ($points as $p)
-                                <li>{{ $p }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    @if (filled($section->button_label))
-                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-8 inline-flex w-fit shrink-0 self-start items-center justify-center rounded-sm bg-primary px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-secondary shadow-md transition-all hover:brightness-95 hover:shadow-lg sm:px-10 sm:py-4">
-                            {{ $section->button_label }}
-                        </a>
-                    @endif
+                <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start flex-1">
+                    @include('site.menu-page-sections.partials.image-details-headings', [
+                        'mini' => $mini,
+                        'title' => $title,
+                        'miniClass' => $stripMiniClass,
+                        'titleClass' => $stripTitleClass,
+                        'titleSize' => 'lg',
+                    ])
+                    @include('site.menu-page-sections.partials.image-details-content', [
+                        'desc' => $desc,
+                        'points' => $points,
+                        'detailsBodyClass' => $detailsBodyClass,
+                        'descMargin' => $descMargin,
+                        'pointsMargin' => $pointsMargin,
+                        'buttonMargin' => $buttonMargin,
+                        'maxWidth' => 'max-w-2xl',
+                        'buttonLabel' => $section->button_label,
+                        'buttonHref' => $section->resolvedButtonHref(),
+                    ])
                 </div>
             </div>
         </div>
     </section>
 @else
     <section class="{{ $stripSectionClass }} site-section image-details-section image-details-full">
-        <div @class(['flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:gap-5'])>
+        <div @class([
+            'flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:gap-5',
+            'lg:flex-row-reverse' => $imageOnRight,
+        ])>
             <div class="image-details-mobile-image w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
                 <img src="{{ $imgUrl }}" alt="{{ $section->image_alt ?: '' }}" loading="lazy" decoding="async" class="image-details-mobile-image__img">
             </div>
-            <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start px-4 pb-8 pt-0 flex-1 sm:px-8 sm:pb-12 lg:pb-14 lg:pr-10 xl:pr-12">
+            <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start px-4 flex-1 sm:px-8 lg:pr-10 xl:pr-12">
                 <div class="max-w-xl">
-                    <h3 class="text-xs font-bold uppercase tracking-[0.2em] {{ $stripMiniClass }}">{{ $mini ?: 'About Us' }}</h3>
-                    <h2 class="mt-3 font-sans text-2xl font-bold leading-tight {{ $stripTitleClass }} sm:text-3xl lg:text-[2.25rem]">
-                        {{ $title ?: 'Built on Trust. Driven by Excellence.' }}
-                    </h2>
-                    @if (filled($desc))
-                        <p class="mt-3 {{ $detailsBodyClass }}">{!! nl2br(e($desc)) !!}</p>
-                    @endif
-                    @if (count($points) > 0)
-                        <ul class="mt-3 list-disc space-y-2 pl-5 {{ $detailsBodyClass }}">
-                            @foreach ($points as $p)
-                                <li>{{ $p }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    @if (filled($section->button_label))
-                        <a href="{{ $section->resolvedButtonHref() }}" class="mt-8 inline-flex w-fit shrink-0 self-start items-center justify-center rounded-sm bg-primary px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-secondary shadow-md transition-all hover:brightness-95 hover:shadow-lg sm:px-10 sm:py-4">
-                            {{ $section->button_label }}
-                        </a>
-                    @endif
+                    @include('site.menu-page-sections.partials.image-details-headings', [
+                        'mini' => $mini,
+                        'title' => $title,
+                        'miniClass' => $stripMiniClass,
+                        'titleClass' => $stripTitleClass,
+                        'titleSize' => 'full',
+                    ])
+                    @include('site.menu-page-sections.partials.image-details-content', [
+                        'desc' => $desc,
+                        'points' => $points,
+                        'detailsBodyClass' => $detailsBodyClass,
+                        'descMargin' => $descMargin,
+                        'pointsMargin' => $pointsMargin,
+                        'buttonMargin' => $buttonMargin,
+                        'buttonLabel' => $section->button_label,
+                        'buttonHref' => $section->resolvedButtonHref(),
+                    ])
                 </div>
             </div>
         </div>

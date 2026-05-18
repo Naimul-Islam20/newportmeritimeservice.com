@@ -10,22 +10,25 @@
         <div class="site-section-after-title swiper supplies-swiper">
             <div class="swiper-wrapper">
                 @forelse ($items as $item)
+                    @php($hasDesc = filled($item->description))
+                    @php($descPlain = $hasDesc ? preg_replace('/\s+/u', ' ', trim($item->description)) : '')
                     <div class="swiper-slide">
-                        <div class="flex h-full w-full flex-col rounded-2xl border border-foreground/10 bg-secondary/5 p-8 shadow-sm transition hover:shadow-md">
-                            @if ($item->coverImageUrl() !== '')
-                                <div class="-mx-8 -mt-8 mb-6 overflow-hidden rounded-t-2xl">
-                                    <img src="{{ $item->coverImageUrl() }}" alt="{{ $item->label }}" class="h-44 w-full object-cover sm:h-52">
+                        <div class="flex h-full min-h-0 w-full flex-col rounded-2xl border border-foreground/10 bg-secondary/5 p-8 shadow-sm transition hover:shadow-md">
+                            <div class="-mx-8 -mt-8 mb-6 shrink-0 overflow-hidden rounded-t-2xl">
+                                <img src="{{ $item->pageHeroBackgroundUrl() }}" alt="{{ $item->label }}" class="h-44 w-full object-cover sm:h-52">
+                            </div>
+                            <div class="flex min-h-0 flex-1 flex-col">
+                                <h4 class="shrink-0 text-xl font-bold uppercase text-secondary">{{ $item->label }}</h4>
+                                <div class="mt-4 min-h-[2.75rem] shrink-0 sm:min-h-[3rem]" @if ($hasDesc) title="{{ $descPlain }}" @endif>
+                                    @if ($hasDesc)
+                                        <p class="line-clamp-2 text-sm font-medium leading-relaxed text-foreground/70">
+                                            {{ $descPlain }}
+                                        </p>
+                                    @endif
                                 </div>
-                            @endif
-                            <h4 class="text-xl font-bold uppercase text-secondary">{{ $item->label }}</h4>
-                            @if (filled($item->description))
-                                <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-foreground/70">
-                                    {{ \Illuminate\Support\Str::limit($item->description, 160) }}
-                                </p>
-                            @else
-                                <div class="mt-4 flex-1"></div>
-                            @endif
-                            <a href="{{ $item->resolvedHref() }}" class="mt-8 text-sm font-bold text-secondary transition hover:text-primary">View details</a>
+                                <div class="min-h-0 flex-1" aria-hidden="true"></div>
+                                <a href="{{ $item->resolvedHref() }}" class="mt-auto shrink-0 pt-6 text-sm font-bold text-secondary transition hover:text-primary">View details</a>
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -39,4 +42,3 @@
         </div>
     </div>
 </section>
-

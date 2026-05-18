@@ -1,8 +1,8 @@
 @php
     $d = is_array($section->data ?? null) ? $section->data : [];
-    $mini = data_get($d, 'mini_title');
-    $title = $section->title;
-    $desc = data_get($d, 'description');
+    $mini = filled(data_get($d, 'mini_title')) ? trim(data_get($d, 'mini_title')) : null;
+    $title = is_string($section->title ?? null) && trim($section->title) !== '' ? trim($section->title) : null;
+    $desc = filled(data_get($d, 'description')) ? trim(data_get($d, 'description')) : null;
     $mainPath = data_get($d, 'image_path');
     $mainCaption = data_get($d, 'image_caption');
     $extrasRaw = data_get($d, 'extra_gallery');
@@ -29,12 +29,17 @@
             ];
         }
     }
+
+    $hasHeader = filled($mini) || filled($title) || filled($desc);
+    $hasTitles = filled($mini) || filled($title);
+    $descMargin = $hasTitles ? 'mt-5' : 'mt-0';
+    $bodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
 @endphp
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
 <section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
-        @if (filled($mini) || filled($title) || filled($desc))
+        @if ($hasHeader)
             <div class="mx-auto max-w-3xl text-center">
                 @if (filled($mini))
                     <p class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $mini }}</p>
@@ -45,7 +50,7 @@
                     </h2>
                 @endif
                 @if (filled($desc))
-                    <p class="mt-5 text-base leading-relaxed {{ $stripBodyClass }} sm:text-lg">
+                    <p class="{{ $descMargin }} {{ $bodyClass }}">
                         {!! nl2br(e($desc)) !!}
                     </p>
                 @endif
@@ -53,9 +58,8 @@
         @endif
 
         @if (count($tiles) > 0)
-            <div class="site-section-after-title grid items-start gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+            <div @class(['grid items-start gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3', 'site-section-after-title' => $hasHeader])>
                 @foreach ($tiles as $tile)
-                    {{-- Box height follows image (column width, natural aspect); light tinted shadow --}}
                     <figure class="flex w-full flex-col overflow-hidden rounded-lg {{ $stripCardClass }} shadow-lg shadow-secondary/10">
                         <div class="w-full overflow-hidden rounded-t-lg bg-foreground/5 {{ filled($tile['caption'] ?? null) ? '' : 'rounded-b-lg' }}">
                             @php($lbSrc = asset($tile['path']))

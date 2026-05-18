@@ -239,6 +239,7 @@
 
             <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
                 <div style="font-weight:700; margin-bottom:10px;">Add images</div>
+                <p style="margin:0 0 10px 0; color:#64748b; font-size:12px;">Optional. Max {{ \App\Support\ImageUploadRules::maxMegabytesLabel() }} MB each (JPEG, PNG, WebP, GIF). macOS screenshots are often larger — compress if upload fails.</p>
                 <div id="imgNewExtraWrap" style="display:flex; flex-direction:column; gap:12px;"></div>
                 <div style="margin-top:10px;">
                     <button type="button" class="btn btn-muted" id="imgEditAddExtraBtn">Another image</button>

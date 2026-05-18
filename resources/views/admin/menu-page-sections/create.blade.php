@@ -26,7 +26,14 @@
 
     <form method="post" action="{{ $postUrl ?? '#' }}" id="sectionCreateForm" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="type" id="sectionType" value="">
+        @if ($errors->any())
+            <div class="error" style="margin-bottom:12px;">
+                @foreach ($errors->all() as $err)
+                    <div>{{ $err }}</div>
+                @endforeach
+            </div>
+        @endif
+        <input type="hidden" name="type" id="sectionType" value="{{ old('type', '') }}">
         <div id="typeHint" style="color:#64748b; font-size:13px; padding:10px 12px; border:1px dashed #cbd5e1; border-radius:8px;">
             Select a section type above to see the form.
         </div>
@@ -62,7 +69,7 @@
                     <div id="tciImageCol" style="order: 0; border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
                         <div style="font-weight:700; margin-bottom:10px;">Image upload</div>
                         <label for="tci_image" style="font-size:12px;">Upload image</label>
-                        <input id="tci_image" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <input id="tci_image" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-field-name="image_file">
                     </div>
 
                     <div id="tciDetailsCol" style="order: 1; border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
@@ -124,8 +131,9 @@
 
                 <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
                     <div style="font-weight:700; margin-bottom:10px;">Main image</div>
-                    <label for="img_main_file" style="font-size:12px;">Upload image</label>
-                    <input id="img_main_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                    <label for="img_main_file" style="font-size:12px;">Upload image <span style="color:#dc2626;">*</span></label>
+                    <input id="img_main_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-field-name="image_file">
+                    @error('image_file') <div class="error">{{ $message }}</div> @enderror
                     <div style="margin-top:10px;">
                         <label for="img_image_caption">Image title / caption</label>
                         <input id="img_image_caption" name="image_caption" placeholder="Optional">
@@ -134,6 +142,7 @@
 
                 <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
                     <div style="font-weight:700; margin-bottom:10px;">More images</div>
+                    <p style="margin:0 0 10px 0; color:#64748b; font-size:12px;">Optional. Max {{ \App\Support\ImageUploadRules::maxMegabytesLabel() }} MB each (JPEG, PNG, WebP, GIF). macOS screenshots are often larger — compress if upload fails.</p>
                     <div id="imgExtraWrap" style="display:flex; flex-direction:column; gap:12px;"></div>
                     <div style="margin-top:10px;">
                         <button type="button" class="btn btn-muted" id="imgAddExtraBtn">Another image</button>
@@ -166,7 +175,7 @@
                     </div>
                     <div style="margin-top:10px;">
                         <label for="ti_image_file" style="font-size:12px;">Image</label>
-                        <input id="ti_image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <input id="ti_image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-field-name="image_file">
                         @error('image_file') <div class="error">{{ $message }}</div> @enderror
                     </div>
                     <div style="margin-top:10px;">
@@ -367,18 +376,42 @@
             imgAddExtraBtn.addEventListener('click', appendImgExtraRow);
         }
 
+        const syncPanelFieldNames = (activeType) => {
+            panels.forEach((p) => {
+                const active = p.getAttribute('data-type') === activeType;
+                p.querySelectorAll('input:not([type="hidden"]), textarea, select').forEach((el) => {
+                    if (el.type === 'file') {
+                        const fieldName = el.dataset.fieldName;
+                        if (!fieldName) {
+                            el.disabled = !active;
+
+                            return;
+                        }
+                        if (active) {
+                            el.setAttribute('name', fieldName);
+                            el.disabled = false;
+                        } else {
+                            el.removeAttribute('name');
+                            el.disabled = true;
+                        }
+
+                        return;
+                    }
+
+                    el.disabled = !active;
+                });
+            });
+        };
+
         const setActive = (type) => {
             typeInput.value = type;
             saveBtn.disabled = !type;
             if (formsWrap) formsWrap.style.display = type ? 'block' : 'none';
             if (hint) hint.style.display = type ? 'none' : 'block';
             panels.forEach((p) => {
-                const active = p.getAttribute('data-type') === type;
-                p.style.display = active ? 'block' : 'none';
-                p.querySelectorAll('input:not([type="hidden"]), textarea, select').forEach((el) => {
-                    el.disabled = !active;
-                });
+                p.style.display = p.getAttribute('data-type') === type ? 'block' : 'none';
             });
+            syncPanelFieldNames(type);
             if (type === 'two_column_image_details') {
                 setTciSideUi((tciSideInput?.value ?? 'left') === 'left');
                 setTciWidthUi((tciWidthInput?.value ?? 'full') === 'full');
@@ -397,6 +430,25 @@
                 setActive(t);
             });
         });
+
+        const form = document.getElementById('sectionCreateForm');
+        if (form) {
+            form.addEventListener('submit', () => {
+                const type = typeInput.value;
+                panels.forEach((p) => {
+                    const active = p.getAttribute('data-type') === type;
+                    p.querySelectorAll('input, textarea, select').forEach((el) => {
+                        el.disabled = !active;
+                    });
+                });
+                syncPanelFieldNames(type);
+            });
+        }
+
+        const initialType = (typeInput.value || '').trim();
+        if (initialType) {
+            setActive(initialType);
+        }
     })();
 </script>
 @endsection

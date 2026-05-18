@@ -32,7 +32,7 @@
                     <tr>
                         <td>{{ $s->sort_order }}</td>
                         <td>
-                            <div style="font-weight:700;">{{ $s->title ?? 'Section' }}</div>
+                            <div style="font-weight:700;">{{ filled($s->title) ? $s->title : '—' }}</div>
                             <div style="margin-top:4px; font-size:12px; color:#64748b;">
                                 Type: <code style="font-size:11px;">{{ $s->type ?? 'unknown' }}</code>
                             </div>
@@ -71,5 +71,11 @@
             </tbody>
         </table>
     </div>
+
+    @if (! empty($showCreateBottom))
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid #e5e7eb;">
+            <a class="btn btn-primary" href="{{ $createUrl }}">Create section</a>
+        </div>
+    @endif
 </div>
 @endsection

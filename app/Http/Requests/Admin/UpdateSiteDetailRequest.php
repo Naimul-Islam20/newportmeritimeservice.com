@@ -52,6 +52,8 @@ class UpdateSiteDetailRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'site_name' => ['nullable', 'string', 'max:255'],
+            'meta_description' => ['nullable', 'string', 'max:5000'],
             'location' => ['nullable', 'string', 'max:5000'],
             'map' => ['nullable', 'string', 'max:20000'],
             'emails' => ['nullable', 'array', 'max:25'],
@@ -60,6 +62,7 @@ class UpdateSiteDetailRequest extends FormRequest
             'phones.*' => ['nullable', 'string', 'max:40'],
             'social' => ['nullable', 'array'],
             'social.facebook' => ['nullable', 'string', 'max:2048'],
+            'social.instagram' => ['nullable', 'string', 'max:2048'],
             'social.linkedin' => ['nullable', 'string', 'max:2048'],
             'social.youtube' => ['nullable', 'string', 'max:2048'],
             'social.twitter' => ['nullable', 'string', 'max:2048'],

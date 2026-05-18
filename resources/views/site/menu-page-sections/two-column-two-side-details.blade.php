@@ -1,10 +1,11 @@
 @php($d = is_array($section->data ?? null) ? $section->data : [])
-@php($leftTitle = data_get($d, 'left_title'))
-@php($rightTitle = data_get($d, 'right_title'))
-@php($leftDesc = data_get($d, 'left_description'))
-@php($rightDesc = data_get($d, 'right_description'))
-@php($sectionTitle = $section->title)
+@php($leftTitle = filled(data_get($d, 'left_title')) ? trim(data_get($d, 'left_title')) : null)
+@php($rightTitle = filled(data_get($d, 'right_title')) ? trim(data_get($d, 'right_title')) : null)
+@php($leftDesc = filled(data_get($d, 'left_description')) ? trim(data_get($d, 'left_description')) : null)
+@php($rightDesc = filled(data_get($d, 'right_description')) ? trim(data_get($d, 'right_description')) : null)
+@php($sectionTitle = is_string($section->title ?? null) && trim($section->title) !== '' ? trim($section->title) : null)
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
+@php($bodyClass = 'image-details-body text-base leading-relaxed')
 
 <section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
@@ -16,16 +17,20 @@
 
         <div class="site-section-gap grid lg:grid-cols-2">
             <div class="rounded-2xl border p-8 shadow-sm transition hover:shadow-md sm:p-12 {{ $stripCardClass }} {{ $stripCardBorderClass }}">
-                <h3 class="font-sans text-3xl font-bold text-secondary">{{ $leftTitle ?: 'Our Mission' }}</h3>
+                @if (filled($leftTitle))
+                    <h3 class="font-sans text-3xl font-bold text-secondary">{{ $leftTitle }}</h3>
+                @endif
                 @if (filled($leftDesc))
-                    <p class="mt-6 text-base leading-relaxed text-foreground/70">{!! nl2br(e($leftDesc)) !!}</p>
+                    <p @class([filled($leftTitle) ? 'mt-6' : 'mt-0', $bodyClass])>{!! nl2br(e($leftDesc)) !!}</p>
                 @endif
             </div>
 
             <div class="rounded-2xl border p-8 shadow-sm transition hover:shadow-md sm:p-12 {{ $stripCardClass }} {{ $stripCardBorderClass }}">
-                <h3 class="font-sans text-3xl font-bold text-secondary">{{ $rightTitle ?: 'Our Vision' }}</h3>
+                @if (filled($rightTitle))
+                    <h3 class="font-sans text-3xl font-bold text-secondary">{{ $rightTitle }}</h3>
+                @endif
                 @if (filled($rightDesc))
-                    <p class="mt-6 text-base leading-relaxed text-foreground/70">{!! nl2br(e($rightDesc)) !!}</p>
+                    <p @class([filled($rightTitle) ? 'mt-6' : 'mt-0', $bodyClass])>{!! nl2br(e($rightDesc)) !!}</p>
                 @endif
             </div>
         </div>

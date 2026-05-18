@@ -23,6 +23,7 @@ class HomeSection extends Model
         'points',
         'left_content',
         'right_content',
+        'data',
         'button_label',
         'button_url',
         'sort_order',
@@ -38,6 +39,7 @@ class HomeSection extends Model
             'points' => 'array',
             'left_content' => 'array',
             'right_content' => 'array',
+            'data' => 'array',
         ];
     }
 

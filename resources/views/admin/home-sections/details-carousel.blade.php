@@ -7,12 +7,41 @@
 </div>
 
 <style>
-    .details-grid { display:grid; grid-template-columns: 320px 1fr; gap: 14px; }
-    .panel { border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; }
-    .panel h2 { margin:0 0 10px 0; font-size:14px; }
-    .muted { color:#64748b; font-size:12px; margin-top:4px; }
-    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 900px) { .details-grid { grid-template-columns: 1fr; } }
+    .details-grid {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 14px;
+    }
+
+    .panel {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        padding: 14px;
+    }
+
+    .panel h2 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+    }
+
+    .muted {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <div class="card">
@@ -47,8 +76,8 @@
                 <div>
                     <label for="layout_width">Width</label>
                     <select id="layout_width" name="layout_width" required>
-                        <option value="full" @selected(old('layout_width', 'full') === 'full')>Full width</option>
-                        <option value="short" @selected(old('layout_width', 'full') === 'short')>Short width</option>
+                        <option value="full" @selected(old('layout_width', 'full' )==='full' )>Full width</option>
+                        <option value="short" @selected(old('layout_width', 'full' )==='short' )>Short width</option>
                     </select>
                     <div class="muted">
                         Full width → Home page “About Us” full layout. Short width → compact layout.
@@ -57,59 +86,59 @@
                 </div>
 
                 @if (in_array('mini_title', $fields ?? []))
-                    <div>
-                        <label for="mini_title">Mini title</label>
-                        <input id="mini_title" name="mini_title" placeholder="Small label above the main title">
-                        <div class="muted">Example: Trusted Partner</div>
-                    </div>
+                <div>
+                    <label for="mini_title">Mini title</label>
+                    <input id="mini_title" name="mini_title" placeholder="Small label above the main title">
+                    <div class="muted">Example: Trusted Partner</div>
+                </div>
                 @endif
 
                 @if (in_array('title', $fields ?? []))
-                    <div style="margin-top:12px;">
-                        <label for="title">Title</label>
-                        <input id="title" name="title" placeholder="Main headline">
-                        <div class="muted">Example: One Partner. Every Need.</div>
-                    </div>
+                <div style="margin-top:12px;">
+                    <label for="title">Title</label>
+                    <input id="title" name="title" placeholder="Main headline">
+                    <div class="muted">Example: One Partner. Every Need.</div>
+                </div>
                 @endif
 
                 @if (in_array('description', $fields ?? []))
-                    <div style="margin-top:12px;">
-                        <label for="description">Description</label>
-                        <textarea id="description" name="description" rows="3" placeholder="Short supporting paragraph..."></textarea>
-                        <div class="muted">Keep it concise and clear.</div>
-                        @error('description') <div class="error">{{ $message }}</div> @enderror
-                    </div>
+                <div style="margin-top:12px;">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3" placeholder="Short supporting paragraph..."></textarea>
+                    <div class="muted">Keep it concise and clear.</div>
+                    @error('description') <div class="error">{{ $message }}</div> @enderror
+                </div>
                 @endif
 
                 @if (in_array('points', $fields ?? []))
-                    <div style="margin-top:12px;">
-                        <label>Point</label>
-                        <div id="pointsWrap" style="display:flex; flex-direction:column; gap:10px;">
-                            <div class="grid-2" style="grid-template-columns: 1fr auto; gap:10px;">
-                                <input name="points[]" placeholder="Write a point">
-                                <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
-                            </div>
+                <div style="margin-top:12px;">
+                    <label>Point</label>
+                    <div id="pointsWrap" style="display:flex; flex-direction:column; gap:10px;">
+                        <div class="grid-2" style="grid-template-columns: 1fr auto; gap:10px;">
+                            <input name="points[]" placeholder="Write a point">
+                            <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
                         </div>
-                        <div style="margin-top:10px;">
-                            <button type="button" class="btn btn-muted" id="addPointBtn">Add another point</button>
-                        </div>
-                        <div class="muted">Each point will show as a bullet on the Home page.</div>
-                        @error('points') <div class="error">{{ $message }}</div> @enderror
-                        @error('points.*') <div class="error">{{ $message }}</div> @enderror
                     </div>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-muted" id="addPointBtn">Add another point</button>
+                    </div>
+                    <div class="muted">Each point will show as a bullet on the Home page.</div>
+                    @error('points') <div class="error">{{ $message }}</div> @enderror
+                    @error('points.*') <div class="error">{{ $message }}</div> @enderror
+                </div>
                 @endif
 
                 @if (in_array('button', $fields ?? []))
-                    <div class="grid-2" style="margin-top:12px;">
-                        <div>
-                            <label for="button_text">Button text</label>
-                            <input id="button_text" name="button_text" placeholder="e.g., Learn more">
-                        </div>
-                        <div>
-                            <label for="button_url">Button URL</label>
-                            <input id="button_url" name="button_url" placeholder="/contact or https://...">
-                        </div>
+                <div class="grid-2" style="margin-top:12px;">
+                    <div>
+                        <label for="button_text">Button text</label>
+                        <input id="button_text" name="button_text" placeholder="e.g., Learn more">
                     </div>
+                    <div>
+                        <label for="button_url">Button URL</label>
+                        <input id="button_url" name="button_url" placeholder="/contact or https://...">
+                    </div>
+                </div>
                 @endif
 
                 <div style="margin-top: 14px;">
@@ -122,43 +151,43 @@
 </div>
 
 @if (in_array('points', $fields ?? []))
-    <script>
-        (() => {
-            const wrap = document.getElementById('pointsWrap');
-            const addBtn = document.getElementById('addPointBtn');
-            if (!wrap || !addBtn) return;
+<script>
+    (() => {
+        const wrap = document.getElementById('pointsWrap');
+        const addBtn = document.getElementById('addPointBtn');
+        if (!wrap || !addBtn) return;
 
-            const template = () => {
-                const row = document.createElement('div');
-                row.className = 'grid-2';
-                row.style.gridTemplateColumns = '1fr auto';
-                row.style.gap = '10px';
-                row.innerHTML = `
+        const template = () => {
+            const row = document.createElement('div');
+            row.className = 'grid-2';
+            row.style.gridTemplateColumns = '1fr auto';
+            row.style.gap = '10px';
+            row.innerHTML = `
                     <input name="points[]" placeholder="Write a point">
                     <button type="button" class="btn btn-muted" data-remove-point style="padding:8px 12px;">Remove</button>
                 `;
-                return row;
-            };
+            return row;
+        };
 
-            const syncRemoveButtons = () => {
-                const rows = Array.from(wrap.querySelectorAll('.grid-2'));
-                rows.forEach((row) => {
-                    const btn = row.querySelector('[data-remove-point]');
-                    if (!btn) return;
-                    btn.onclick = () => {
-                        row.remove();
-                        syncRemoveButtons();
-                    };
-                });
-            };
-
-            syncRemoveButtons();
-
-            addBtn.addEventListener('click', () => {
-                wrap.appendChild(template());
-                syncRemoveButtons();
+        const syncRemoveButtons = () => {
+            const rows = Array.from(wrap.querySelectorAll('.grid-2'));
+            rows.forEach((row) => {
+                const btn = row.querySelector('[data-remove-point]');
+                if (!btn) return;
+                btn.onclick = () => {
+                    row.remove();
+                    syncRemoveButtons();
+                };
             });
-        })();
-    </script>
+        };
+
+        syncRemoveButtons();
+
+        addBtn.addEventListener('click', () => {
+            wrap.appendChild(template());
+            syncRemoveButtons();
+        });
+    })();
+</script>
 @endif
 @endsection
