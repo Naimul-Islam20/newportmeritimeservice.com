@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Model;
 
 class SiteDetail extends Model
@@ -76,7 +77,9 @@ class SiteDetail extends Model
         $detail ??= self::query()->first();
         $path = is_string($detail?->favicon_path ?? null) ? trim($detail->favicon_path) : '';
 
-        return $path !== '' ? asset($path) : null;
+        $url = PublicUploadUrl::fromPath($path);
+
+        return $url !== '' ? $url : null;
     }
 
     public function metaDescriptionForSite(): ?string
@@ -211,7 +214,26 @@ class SiteDetail extends Model
         $detail ??= self::query()->first();
         $path = is_string($detail?->header_logo_path ?? null) ? trim($detail->header_logo_path) : '';
 
-        return $path !== '' ? asset($path) : asset('newport-logo.png');
+        $url = PublicUploadUrl::fromPath($path);
+        if ($url !== '') {
+            return $url;
+        }
+
+        $default = PublicUploadUrl::fromPath('newport-logo.png');
+
+        return $default !== '' ? $default : '/newport-logo.png';
+    }
+
+    public static function footerLogoAssetUrl(?self $detail = null): string
+    {
+        $detail ??= self::query()->first();
+        $path = is_string($detail?->footer_logo_path ?? null) ? trim($detail->footer_logo_path) : '';
+        $url = PublicUploadUrl::fromPath($path);
+        if ($url !== '') {
+            return $url;
+        }
+
+        return self::headerLogoAssetUrl($detail);
     }
 
     /**

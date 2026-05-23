@@ -1,133 +1,176 @@
-{{-- Two column: image + details (home sections from admin) --}}
+{{-- Home: 50% full-height image | 50% copy | YouTube play on center seam (Gimaş-style) --}}
 @php
+    $sectionData = is_array($section->data ?? null) ? $section->data : [];
     $layout = $section->layout_width ?: 'full';
-    $imgUrl = (is_string($section->image_path) && $section->image_path !== '')
-        ? asset($section->image_path)
+    $sectionImageUrl = $section->imagePublicUrl();
+    $hasImage = $sectionImageUrl !== '';
+    $imgUrl = $hasImage
+        ? $sectionImageUrl
         : 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop';
     $mini = filled($section->mini_title) ? trim($section->mini_title) : null;
     $title = filled($section->title) ? trim($section->title) : null;
-    $desc = filled($section->description) ? trim($section->description) : null;
+    $descPlain = filled($section->description) ? trim(strip_tags((string) $section->description)) : '';
     $points = is_array($section->points ?? null)
         ? array_values(array_filter($section->points, fn ($v) => is_string($v) && trim($v) !== ''))
         : [];
-    $detailsBodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
-    $hasHeadings = filled($mini) || filled($title);
-    $descMargin = $hasHeadings ? 'mt-3' : 'mt-0';
-    $pointsMargin = ($hasHeadings || filled($desc)) ? 'mt-3' : 'mt-0';
-    $buttonMargin = ($hasHeadings || filled($desc) || count($points) > 0) ? 'mt-8' : 'mt-0';
-    $stackTextFirstOnMobile = ! $hasHeadings;
-    $sectionData = is_array($section->data ?? null) ? $section->data : [];
     $imageSide = strtolower(trim((string) ($sectionData['image_side'] ?? 'left')));
-    $imageOnRight = $imageSide === 'right';
+    $imageOnRight = in_array($imageSide, ['right', '1', 'true', 'on'], true);
+    $sectionVideo = $section->videoModalPayload();
+    $hasVideo = $sectionVideo['type'] !== 'none';
+    $modalId = 'home-section-video-'.$section->id;
+    $sd = \App\Models\SiteDetail::query()->first();
+    $social = is_array($sd?->social_links ?? null) ? $sd->social_links : [];
+    $socialUrl = static function (?string $raw): ?string {
+        $url = trim((string) ($raw ?? ''));
+        if ($url === '') {
+            return null;
+        }
+        if (preg_match('#^https?://#i', $url)) {
+            return $url;
+        }
+
+        return 'https://'.ltrim($url, '/');
+    };
+    $socialNetworks = [
+        'facebook' => $socialUrl($social['facebook'] ?? null),
+        'twitter' => $socialUrl($social['twitter'] ?? null),
+        'linkedin' => $socialUrl($social['linkedin'] ?? null),
+        'instagram' => $socialUrl($social['instagram'] ?? null),
+    ];
+    $hasContent = filled($mini) || filled($title) || $descPlain !== '' || count($points) > 0;
+    $showLeft = $hasImage || $hasVideo;
 @endphp
-@php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 
-@push('styles')
-<style>
-    @media (max-width: 1023px) {
-        .image-details-mobile-image {
-            display: block !important;
-            width: 100% !important;
-            height: auto !important;
-            max-height: none !important;
-            min-height: 0 !important;
-            overflow: visible !important;
-        }
-
-        .image-details-mobile-image img,
-        .image-details-mobile-image__img {
-            display: block !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            max-height: none !important;
-            object-fit: contain !important;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .image-details-mobile-image {
-            display: block !important;
-            height: auto !important;
-            min-height: 0 !important;
-            max-height: none !important;
-        }
-
-        .image-details-mobile-image img {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            max-height: none !important;
-            object-fit: contain !important;
-        }
-    }
-</style>
-@endpush
-
-@if ($layout === 'short')
-    <section class="{{ $stripSectionClass }} site-section image-details-section image-details-short">
-        <div class="site-container">
-            <div @class([
-                'flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-start lg:gap-10',
-                'flex-col-reverse' => $stackTextFirstOnMobile,
-                'lg:flex-row-reverse' => $imageOnRight && ! $stackTextFirstOnMobile,
-            ])>
-                <div class="image-details-mobile-image w-full shrink-0 overflow-hidden rounded-md bg-background/90 lg:w-[48%] lg:shrink-0">
-                    <img src="{{ $imgUrl }}" alt="{{ $section->image_alt ?: '' }}" loading="lazy" decoding="async" class="image-details-mobile-image__img">
-                </div>
-                <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start flex-1">
-                    @include('site.menu-page-sections.partials.image-details-headings', [
-                        'mini' => $mini,
-                        'title' => $title,
-                        'miniClass' => $stripMiniClass,
-                        'titleClass' => $stripTitleClass,
-                        'titleSize' => 'lg',
-                    ])
-                    @include('site.menu-page-sections.partials.image-details-content', [
-                        'desc' => $desc,
-                        'points' => $points,
-                        'detailsBodyClass' => $detailsBodyClass,
-                        'descMargin' => $descMargin,
-                        'pointsMargin' => $pointsMargin,
-                        'buttonMargin' => $buttonMargin,
-                        'maxWidth' => 'max-w-2xl',
-                        'buttonLabel' => $section->button_label,
-                        'buttonHref' => $section->resolvedButtonHref(),
-                    ])
-                </div>
-            </div>
-        </div>
-    </section>
-@else
-    <section class="{{ $stripSectionClass }} site-section image-details-section image-details-full">
+<section @class([
+    'home-about-split',
+    'home-about-split--short' => $layout === 'short',
+])>
+    <div class="home-about-split__wrap">
         <div @class([
-            'flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-start lg:gap-5',
-            'lg:flex-row-reverse' => $imageOnRight,
+            'home-about-split__grid',
+            'home-about-split__grid--image-right' => $imageOnRight,
+            'home-about-split__grid--content-only' => ! $showLeft,
         ])>
-            <div class="image-details-mobile-image w-full shrink-0 overflow-hidden bg-background/90 lg:w-[48%] lg:shrink-0">
-                <img src="{{ $imgUrl }}" alt="{{ $section->image_alt ?: '' }}" loading="lazy" decoding="async" class="image-details-mobile-image__img">
-            </div>
-            <div class="image-details-details-col flex w-full min-w-0 flex-col justify-start px-4 flex-1 sm:px-8 lg:pr-10 xl:pr-12">
-                <div class="max-w-xl">
-                    @include('site.menu-page-sections.partials.image-details-headings', [
-                        'mini' => $mini,
-                        'title' => $title,
-                        'miniClass' => $stripMiniClass,
-                        'titleClass' => $stripTitleClass,
-                        'titleSize' => 'full',
-                    ])
-                    @include('site.menu-page-sections.partials.image-details-content', [
-                        'desc' => $desc,
-                        'points' => $points,
-                        'detailsBodyClass' => $detailsBodyClass,
-                        'descMargin' => $descMargin,
-                        'pointsMargin' => $pointsMargin,
-                        'buttonMargin' => $buttonMargin,
-                        'buttonLabel' => $section->button_label,
-                        'buttonHref' => $section->resolvedButtonHref(),
-                    ])
+            @if ($showLeft)
+                <div class="home-about-split__media">
+                    @if ($hasImage)
+                        <img src="{{ $imgUrl }}" alt="{{ $section->image_alt ?: '' }}" class="home-about-split__image" loading="lazy" decoding="async">
+                    @else
+                        <div class="home-about-split__media-placeholder" aria-hidden="true"></div>
+                    @endif
                 </div>
-            </div>
+            @endif
+
+            @if ($hasContent)
+                <div class="home-about-split__content">
+                    @if (filled($mini))
+                        <p class="home-about-split__eyebrow">{{ $mini }}</p>
+                    @endif
+                    @if (filled($title))
+                        <h2 class="home-about-split__title">{!! nl2br(e($title)) !!}</h2>
+                    @endif
+                    @if ($descPlain !== '')
+                        <div class="home-about-split__body">
+                            <p>{{ $descPlain }}</p>
+                        </div>
+                    @endif
+                    @if (count($points) > 0)
+                        <ul class="home-about-split__points">
+                            @foreach ($points as $point)
+                                <li>{{ $point }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <div class="home-about-split__socials">
+                        @foreach ($socialNetworks as $key => $url)
+                            @if (filled($url))
+                                <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="home-about-split__social" aria-label="{{ ucfirst($key) }}">
+                                    @include('site.partials.footer-social-icon', ['icon' => $key])
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if ($hasVideo)
+                <button type="button"
+                    class="home-about-split__video-btn"
+                    data-home-video-open="{{ $modalId }}"
+                    data-embed="{{ e($sectionVideo['embed_url']) }}"
+                    aria-label="Play video">
+                    <svg class="home-about-split__video-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </button>
+            @endif
         </div>
-    </section>
+    </div>
+</section>
+
+@if ($hasVideo)
+    @include('site.partials.youtube-video-modal', ['modalId' => $modalId])
+
+    @once
+        @push('scripts')
+        <script>
+            (() => {
+                if (window.__homeSectionVideoModalBound) return;
+                window.__homeSectionVideoModalBound = true;
+
+                document.addEventListener('click', (e) => {
+                    const openBtn = e.target.closest('[data-home-video-open]');
+                    if (openBtn) {
+                        const modalId = openBtn.getAttribute('data-home-video-open');
+                        const embed = openBtn.getAttribute('data-embed') || '';
+                        const modal = document.getElementById(modalId);
+                        const iframe = modal?.querySelector('[data-youtube-iframe]');
+                        if (!modal || !iframe || !embed) return;
+                        const sep = embed.includes('?') ? '&' : '?';
+                        iframe.src = embed + sep + 'autoplay=1';
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        modal.setAttribute('aria-hidden', 'false');
+                        document.body.style.overflow = 'hidden';
+                        return;
+                    }
+
+                    const closeBtn = e.target.closest('[data-youtube-modal-close]');
+                    if (closeBtn) {
+                        const modal = closeBtn.closest('[data-youtube-modal]');
+                        const iframe = modal?.querySelector('[data-youtube-iframe]');
+                        if (iframe) iframe.src = '';
+                        modal?.classList.add('hidden');
+                        modal?.classList.remove('flex');
+                        modal?.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                        return;
+                    }
+
+                    const backdrop = e.target.closest('[data-youtube-modal]');
+                    if (backdrop && e.target === backdrop) {
+                        const iframe = backdrop.querySelector('[data-youtube-iframe]');
+                        if (iframe) iframe.src = '';
+                        backdrop.classList.add('hidden');
+                        backdrop.classList.remove('flex');
+                        backdrop.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Escape') return;
+                    document.querySelectorAll('[data-youtube-modal].flex').forEach((modal) => {
+                        const iframe = modal.querySelector('[data-youtube-iframe]');
+                        if (iframe) iframe.src = '';
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        modal.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                    });
+                });
+            })();
+        </script>
+        @endpush
+    @endonce
 @endif

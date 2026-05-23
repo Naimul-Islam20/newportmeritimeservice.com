@@ -48,15 +48,23 @@
                 <label for="trust_image_file">Side image — upload image only</label>
                 <input id="trust_image_file" name="trust_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
                 @error('trust_image_file') <div class="error">{{ $message }}</div> @enderror
-                @if (filled($aboutPage->trust_image))
+                @php $trustImagePreview = \App\Models\AboutPage::imageSrc($aboutPage->trust_image); @endphp
+                @if ($trustImagePreview !== '')
                     <div style="margin-top:8px;">
-                        <img src="{{ \App\Models\AboutPage::imageSrc($aboutPage->trust_image) }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <img src="{{ $trustImagePreview }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
                         <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
                             <input type="checkbox" name="remove_trust_image" value="1" @checked(old('remove_trust_image'))>
                             Remove current side image
                         </label>
                     </div>
+                @elseif (filled($aboutPage->trust_image))
+                    <p style="margin:8px 0 0; font-size:13px; color:#b45309;">Saved image path is missing on disk — upload again or check “Remove current side image” and save.</p>
                 @endif
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="cta_video_url">Intro YouTube link (play button on the side image)</label>
+                <input id="cta_video_url" name="cta_video_url" value="{{ old('cta_video_url', $aboutPage->cta_video_url) }}" placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…">
+                @error('cta_video_url') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="trust_title">Title</label>
@@ -158,11 +166,6 @@
                         </label>
                     </div>
                 @endif
-            </div>
-            <div style="grid-column: 1 / -1;">
-                <label for="cta_video_url">YouTube link (opens in video modal on the site)</label>
-                <input id="cta_video_url" name="cta_video_url" value="{{ old('cta_video_url', $aboutPage->cta_video_url) }}" placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…">
-                @error('cta_video_url') <div class="error">{{ $message }}</div> @enderror
             </div>
         </div>
 

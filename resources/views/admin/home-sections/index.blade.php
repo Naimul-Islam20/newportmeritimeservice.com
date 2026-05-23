@@ -31,7 +31,9 @@
                         $section->block_type === 'carousel' => 'Carousel ('.($section->variant ?? '').')',
                         $section->block_type === 'image' => 'Image',
                         $section->block_type === 'text_input' => 'Text & points',
+                        $section->block_type === 'logo_carousel' => 'Certificates / logos',
                         $section->block_type === 'two_column' && $section->two_column_mode === 'image_details' => 'Image and details',
+                        $section->block_type === 'two_column' && $section->two_column_mode === 'split_cta' => 'Text, image & CTAs',
                         $section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details' => '2 side details',
                         default => $section->block_type,
                     };

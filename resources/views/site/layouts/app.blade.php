@@ -11,7 +11,7 @@
     @stack('styles')
 </head>
 
-<body class="min-h-screen overflow-x-clip bg-background font-sans text-foreground antialiased">
+<body class="min-h-screen overflow-x-clip bg-white font-sans text-foreground antialiased">
     @include('site.partials.header')
 
     <main>

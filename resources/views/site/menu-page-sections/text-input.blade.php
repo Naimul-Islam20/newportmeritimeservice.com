@@ -5,8 +5,9 @@
     $desc = filled(data_get($d, 'description')) ? trim(data_get($d, 'description')) : null;
     $bottom = filled(data_get($d, 'bottom_description')) ? trim(data_get($d, 'bottom_description')) : null;
     $imagePath = data_get($d, 'image_path');
+    $imageUrl = public_upload_url(is_string($imagePath) ? $imagePath : null);
     $points = is_array(data_get($d, 'points')) ? array_values(array_filter(data_get($d, 'points'), fn ($v) => is_string($v) && trim($v) !== '')) : [];
-    $hasImage = is_string($imagePath) && $imagePath !== '';
+    $hasImage = $imageUrl !== '';
     $hasContent = filled($mini) || filled($title) || filled($desc) || $hasImage || count($points) > 0 || filled($bottom);
     $hasTitleBlock = filled($mini) || filled($title);
     $bodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
@@ -43,7 +44,7 @@
         @if ($hasImage)
             <figure class="{{ $imageMargin }} overflow-hidden rounded-lg {{ $stripCardClass }} shadow-lg shadow-secondary/10">
                 <div class="bg-foreground/5">
-                    <img src="{{ asset($imagePath) }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
+                    <img src="{{ $imageUrl }}" alt="" loading="lazy" decoding="async" class="block h-auto w-full max-w-full object-contain">
                 </div>
             </figure>
         @endif

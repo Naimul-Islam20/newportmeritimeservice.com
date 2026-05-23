@@ -163,6 +163,101 @@
                 </div>
             </div>
 
+            <div class="type-panel" data-type="two_column_split_cta" style="display:none;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:12px;">
+                    <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
+                        <div style="font-weight:700; margin-bottom:10px;">Image (right column)</div>
+                        <label for="rct_image" style="font-size:12px;">Upload image</label>
+                        <input id="rct_image" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-field-name="image_file">
+                        <div style="margin-top:10px;">
+                            <label for="rct_image_alt">Image alt</label>
+                            <input id="rct_image_alt" name="image_alt" placeholder="Optional">
+                        </div>
+                    </div>
+
+                    <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
+                        <div style="font-weight:700; margin-bottom:10px;">Text &amp; buttons (left column)</div>
+                        <div style="margin-top:10px;">
+                            <label for="rct_title">Title</label>
+                            <input id="rct_title" name="title" placeholder="e.g. Recruitment">
+                        </div>
+                        <div style="margin-top:10px;">
+                            <label for="rct_description">Description (paragraph 1)</label>
+                            <textarea id="rct_description" name="description" rows="4" placeholder="Optional"></textarea>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <label for="rct_secondary_description">Description (paragraph 2)</label>
+                            <textarea id="rct_secondary_description" name="secondary_description" rows="4" placeholder="HTML allowed: &lt;strong&gt;, &lt;a&gt;, &lt;br&gt;"></textarea>
+                        </div>
+                        <div class="grid-2" style="margin-top:10px;">
+                            <div>
+                                <label for="rct_button_label">Button 1 label</label>
+                                <input id="rct_button_label" name="button_label" placeholder="JOIN US">
+                            </div>
+                            <div>
+                                <label for="rct_button_url">Button 1 URL</label>
+                                <input id="rct_button_url" name="button_url" placeholder="https://… or /page">
+                            </div>
+                        </div>
+                        <div class="grid-2" style="margin-top:10px;">
+                            <div>
+                                <label for="rct_secondary_button_label">Button 2 label</label>
+                                <input id="rct_secondary_button_label" name="secondary_button_label" placeholder="OUR TEAM">
+                            </div>
+                            <div>
+                                <label for="rct_secondary_button_url">Button 2 URL</label>
+                                <input id="rct_secondary_button_url" name="secondary_button_url" placeholder="https://… or /page">
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <label for="is_active_rct">Status</label>
+                            <select id="is_active_rct" name="is_active">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="type-panel" data-type="logo_carousel" style="display:none;">
+                <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
+                    <div style="font-weight:700; margin-bottom:10px;">Section header</div>
+                    <div style="margin-top:10px;">
+                        <label for="lc_create_title">Title</label>
+                        <input id="lc_create_title" name="title" placeholder="Quality Certificates & Memberships">
+                    </div>
+                    <div style="margin-top:10px;">
+                        <label for="lc_create_description">Subtitle prefix</label>
+                        <input id="lc_create_description" name="description" placeholder="Click to see all our">
+                    </div>
+                    <div class="grid-2" style="margin-top:10px;">
+                        <div>
+                            <label for="lc_create_button_label">Link text</label>
+                            <input id="lc_create_button_label" name="button_label" placeholder="Quality Certificates & Memberships">
+                        </div>
+                        <div>
+                            <label for="lc_create_button_url">Link URL</label>
+                            <input id="lc_create_button_url" name="button_url" placeholder="/page or https://…">
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <label for="is_active_lc">Status</label>
+                        <select id="is_active_lc" name="is_active">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
+                    <div style="font-weight:700; margin-bottom:10px;">Logos</div>
+                    <div id="lcCreateLogoWrap" style="display:flex; flex-direction:column; gap:12px;"></div>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="btn btn-muted" id="lcCreateAddLogoBtn">Add logo</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="type-panel" data-type="two_column_two_side_details" style="display:none;">
                 <div class="grid grid-2">
                     <div>

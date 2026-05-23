@@ -4,7 +4,10 @@
     $imageSide = strtolower(trim((string) data_get($d, 'image_side', 'left')));
     $imageRight = in_array($imageSide, ['right', '1', 'true', 'on'], true);
     $imgPath = data_get($d, 'image_path');
-    $imgUrl = (is_string($imgPath) && $imgPath !== '') ? asset($imgPath) : 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop';
+    $resolvedImg = public_upload_url(is_string($imgPath) ? $imgPath : null);
+    $imgUrl = $resolvedImg !== ''
+        ? $resolvedImg
+        : 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop';
     $miniRaw = data_get($d, 'mini_title');
     $mini = is_string($miniRaw) && trim($miniRaw) !== '' ? trim($miniRaw) : null;
     $title = is_string($section->title ?? null) && trim($section->title) !== '' ? trim($section->title) : null;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,21 +36,7 @@ class SubMenu extends Model
 
     public function coverImageUrl(): string
     {
-        if (! is_string($this->cover_image_path) || $this->cover_image_path === '') {
-            return '';
-        }
-
-        $path = str_replace('\\', '/', ltrim($this->cover_image_path, '/'));
-
-        if (Storage::disk('public_site')->exists($path)) {
-            return asset($path);
-        }
-
-        if (Storage::disk('public')->exists($path)) {
-            return asset('storage/'.$path);
-        }
-
-        return '';
+        return PublicUploadUrl::fromPath($this->cover_image_path);
     }
 
     /**
@@ -59,7 +46,11 @@ class SubMenu extends Model
     {
         $cover = $this->coverImageUrl();
 
-        return $cover !== '' ? $cover : asset('menu-page-cover.jpg');
+        if ($cover !== '') {
+            return $cover;
+        }
+
+        return PublicUploadUrl::fromPathOr('menu-page-cover.jpg', '/menu-page-cover.jpg');
     }
 
     public function menu(): BelongsTo

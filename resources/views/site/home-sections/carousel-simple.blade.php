@@ -1,47 +1,64 @@
-{{-- Simple carousel: Our Services / What We Do --}}
-@php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-<section id="services" class="{{ $stripSectionClass }} site-section">
+{{-- Simple carousel: Our Services / What We Do (Gimaş-style white cards) --}}
+<section id="services" class="services-carousel site-section bg-white">
     <div class="site-container">
-        <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider {{ $stripMiniClass }}">{{ $section->mini_title ?: 'Our Services' }}</h3>
-            <h2 class="mt-2 font-sans text-4xl font-bold {{ $stripTitleClass }} sm:text-5xl">{{ $section->title ?: 'What We Do' }}</h2>
+        <div class="services-carousel__header">
+            <div class="services-carousel__headings">
+                <p class="services-carousel__eyebrow">{{ $section->mini_title ?: 'Our Services' }}</p>
+                <h2 class="services-carousel__title">{{ $section->title ?: 'What We Do' }}</h2>
+            </div>
+            <div class="services-carousel__nav" aria-label="Services carousel controls">
+                <button type="button" id="services-prev" class="services-carousel__arrow services-carousel__arrow--prev" aria-label="Previous slide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M14.5 6.5 9 12l5.5 5.5" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button type="button" id="services-next" class="services-carousel__arrow services-carousel__arrow--next" aria-label="Next slide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M9.5 6.5 15 12l-5.5 5.5" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="site-section-after-title site-container">
-        <div class="swiper services-swiper">
+        <div class="swiper services-swiper services-carousel__swiper">
             <div class="swiper-wrapper">
                 @forelse ($items as $item)
-                    @php($hasDesc = filled($item->description))
+                    @php
+                        $cardDescRaw = trim(strip_tags((string) ($item->description ?? '')));
+                        if ($cardDescRaw === '' && filled($item->page_content)) {
+                            $cardDescRaw = trim(strip_tags((string) $item->page_content));
+                        }
+                        $cardDesc = $cardDescRaw !== ''
+                            ? \Illuminate\Support\Str::limit(preg_replace('/\s+/u', ' ', $cardDescRaw), 280)
+                            : '';
+                        $iconUrl = $item->coverImageUrl();
+                    @endphp
                     <div class="swiper-slide">
-                        <div class="group relative flex h-[380px] w-full flex-col overflow-hidden rounded-xl bg-secondary p-8 shadow-lg">
-                            <img src="{{ $item->pageHeroBackgroundUrl() }}" class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" alt="{{ $item->label }}">
-                            <div class="absolute inset-0 bg-secondary/28 mix-blend-multiply"></div>
-                            <div class="absolute inset-0 bg-gradient-to-b from-secondary/35 via-secondary/18 to-secondary/35"></div>
-
-                            <div @class([
-                                'relative z-10 flex h-full flex-col',
-                                'justify-between' => $hasDesc,
-                                'justify-end gap-4' => ! $hasDesc,
-                            ])>
-                                @if ($hasDesc)
-                                    <h4 class="text-2xl font-bold uppercase leading-snug text-white">{{ $item->label }}</h4>
-                                    <p class="mt-4 flex-1 text-sm font-medium leading-relaxed text-white/90">
-                                        {{ \Illuminate\Support\Str::limit($item->description, 140) }}
-                                    </p>
-                                    <a href="{{ $item->resolvedHref() }}" class="mt-auto font-bold text-white transition hover:text-primary">View details</a>
+                        <article class="services-card">
+                            <div class="services-card__icon-wrap">
+                                @if ($iconUrl !== '')
+                                    <img src="{{ $iconUrl }}" alt="" class="services-card__icon-img">
                                 @else
-                                    <h4 class="text-2xl font-bold uppercase leading-snug text-white">{{ $item->label }}</h4>
-                                    <a href="{{ $item->resolvedHref() }}" class="font-bold text-white transition hover:text-primary">View details</a>
+                                    @include('site.partials.services-card-icon')
                                 @endif
                             </div>
-                        </div>
+                            <h3 class="services-card__title">{{ $item->label }}</h3>
+                            <p @class(['services-card__text', 'services-card__text--empty' => $cardDesc === ''])>{{ $cardDesc !== '' ? $cardDesc : ' ' }}</p>
+                            <a href="{{ $item->siteNavHref() }}" class="services-card__link">
+                                <span>View Details</span>
+                                <span class="services-card__link-icon" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14M13 6l6 6-6 6" />
+                                    </svg>
+                                </span>
+                            </a>
+                        </article>
                     </div>
                 @empty
                     <div class="swiper-slide">
-                        <div class="flex h-[220px] w-full items-center justify-center rounded-xl border border-foreground/10 bg-secondary/5 p-8 text-center text-foreground/70">
-                            No items found for this section.
-                        </div>
+                        <article class="services-card services-card--empty">
+                            <p class="services-card__text">No items found for this section.</p>
+                        </article>
                     </div>
                 @endforelse
             </div>

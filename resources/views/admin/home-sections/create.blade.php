@@ -10,6 +10,8 @@
     <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #e2e8f0;">
         <button type="button" class="btn btn-muted" data-type-btn="image">Image</button>
         <button type="button" class="btn btn-muted" data-type-btn="two_column_image_details">Image and details</button>
+        <button type="button" class="btn btn-muted" data-type-btn="two_column_split_cta">Text, image &amp; CTAs</button>
+        <button type="button" class="btn btn-muted" data-type-btn="logo_carousel">Certificates / logos</button>
         <button type="button" class="btn btn-muted" data-type-btn="two_column_two_side_details">2 side details</button>
         <button type="button" class="btn btn-muted" data-type-btn="text_input">Text &amp; points</button>
         <button type="button" class="btn btn-muted" data-carousel-kind="carousel_simple">Simple carousel</button>

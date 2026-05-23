@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Support\PublicUploadUrl;
 use Illuminate\Support\Facades\Storage;
 
 class AboutPage extends Model
@@ -60,11 +61,23 @@ class AboutPage extends Model
             return (object) $out;
         }
 
+        $imageKeys = ['hero_background', 'trust_image', 'cta_background'];
+
         foreach ((new self)->getFillable() as $key) {
             $v = $row->{$key};
             if (is_string($v)) {
                 $trimmed = trim($v);
-                $out[$key] = $trimmed !== '' ? $trimmed : null;
+                if ($trimmed === '') {
+                    $out[$key] = null;
+
+                    continue;
+                }
+                if (in_array($key, $imageKeys, true) && self::imageSrc($trimmed) === '') {
+                    $out[$key] = null;
+
+                    continue;
+                }
+                $out[$key] = $trimmed;
             } elseif ($v !== null && $v !== '') {
                 $out[$key] = $v;
             }
@@ -73,18 +86,10 @@ class AboutPage extends Model
         return (object) $out;
     }
 
-    /** Use full URL, site path, or storage path as image src. */
-    public static function imageSrc(string $value): string
+    /** Use full URL, site path, or storage path as image src (empty if file missing). */
+    public static function imageSrc(?string $value): string
     {
-        $value = trim($value);
-        if ($value === '') {
-            return '';
-        }
-        if (preg_match('#^https?://#i', $value)) {
-            return $value;
-        }
-
-        return asset(ltrim($value, '/'));
+        return PublicUploadUrl::fromPath($value);
     }
 
     public static function isManagedUploadPath(?string $path): bool
@@ -123,7 +128,7 @@ class AboutPage extends Model
             return $empty;
         }
         $v = trim($ctaVideoUrl);
-        if (preg_match('#(?:(?:www\.|m\.)?youtube\.com/watch\?[^#]*v=|youtube\.com/embed/|youtu\.be/)([a-zA-Z0-9_-]{11})#', $v, $m)) {
+        if (preg_match('~(?:(?:www\.|m\.)?youtube\.com/watch\?(?:[^&\s]*&)*v=|youtube\.com/embed/|youtu\.be/)([a-zA-Z0-9_-]{11})~', $v, $m)) {
             $id = $m[1];
 
             return [

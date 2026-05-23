@@ -13,6 +13,8 @@
     $typeLabels = [
         'image' => 'Image',
         'two_column_image_details' => 'Image and details',
+        'two_column_split_cta' => 'Text, image & CTAs',
+        'logo_carousel' => 'Certificates / logos',
         'two_column_two_side_details' => '2 side details',
         'text_input' => 'Text & points',
     ];
@@ -97,6 +99,11 @@
                         <label for="description">Description</label>
                         <textarea id="description" name="description" rows="4" placeholder="Optional">{{ old('description', $section->description) }}</textarea>
                     </div>
+                    <div style="margin-top:10px;">
+                        <label for="video_url">YouTube video (play button on image)</label>
+                        <input id="video_url" name="video_url" type="url" value="{{ old('video_url', data_get($d, 'video_url')) }}" placeholder="https://youtu.be/… or https://www.youtube.com/watch?v=…">
+                        @error('video_url') <div class="error">{{ $message }}</div> @enderror
+                    </div>
 
                     <div style="margin-top:10px;">
                         <label>Point</label>
@@ -117,6 +124,115 @@
                         @error('points.*') <div class="error">{{ $message }}</div> @enderror
                     </div>
                 </div>
+            </div>
+
+        @elseif ($formType === 'two_column_split_cta')
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:12px;">
+                <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
+                    <div style="font-weight:700; margin-bottom:10px;">Image (right column)</div>
+                    @if (is_string($section->image_path) && $section->image_path !== '')
+                        <div style="margin-bottom:10px;">
+                            <img src="{{ asset($section->image_path) }}" alt="" style="max-width: 260px; width: 100%; height: auto; border-radius: 8px; border:1px solid #e5e7eb;">
+                        </div>
+                    @endif
+                    <label for="rct_image_file" style="font-size:12px;">Upload new image (optional)</label>
+                    <input id="rct_image_file" name="image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                    @error('image_file') <div class="error">{{ $message }}</div> @enderror
+                    <div style="margin-top:10px;">
+                        <label for="rct_image_alt">Image alt</label>
+                        <input id="rct_image_alt" name="image_alt" value="{{ old('image_alt', $section->image_alt) }}" placeholder="Optional">
+                    </div>
+                </div>
+
+                <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px;">
+                    <div style="font-weight:700; margin-bottom:10px;">Text &amp; buttons (left column)</div>
+                    <div style="margin-top:10px;">
+                        <label for="rct_title">Title</label>
+                        <input id="rct_title" name="title" value="{{ old('title', $section->title) }}" placeholder="e.g. Recruitment">
+                    </div>
+                    <div style="margin-top:10px;">
+                        <label for="rct_description">Description (paragraph 1)</label>
+                        <textarea id="rct_description" name="description" rows="4" placeholder="Optional">{{ old('description', $section->description) }}</textarea>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <label for="rct_secondary_description">Description (paragraph 2)</label>
+                        <textarea id="rct_secondary_description" name="secondary_description" rows="4" placeholder="HTML: &lt;strong&gt;, &lt;a&gt;, &lt;br&gt;">{{ old('secondary_description', data_get($d, 'secondary_description')) }}</textarea>
+                    </div>
+                    <div class="grid grid-2" style="margin-top:10px;">
+                        <div>
+                            <label for="rct_button_label">Button 1 label</label>
+                            <input id="rct_button_label" name="button_label" value="{{ old('button_label', $section->button_label) }}" placeholder="JOIN US">
+                        </div>
+                        <div>
+                            <label for="rct_button_url">Button 1 URL</label>
+                            <input id="rct_button_url" name="button_url" value="{{ old('button_url', $section->button_url) }}" placeholder="https://… or /page">
+                        </div>
+                    </div>
+                    <div class="grid grid-2" style="margin-top:10px;">
+                        <div>
+                            <label for="rct_secondary_button_label">Button 2 label</label>
+                            <input id="rct_secondary_button_label" name="secondary_button_label" value="{{ old('secondary_button_label', data_get($d, 'secondary_button_label')) }}" placeholder="OUR TEAM">
+                        </div>
+                        <div>
+                            <label for="rct_secondary_button_url">Button 2 URL</label>
+                            <input id="rct_secondary_button_url" name="secondary_button_url" value="{{ old('secondary_button_url', data_get($d, 'secondary_button_url')) }}" placeholder="https://… or /page">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        @elseif ($formType === 'logo_carousel')
+            @php($logoItems = is_array(data_get($d, 'items')) ? array_values(data_get($d, 'items')) : [])
+            <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
+                <div style="font-weight:700; margin-bottom:10px;">Section header</div>
+                <div style="margin-top:10px;">
+                    <label for="lc_title">Title</label>
+                    <input id="lc_title" name="title" value="{{ old('title', $section->title) }}" placeholder="Quality Certificates & Memberships">
+                </div>
+                <div style="margin-top:10px;">
+                    <label for="lc_description">Subtitle prefix</label>
+                    <input id="lc_description" name="description" value="{{ old('description', $section->description) }}" placeholder="Click to see all our">
+                </div>
+                <div class="grid grid-2" style="margin-top:10px;">
+                    <div>
+                        <label for="lc_button_label">Link text</label>
+                        <input id="lc_button_label" name="button_label" value="{{ old('button_label', $section->button_label) }}" placeholder="Quality Certificates & Memberships">
+                    </div>
+                    <div>
+                        <label for="lc_button_url">Link URL</label>
+                        <input id="lc_button_url" name="button_url" value="{{ old('button_url', $section->button_url) }}" placeholder="/page or https://…">
+                    </div>
+                </div>
+            </div>
+
+            <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
+                <div style="font-weight:700; margin-bottom:10px;">Logos</div>
+                @foreach ($logoItems as $li => $logo)
+                    @if (is_array($logo) && (is_string(data_get($logo, 'path')) && data_get($logo, 'path') !== '' || filled(data_get($logo, 'title'))))
+                        <div style="display:grid; grid-template-columns: 100px 1fr auto; gap:12px; align-items:start; padding:10px 0; border-bottom:1px solid #f1f5f9;">
+                            @if (is_string(data_get($logo, 'path')) && data_get($logo, 'path') !== '')
+                                <img src="{{ asset(data_get($logo, 'path')) }}" alt="" style="width:100px; height:70px; object-fit:contain; background:#f3f4f6; border-radius:6px; padding:6px;">
+                            @else
+                                <div style="width:100px; height:70px; background:#f3f4f6; border-radius:6px;"></div>
+                            @endif
+                            <div>
+                                <label style="font-size:12px;">Title (fallback if no image)</label>
+                                <input name="logo_titles[{{ $li }}]" value="{{ old('logo_titles.'.$li, data_get($logo, 'title')) }}" style="width:100%; max-width:360px;">
+                                <label style="font-size:12px; margin-top:8px; display:block;">Optional URL</label>
+                                <input name="logo_urls[{{ $li }}]" value="{{ old('logo_urls.'.$li, data_get($logo, 'url')) }}" style="width:100%; max-width:360px;" placeholder="https://…">
+                            </div>
+                            <label style="display:flex; align-items:center; gap:6px; font-size:12px; white-space:nowrap;">
+                                <input type="checkbox" name="logo_remove[]" value="{{ $li }}"> Remove
+                            </label>
+                        </div>
+                    @endif
+                @endforeach
+                <div id="lcNewLogoWrap" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;"></div>
+                <div style="margin-top:10px;">
+                    <button type="button" class="btn btn-muted" id="lcAddLogoBtn">Add logo</button>
+                </div>
+                @error('logo_items') <div class="error">{{ $message }}</div> @enderror
+                @error('logo_items.*.file') <div class="error">{{ $message }}</div> @enderror
             </div>
 
         @elseif ($formType === 'text_input')
@@ -397,6 +513,31 @@
         };
         if (imgEditAddExtraBtn) {
             imgEditAddExtraBtn.addEventListener('click', appendImgEditExtraRow);
+        }
+
+        const lcNewLogoWrap = document.getElementById('lcNewLogoWrap');
+        const lcAddLogoBtn = document.getElementById('lcAddLogoBtn');
+        let lcLogoSeq = 0;
+        const appendLcLogoRow = () => {
+            if (!lcNewLogoWrap) return;
+            const k = 'n' + (lcLogoSeq++);
+            const row = document.createElement('div');
+            row.style.border = '1px dashed #cbd5e1';
+            row.style.borderRadius = '8px';
+            row.style.padding = '10px';
+            row.innerHTML = `
+                <div style="font-size:12px; color:#64748b; margin-bottom:8px;">New logo</div>
+                <label style="font-size:12px;">Image file</label>
+                <input name="logo_items[${k}][file]" type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="display:block; margin-top:4px;">
+                <label style="font-size:12px; margin-top:8px; display:block;">Title (optional)</label>
+                <input name="logo_items[${k}][title]" placeholder="ISO 14001" style="margin-top:4px; width:100%; max-width:420px;">
+                <label style="font-size:12px; margin-top:8px; display:block;">URL (optional)</label>
+                <input name="logo_items[${k}][url]" placeholder="https://…" style="margin-top:4px; width:100%; max-width:420px;">
+            `;
+            lcNewLogoWrap.appendChild(row);
+        };
+        if (lcAddLogoBtn) {
+            lcAddLogoBtn.addEventListener('click', appendLcLogoRow);
         }
     })();
 </script>

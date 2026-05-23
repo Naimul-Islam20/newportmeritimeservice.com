@@ -131,6 +131,32 @@
             imgAddExtraBtn.addEventListener('click', appendImgExtraRow);
         }
 
+        const lcCreateLogoWrap = document.getElementById('lcCreateLogoWrap');
+        const lcCreateAddLogoBtn = document.getElementById('lcCreateAddLogoBtn');
+        let lcCreateLogoSeq = 0;
+        const appendLcCreateLogoRow = () => {
+            if (!lcCreateLogoWrap) return;
+            const k = 'n' + (lcCreateLogoSeq++);
+            const row = document.createElement('div');
+            row.style.border = '1px dashed #cbd5e1';
+            row.style.borderRadius = '8px';
+            row.style.padding = '10px';
+            row.innerHTML = `
+                <label style="font-size:12px;">Image file</label>
+                <input name="logo_items[${k}][file]" type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="display:block; margin-top:4px;">
+                <label style="font-size:12px; margin-top:8px; display:block;">Title (optional)</label>
+                <input name="logo_items[${k}][title]" placeholder="ISO 14001" style="margin-top:4px; width:100%; max-width:420px;">
+                <label style="font-size:12px; margin-top:8px; display:block;">URL (optional)</label>
+                <input name="logo_items[${k}][url]" placeholder="https://…" style="margin-top:4px; width:100%; max-width:420px;">
+            `;
+            lcCreateLogoWrap.appendChild(row);
+        };
+        if (lcCreateAddLogoBtn) {
+            lcCreateAddLogoBtn.addEventListener('click', appendLcCreateLogoRow);
+            appendLcCreateLogoRow();
+            appendLcCreateLogoRow();
+        }
+
         const syncPanelFieldNames = (activeType) => {
             panels.forEach((p) => {
                 const active = p.getAttribute('data-type') === activeType;

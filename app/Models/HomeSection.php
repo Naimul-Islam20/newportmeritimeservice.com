@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,9 +58,68 @@ class HomeSection extends Model
         return $query->orderBy('sort_order')->orderBy('id');
     }
 
+    public function imagePublicUrl(): string
+    {
+        return PublicUploadUrl::fromPath($this->image_path);
+    }
+
+    /**
+     * @return array{type: 'none'|'youtube', embed_url: string}
+     */
+    public function videoModalPayload(): array
+    {
+        $url = data_get($this->data, 'video_url');
+
+        return AboutPage::videoModalPayload(is_string($url) ? $url : null);
+    }
+
     public function resolvedButtonHref(): string
     {
-        $raw = trim((string) ($this->button_url ?? ''));
+        return $this->resolvedButtonHrefFor($this->button_url);
+    }
+
+    /**
+     * @return list<array{path?: string|null, title?: string|null, url?: string|null}>
+     */
+    public function logoCarouselItems(): array
+    {
+        $raw = data_get($this->data, 'items');
+        if (! is_array($raw)) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($raw as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            $path = data_get($item, 'path');
+            $title = data_get($item, 'title');
+            $hasPath = is_string($path) && trim($path) !== '';
+            $hasTitle = is_string($title) && trim($title) !== '';
+            if (! $hasPath && ! $hasTitle) {
+                continue;
+            }
+            $out[] = [
+                'path' => $hasPath ? trim($path) : null,
+                'title' => $hasTitle ? trim($title) : null,
+                'url' => $this->resolveOptionalStoredString(data_get($item, 'url')),
+            ];
+        }
+
+        return $out;
+    }
+
+    private function resolveOptionalStoredString(mixed $value): ?string
+    {
+        $value = is_string($value) ? trim($value) : '';
+
+        return $value !== '' ? $value : null;
+    }
+
+    public function resolvedButtonHrefFor(mixed $url): string
+    {
+        $raw = trim((string) ($url ?? ''));
 
         if ($raw === '' || $raw === '#') {
             return '#';
@@ -67,6 +127,10 @@ class HomeSection extends Model
 
         if (preg_match('#^https?://#i', $raw)) {
             return $raw;
+        }
+
+        if (str_contains($raw, '@') && ! str_contains($raw, '/')) {
+            return 'mailto:'.$raw;
         }
 
         $path = Str::startsWith($raw, '/') ? $raw : '/'.$raw;

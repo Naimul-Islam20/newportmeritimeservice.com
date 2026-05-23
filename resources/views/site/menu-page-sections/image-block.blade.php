@@ -60,9 +60,12 @@
         @if (count($tiles) > 0)
             <div @class(['grid items-start gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3', 'site-section-after-title' => $hasHeader])>
                 @foreach ($tiles as $tile)
+                    @php($lbSrc = public_upload_url($tile['path'] ?? null))
+                    @if ($lbSrc === '')
+                        @continue
+                    @endif
                     <figure class="flex w-full flex-col overflow-hidden rounded-lg {{ $stripCardClass }} shadow-lg shadow-secondary/10">
                         <div class="w-full overflow-hidden rounded-t-lg bg-foreground/5 {{ filled($tile['caption'] ?? null) ? '' : 'rounded-b-lg' }}">
-                            @php($lbSrc = asset($tile['path']))
                             @php($lbAlt = is_string($tile['caption'] ?? null) ? $tile['caption'] : '')
                             <button type="button" class="group w-full cursor-zoom-in border-0 bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" data-lightbox-src="{{ e($lbSrc) }}" data-lightbox-alt="{{ e($lbAlt) }}">
                                 <img src="{{ $lbSrc }}" alt="{{ $lbAlt }}" loading="lazy" decoding="async" class="block h-auto w-full max-w-full align-middle transition-opacity group-hover:opacity-95">

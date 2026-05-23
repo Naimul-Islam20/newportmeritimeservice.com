@@ -99,6 +99,7 @@ class PageController extends Controller
             'title' => SiteDetail::pageTitle($pageTitle),
             'metaDescription' => $siteDetail?->metaDescriptionForSite(),
             'about' => $about,
+            'siteDetails' => $siteDetail,
             'pageSections' => $aboutPage->pageSections()->ordered()->where('is_active', true)->get(),
         ]);
     }

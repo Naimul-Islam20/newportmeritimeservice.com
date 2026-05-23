@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -26,21 +27,7 @@ class HeroSlide extends Model
 
     public function imagePublicUrl(): string
     {
-        if ($this->image_path === null || $this->image_path === '') {
-            return '';
-        }
-
-        $path = str_replace('\\', '/', ltrim($this->image_path, '/'));
-
-        if (Storage::disk('public_site')->exists($path)) {
-            return asset($path);
-        }
-
-        if (Storage::disk('public')->exists($path)) {
-            return asset('storage/'.$path);
-        }
-
-        return '';
+        return PublicUploadUrl::fromPath($this->image_path);
     }
 
     public function resolvedButtonHref(): string

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateHomeServiceAreaSettingRequest;
+use App\Models\AboutPage;
 use App\Models\HomeSection;
 use App\Models\HomeServiceAreaSetting;
 use App\Models\HomeVisualFramesSetting;
@@ -254,6 +255,7 @@ class HomeSectionController extends Controller
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'image_side' => ['required', 'in:left,right'],
                 'image_file' => ImageUploadRules::rules(required: true),
+                'video_url' => ['nullable', 'string', 'max:2048'],
                 'is_active' => ['sometimes', 'boolean'],
             ],
             'two_column_two_side_details' => [
@@ -263,6 +265,19 @@ class HomeSectionController extends Controller
                 'right_title' => ['nullable', 'string', 'max:255'],
                 'left_description' => ['nullable', 'string', 'max:5000'],
                 'right_description' => ['nullable', 'string', 'max:5000'],
+                'is_active' => ['sometimes', 'boolean'],
+            ],
+            'two_column_split_cta' => [
+                'type' => ['required', 'in:two_column_split_cta'],
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string', 'max:5000'],
+                'secondary_description' => ['nullable', 'string', 'max:5000'],
+                'image_file' => ImageUploadRules::rules(required: true),
+                'image_alt' => ['nullable', 'string', 'max:255'],
+                'button_label' => ['nullable', 'string', 'max:255'],
+                'button_url' => ['nullable', 'string', 'max:2048'],
+                'secondary_button_label' => ['nullable', 'string', 'max:255'],
+                'secondary_button_url' => ['nullable', 'string', 'max:2048'],
                 'is_active' => ['sometimes', 'boolean'],
             ],
             'image' => [
@@ -287,15 +302,34 @@ class HomeSectionController extends Controller
                 'bottom_description' => ['nullable', 'string', 'max:5000'],
                 'is_active' => ['sometimes', 'boolean'],
             ],
+            'logo_carousel' => [
+                'type' => ['required', 'in:logo_carousel'],
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string', 'max:5000'],
+                'button_label' => ['nullable', 'string', 'max:255'],
+                'button_url' => ['nullable', 'string', 'max:2048'],
+                'logo_items' => ['nullable', 'array'],
+                'logo_items.*.title' => ['nullable', 'string', 'max:255'],
+                'logo_items.*.url' => ['nullable', 'string', 'max:2048'],
+                'is_active' => ['sometimes', 'boolean'],
+            ],
             default => [
-                'type' => ['required', 'in:two_column_image_details,two_column_two_side_details,image,text_input'],
+                'type' => ['required', 'in:two_column_image_details,two_column_two_side_details,two_column_split_cta,image,text_input,logo_carousel'],
             ],
         };
 
         $validated = $request->validate($rules);
 
+        if ($type === 'two_column_image_details') {
+            $this->assertValidYoutubeUrl($validated['video_url'] ?? null);
+        }
+
         if ($type === 'image') {
             $this->validateExtraGalleryUploads($request);
+        }
+
+        if ($type === 'logo_carousel') {
+            $this->validateLogoCarouselUploads($request);
         }
 
         $isActive = $request->boolean('is_active', true);
@@ -315,9 +349,7 @@ class HomeSectionController extends Controller
                 'title' => $title,
                 'description' => $this->resolveOptionalString($validated['description'] ?? null),
                 'points' => $points !== [] ? $points : null,
-                'data' => [
-                    'image_side' => $this->normalizeImageSide($validated['image_side'] ?? 'left'),
-                ],
+                'data' => $this->twoColumnImageDetailsData($validated),
                 'is_active' => $isActive,
             ];
         }
@@ -336,6 +368,25 @@ class HomeSectionController extends Controller
                     'title' => $this->resolveOptionalString($validated['right_title'] ?? null),
                     'description' => $this->resolveOptionalString($validated['right_description'] ?? null),
                 ],
+                'is_active' => $isActive,
+            ];
+        }
+
+        if ($type === 'two_column_split_cta') {
+            $imagePath = $request->file('image_file')->store('home-sections', 'public_site');
+
+            return [
+                'block_type' => 'two_column',
+                'variant' => 'recruitment',
+                'two_column_mode' => 'split_cta',
+                'layout_width' => 'full',
+                'image_path' => $imagePath,
+                'image_alt' => $this->resolveOptionalString($validated['image_alt'] ?? null),
+                'title' => $title,
+                'description' => $this->resolveOptionalString($validated['description'] ?? null),
+                'button_label' => $this->resolveOptionalString($validated['button_label'] ?? null),
+                'button_url' => $this->resolveOptionalString($validated['button_url'] ?? null),
+                'data' => $this->splitCtaData($validated),
                 'is_active' => $isActive,
             ];
         }
@@ -382,6 +433,21 @@ class HomeSectionController extends Controller
             ];
         }
 
+        if ($type === 'logo_carousel') {
+            return [
+                'block_type' => 'logo_carousel',
+                'variant' => 'certificates',
+                'title' => $title,
+                'description' => $this->resolveOptionalString($validated['description'] ?? null),
+                'button_label' => $this->resolveOptionalString($validated['button_label'] ?? null),
+                'button_url' => $this->resolveOptionalString($validated['button_url'] ?? null),
+                'data' => [
+                    'items' => $this->collectNewLogoCarouselFiles($request, 'home-sections'),
+                ],
+                'is_active' => $isActive,
+            ];
+        }
+
         throw ValidationException::withMessages([
             'type' => ['Select a section type.'],
         ]);
@@ -414,6 +480,54 @@ class HomeSectionController extends Controller
         $side = strtolower(trim((string) $value));
 
         return in_array($side, ['right', '1', 'true', 'on'], true) ? 'right' : 'left';
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function twoColumnImageDetailsData(array $validated): array
+    {
+        return [
+            'image_side' => $this->normalizeImageSide($validated['image_side'] ?? 'left'),
+            'video_url' => $this->resolveOptionalString($validated['video_url'] ?? null),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function splitCtaData(array $validated): array
+    {
+        return [
+            'secondary_description' => $this->sanitizeRichTextOptional($validated['secondary_description'] ?? null),
+            'secondary_button_label' => $this->resolveOptionalString($validated['secondary_button_label'] ?? null),
+            'secondary_button_url' => $this->resolveOptionalString($validated['secondary_button_url'] ?? null),
+        ];
+    }
+
+    private function sanitizeRichTextOptional(mixed $value): ?string
+    {
+        $value = is_string($value) ? trim($value) : '';
+        if ($value === '') {
+            return null;
+        }
+
+        return strip_tags($value, '<strong><b><a><br><em>');
+    }
+
+    private function assertValidYoutubeUrl(mixed $url): void
+    {
+        if (! is_string($url) || trim($url) === '') {
+            return;
+        }
+
+        if (AboutPage::videoModalPayload($url)['type'] === 'none') {
+            throw ValidationException::withMessages([
+                'video_url' => 'Use a valid YouTube link (watch, youtu.be, or embed URL).',
+            ]);
+        }
     }
 
     private function validateExtraGalleryUploads(Request $request, string $inputKey = 'extra_images'): void
@@ -476,6 +590,99 @@ class HomeSectionController extends Controller
         }
 
         return $out;
+    }
+
+    private function validateLogoCarouselUploads(Request $request): void
+    {
+        $this->validateExtraGalleryUploads($request, 'logo_items');
+    }
+
+    /**
+     * @return list<array{path: string, title: string|null, url: string|null}>
+     */
+    private function collectNewLogoCarouselFiles(Request $request, string $storageDir): array
+    {
+        $out = [];
+        $uploaded = $request->file('logo_items');
+        $inputs = $request->input('logo_items', []);
+        if (! is_array($uploaded)) {
+            $uploaded = [];
+        }
+        if (! is_array($inputs)) {
+            $inputs = [];
+        }
+
+        $keys = array_unique(array_merge(array_keys($uploaded), array_keys($inputs)));
+
+        foreach ($keys as $i) {
+            $row = is_array($uploaded[$i] ?? null) ? $uploaded[$i] : [];
+            $file = $row['file'] ?? null;
+            $title = trim((string) $request->input('logo_items.'.$i.'.title', ''));
+            $url = trim((string) $request->input('logo_items.'.$i.'.url', ''));
+
+            if ($file instanceof UploadedFile && $file->isValid()) {
+                $path = $file->store($storageDir, 'public_site');
+                $out[] = [
+                    'path' => $path,
+                    'title' => $title !== '' ? $title : null,
+                    'url' => $url !== '' ? $url : null,
+                ];
+
+                continue;
+            }
+
+            if ($title !== '') {
+                $out[] = [
+                    'path' => null,
+                    'title' => $title,
+                    'url' => $url !== '' ? $url : null,
+                ];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return list<array{path: string, title: string|null, url: string|null}>
+     */
+    private function mergeLogoCarouselItems(Request $request, HomeSection $section): array
+    {
+        $current = is_array($section->data) ? $section->data : [];
+        $items = data_get($current, 'items', []);
+        if (! is_array($items)) {
+            $items = [];
+        }
+        $items = array_values($items);
+
+        $remove = array_map('intval', (array) $request->input('logo_remove', []));
+        $kept = [];
+        foreach ($items as $idx => $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            if (in_array((int) $idx, $remove, true)) {
+                $this->deleteStoredPath(data_get($item, 'path'));
+
+                continue;
+            }
+            $path = data_get($item, 'path');
+            $path = is_string($path) && trim($path) !== '' ? trim($path) : null;
+            $title = $request->input('logo_titles.'.$idx, data_get($item, 'title'));
+            $url = $request->input('logo_urls.'.$idx, data_get($item, 'url'));
+            $title = is_string($title) ? trim($title) : '';
+            $url = is_string($url) ? trim($url) : '';
+            if ($path === null && $title === '') {
+                continue;
+            }
+            $kept[] = [
+                'path' => $path,
+                'title' => $title !== '' ? $title : null,
+                'url' => $url !== '' ? $url : null,
+            ];
+        }
+
+        return array_merge($kept, $this->collectNewLogoCarouselFiles($request, 'home-sections'));
     }
 
     public function details(Request $request): View
@@ -733,6 +940,14 @@ class HomeSectionController extends Controller
             return 'two_column_two_side_details';
         }
 
+        if ($section->block_type === 'two_column' && $section->two_column_mode === 'split_cta') {
+            return 'two_column_split_cta';
+        }
+
+        if ($section->block_type === 'logo_carousel') {
+            return 'logo_carousel';
+        }
+
         abort(404);
     }
 
@@ -801,9 +1016,12 @@ class HomeSectionController extends Controller
                 'points.*' => ['nullable', 'string', 'max:255'],
                 'image_side' => ['required', 'in:left,right'],
                 'image_file' => ImageUploadRules::rules(),
+                'video_url' => ['nullable', 'string', 'max:2048'],
                 'sort_order' => ['nullable', 'integer', 'min:0'],
                 'is_active' => ['sometimes', 'boolean'],
             ]);
+
+            $this->assertValidYoutubeUrl($validated['video_url'] ?? null);
 
             $imagePath = $section->image_path;
             if ($request->hasFile('image_file')) {
@@ -820,9 +1038,7 @@ class HomeSectionController extends Controller
                 'title' => $this->resolveOptionalString($validated['title'] ?? null),
                 'description' => $this->resolveOptionalString($validated['description'] ?? null),
                 'points' => $points !== [] ? $points : null,
-                'data' => [
-                    'image_side' => $this->normalizeImageSide($validated['image_side'] ?? 'left'),
-                ],
+                'data' => $this->twoColumnImageDetailsData($validated),
                 'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
                 'is_active' => $request->boolean('is_active'),
             ];
@@ -850,6 +1066,41 @@ class HomeSectionController extends Controller
                     'title' => $this->resolveOptionalString($validated['right_title'] ?? null),
                     'description' => $this->resolveOptionalString($validated['right_description'] ?? null),
                 ],
+                'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
+                'is_active' => $request->boolean('is_active'),
+            ];
+        }
+
+        if ($type === 'two_column_split_cta') {
+            $validated = $request->validate([
+                'type' => ['required', 'in:two_column_split_cta'],
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string', 'max:5000'],
+                'secondary_description' => ['nullable', 'string', 'max:5000'],
+                'image_file' => ImageUploadRules::rules(),
+                'image_alt' => ['nullable', 'string', 'max:255'],
+                'button_label' => ['nullable', 'string', 'max:255'],
+                'button_url' => ['nullable', 'string', 'max:2048'],
+                'secondary_button_label' => ['nullable', 'string', 'max:255'],
+                'secondary_button_url' => ['nullable', 'string', 'max:2048'],
+                'sort_order' => ['nullable', 'integer', 'min:0'],
+                'is_active' => ['sometimes', 'boolean'],
+            ]);
+
+            $imagePath = $section->image_path;
+            if ($request->hasFile('image_file')) {
+                $this->deleteStoredPath($imagePath);
+                $imagePath = $request->file('image_file')->store('home-sections', 'public_site');
+            }
+
+            return [
+                'image_path' => $imagePath,
+                'image_alt' => $this->resolveOptionalString($validated['image_alt'] ?? null),
+                'title' => $this->resolveOptionalString($validated['title'] ?? null),
+                'description' => $this->resolveOptionalString($validated['description'] ?? null),
+                'button_label' => $this->resolveOptionalString($validated['button_label'] ?? null),
+                'button_url' => $this->resolveOptionalString($validated['button_url'] ?? null),
+                'data' => $this->splitCtaData($validated),
                 'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
                 'is_active' => $request->boolean('is_active'),
             ];
@@ -961,6 +1212,41 @@ class HomeSectionController extends Controller
             ];
         }
 
+        if ($type === 'logo_carousel') {
+            $validated = $request->validate([
+                'type' => ['required', 'in:logo_carousel'],
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string', 'max:5000'],
+                'button_label' => ['nullable', 'string', 'max:255'],
+                'button_url' => ['nullable', 'string', 'max:2048'],
+                'logo_items' => ['nullable', 'array'],
+                'logo_items.*.title' => ['nullable', 'string', 'max:255'],
+                'logo_items.*.url' => ['nullable', 'string', 'max:2048'],
+                'logo_remove' => ['nullable', 'array'],
+                'logo_remove.*' => ['integer', 'min:0'],
+                'logo_titles' => ['nullable', 'array'],
+                'logo_titles.*' => ['nullable', 'string', 'max:255'],
+                'logo_urls' => ['nullable', 'array'],
+                'logo_urls.*' => ['nullable', 'string', 'max:2048'],
+                'sort_order' => ['nullable', 'integer', 'min:0'],
+                'is_active' => ['sometimes', 'boolean'],
+            ]);
+
+            $this->validateLogoCarouselUploads($request);
+
+            return [
+                'title' => $this->resolveOptionalString($validated['title'] ?? null),
+                'description' => $this->resolveOptionalString($validated['description'] ?? null),
+                'button_label' => $this->resolveOptionalString($validated['button_label'] ?? null),
+                'button_url' => $this->resolveOptionalString($validated['button_url'] ?? null),
+                'data' => [
+                    'items' => $this->mergeLogoCarouselItems($request, $section),
+                ],
+                'sort_order' => (int) ($validated['sort_order'] ?? $section->sort_order),
+                'is_active' => $request->boolean('is_active'),
+            ];
+        }
+
         abort(404);
     }
 
@@ -979,7 +1265,7 @@ class HomeSectionController extends Controller
 
     private function deleteSectionFiles(HomeSection $section): void
     {
-        if ($section->block_type === 'two_column' && $section->two_column_mode === 'image_details') {
+        if ($section->block_type === 'two_column' && in_array($section->two_column_mode, ['image_details', 'split_cta'], true)) {
             $this->deleteStoredPath($section->image_path);
 
             return;
@@ -1001,6 +1287,18 @@ class HomeSectionController extends Controller
         if ($section->block_type === 'text_input') {
             $data = is_array($section->data) ? $section->data : [];
             $this->deleteStoredPath(data_get($data, 'image_path'));
+
+            return;
+        }
+
+        if ($section->block_type === 'logo_carousel') {
+            $data = is_array($section->data) ? $section->data : [];
+            $items = data_get($data, 'items', []);
+            if (is_array($items)) {
+                foreach ($items as $item) {
+                    $this->deleteStoredPath(data_get($item, 'path'));
+                }
+            }
         }
     }
 
