@@ -20,17 +20,79 @@
     }
     $stepsList = array_values(array_map(fn ($s) => is_string($s) ? $s : '', $stepsList));
     $stepsList = array_pad($stepsList, max(4, count($stepsList)), '');
+
+    $branchItems = old('branch_items');
+    if (! is_array($branchItems)) {
+        $stored = ($setting->exists && is_array($setting->branches_items)) ? $setting->branches_items : [];
+        $branchItems = $stored;
+    }
+    $branchItems = array_values($branchItems);
+    $branchItems = array_pad($branchItems, max(4, count($branchItems)), []);
 @endphp
 
 <div class="card">
     <p style="margin: 0 0 14px 0; color:#64748b; font-size: 14px;">
-        Content for the <strong>Service areas / Locations</strong> block on the home page (map image, titles, bottom text, and steps).
+        <strong>Branch offices carousel</strong> (top of service area) and <strong>map / locations</strong> content below it on the home page.
     </p>
 
     <form method="POST" action="{{ route('admin.home-sections.service-area.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
+        <h2 style="margin: 0 0 12px; font-size: 1.05rem;">Branch offices carousel</h2>
+        <div class="grid grid-2" style="gap: 14px; margin-bottom: 20px;">
+            <div>
+                <label for="branches_mini_title">Eyebrow (mini title)</label>
+                <input id="branches_mini_title" name="branches_mini_title" type="text" value="{{ old('branches_mini_title', $setting->branches_mini_title ?? $defaults['branches_mini_title']) }}" autocomplete="off">
+                @error('branches_mini_title') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div>
+                <label for="branches_title">Heading</label>
+                <input id="branches_title" name="branches_title" type="text" value="{{ old('branches_title', $setting->branches_title ?? $defaults['branches_title']) }}" autocomplete="off">
+                @error('branches_title') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div>
+                <label for="branches_view_all_label">“View all” label</label>
+                <input id="branches_view_all_label" name="branches_view_all_label" type="text" value="{{ old('branches_view_all_label', $setting->branches_view_all_label ?? $defaults['branches_view_all_label']) }}" autocomplete="off">
+                @error('branches_view_all_label') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div>
+                <label for="branches_view_all_url">“View all” URL</label>
+                <input id="branches_view_all_url" name="branches_view_all_url" type="text" value="{{ old('branches_view_all_url', $setting->branches_view_all_url ?? $defaults['branches_view_all_url']) }}" placeholder="/where-we-are" autocomplete="off">
+                @error('branches_view_all_url') <div class="error">{{ $message }}</div> @enderror
+            </div>
+        </div>
+
+        <p style="margin: 0 0 10px; color:#64748b; font-size: 13px;">Landscape photos (shown 3 per row). Hover overlay uses subtitle, title, and link below.</p>
+        @foreach ($branchItems as $i => $item)
+            @php
+                $item = is_array($item) ? $item : [];
+                $path = is_string($item['path'] ?? null) ? $item['path'] : (is_string($item['existing_path'] ?? null) ? $item['existing_path'] : '');
+            @endphp
+            <div style="margin-bottom: 14px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                <strong style="font-size: 13px;">Slide {{ $i + 1 }}</strong>
+                @if ($path !== '')
+                    <input type="hidden" name="branch_items[{{ $i }}][existing_path]" value="{{ $path }}">
+                    <div style="margin: 8px 0;">
+                        <img src="{{ str_starts_with($path, 'http') ? $path : asset($path) }}" alt="" style="max-height: 120px; width: auto; border-radius: 6px;">
+                    </div>
+                @endif
+                <label style="display:block; margin-top:8px;">Image</label>
+                <input name="branch_items[{{ $i }}][file]" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                <label style="display:block; margin-top:8px;">Hover — subtitle (small caps line)</label>
+                <input name="branch_items[{{ $i }}][subtitle]" type="text" value="{{ old('branch_items.'.$i.'.subtitle', $item['subtitle'] ?? '') }}" placeholder="Newport Head Office & Warehouse" style="width:100%; max-width:420px;">
+                <label style="display:block; margin-top:8px;">Hover — title (e.g. Istanbul)</label>
+                <input name="branch_items[{{ $i }}][label]" type="text" value="{{ old('branch_items.'.$i.'.label', $item['label'] ?? '') }}" style="width:100%; max-width:420px;">
+                <label style="display:block; margin-top:8px;">View details — link URL</label>
+                <input name="branch_items[{{ $i }}][url]" type="text" value="{{ old('branch_items.'.$i.'.url', $item['url'] ?? '') }}" placeholder="https://…" style="width:100%; max-width:420px;">
+            </div>
+        @endforeach
+        @error('branch_items') <div class="error">{{ $message }}</div> @enderror
+        @error('branch_items.*.file') <div class="error">{{ $message }}</div> @enderror
+
+        <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <h2 style="margin: 0 0 12px; font-size: 1.05rem;">Map &amp; locations (below carousel)</h2>
         <div class="grid grid-2" style="gap: 14px;">
             <div>
                 <label for="mini_title">Mini title</label>

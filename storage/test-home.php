@@ -1,9 +1,4 @@
-@extends('site.layouts.app', [
-    'title' => \App\Models\SiteDetail::pageTitle('Home'),
-    'metaDescription' => 'Maritime logistics, port operations, and trusted supply chain support.',
-])
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
     .services-swiper,
@@ -47,50 +42,50 @@
     }
 
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
-{{-- Hero Carousel --}}
+<?php $__env->startSection('content'); ?>
+
 <section class="hero-carousel">
     <div class="swiper hero-swiper">
         <div class="swiper-wrapper">
-            @if ($heroSlides->isNotEmpty())
-                @foreach ($heroSlides as $slide)
-                    @include('site.partials.hero-slide', [
+            <?php if($heroSlides->isNotEmpty()): ?>
+                <?php $__currentLoopData = $heroSlides; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slide): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php echo $__env->make('site.partials.hero-slide', [
                         'title' => $slide->title,
                         'buttonLabel' => $slide->button_label,
                         'buttonHref' => $slide->resolvedButtonHref(),
                         'imageUrl' => $slide->imagePublicUrl(),
                         'imageAlt' => $slide->title,
                         'showCta' => filled($slide->button_label),
-                    ])
-                @endforeach
-            @else
-                @include('site.partials.hero-slide', [
+                    ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
+                <?php echo $__env->make('site.partials.hero-slide', [
                     'title' => "On-time delivery &\ncustomer satisfaction",
                     'buttonLabel' => 'EXPLORE NOW',
                     'buttonHref' => '#services',
                     'imageUrl' => 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop',
                     'imageAlt' => 'On-time delivery and customer satisfaction',
                     'showCta' => true,
-                ])
-                @include('site.partials.hero-slide', [
+                ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php echo $__env->make('site.partials.hero-slide', [
                     'title' => "Best quality,\nbest service",
                     'buttonLabel' => 'EXPLORE NOW',
                     'buttonHref' => '#supplies',
                     'imageUrl' => 'https://images.unsplash.com/photo-1494412574743-01927c452424?q=80&w=2070&auto=format&fit=crop',
                     'imageAlt' => 'Best quality, best service',
                     'showCta' => true,
-                ])
-                @include('site.partials.hero-slide', [
+                ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php echo $__env->make('site.partials.hero-slide', [
                     'title' => "30 years of\nexperience",
                     'buttonLabel' => 'EXPLORE NOW',
                     'buttonHref' => route('contact.create'),
                     'imageUrl' => 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=2070&auto=format&fit=crop',
                     'imageAlt' => '30 years of experience',
                     'showCta' => true,
-                ])
-            @endif
+                ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+            <?php endif; ?>
         </div>
 
         <button type="button" id="hero-prev" class="hero-carousel__nav hero-carousel__nav--prev" aria-label="Previous slide">
@@ -106,52 +101,40 @@
     </div>
 </section>
 
-{{-- Home sections (ordered by serial/sort_order from DB) --}}
-@php
+
+<?php
     $homeSectionsList = collect($homeSections ?? []);
     $newsHomeSection = $homeSectionsList->first(
         fn ($s) => $s->block_type === 'carousel' && $s->variant === 'news'
     );
-    $content2CarouselSection = $homeSectionsList->first(
-        fn ($s) => $s->block_type === 'carousel' && $s->variant === 'content_2'
-    );
-    $content2CarouselItems = $content2CarouselSection
-        ? ($sectionItems[$content2CarouselSection->id] ?? collect())
-        : collect();
     $mainHomeSections = $homeSectionsList->reject(
-        fn ($s) => $s->block_type === 'carousel' && in_array($s->variant, ['news', 'content_2'], true)
+        fn ($s) => $s->block_type === 'carousel' && $s->variant === 'news'
     )->values();
-    $serviceAreaStripIndex = $mainHomeSections->search(
-        fn ($s) => $s->block_type === 'logo_carousel'
-    );
-    $content2SectionStrip = (($serviceAreaStripIndex === false ? $mainHomeSections->count() : $serviceAreaStripIndex) % 2 === 0)
-        ? 'primary'
-        : 'secondary';
     $serviceAreaRendered = false;
-@endphp
-@foreach ($mainHomeSections as $section)
-@php
+?>
+<?php $__currentLoopData = $mainHomeSections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+<?php
 $items = $sectionItems[$section->id] ?? collect();
 $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
-@endphp
+?>
 
-@if ($section->block_type === 'carousel' && $section->variant === 'simple')
-@include('site.home-sections.carousel-simple', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
-@elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'image_details')
-@include('site.home-sections.two-column-about', ['section' => $section, 'sectionStrip' => $sectionStrip])
-@elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'split_cta')
-@include('site.home-sections.two-column-recruitment', ['section' => $section, 'sectionStrip' => $sectionStrip])
-@elseif ($section->block_type === 'logo_carousel')
-    @if (! $serviceAreaRendered)
-        @php $serviceAreaRendered = true; @endphp
-        @include('site.home-sections.service-areas', [
-            'serviceArea' => $serviceArea ?? [],
-            'content2CarouselSection' => $content2CarouselSection,
-            'content2CarouselItems' => $content2CarouselItems,
-            'content2SectionStrip' => $content2SectionStrip,
-        ])
+<?php if($section->block_type === 'carousel' && $section->variant === 'simple'): ?>
+<?php echo $__env->make('site.home-sections.carousel-simple', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+<?php elseif($section->block_type === 'two_column' && $section->two_column_mode === 'image_details'): ?>
+<?php echo $__env->make('site.home-sections.two-column-about', ['section' => $section, 'sectionStrip' => $sectionStrip], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php elseif($section->block_type === 'two_column' && $section->two_column_mode === 'split_cta'): ?>
+<?php echo $__env->make('site.home-sections.two-column-recruitment', ['section' => $section, 'sectionStrip' => $sectionStrip], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php elseif($section->block_type === 'logo_carousel'): ?>
+    <?php if(! $serviceAreaRendered): ?>
+        <?php($serviceAreaRendered = true)
+        @include('site.home-sections.service-areas', ['serviceArea' => $serviceArea ?? []])
     @endif
     @include('site.home-sections.certificates-carousel', ['section' => $section, 'sectionStrip' => $sectionStrip])
+{{-- Apatoto off: Our Vision / Our Mission (2 side details)
+@elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details')
+@include('site.home-sections.two-column-mission-vision', ['section' => $section, 'sectionStrip' => $sectionStrip])
+--}}
 @elseif ($section->block_type === 'image')
 @include('site.menu-page-sections.image-block', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'text_input')
@@ -160,12 +143,7 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
 @endforeach
 
 @if (! $serviceAreaRendered)
-    @include('site.home-sections.service-areas', [
-        'serviceArea' => $serviceArea ?? [],
-        'content2CarouselSection' => $content2CarouselSection,
-        'content2CarouselItems' => $content2CarouselItems,
-        'content2SectionStrip' => $content2SectionStrip,
-    ])
+    @include('site.home-sections.service-areas', ['serviceArea' => $serviceArea ?? []])
 @endif
 
 {{-- Latest News — fixed above footer (not in main section order) --}}
@@ -174,11 +152,11 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
         $section = $newsHomeSection;
         $items = $sectionItems[$section->id] ?? collect();
         $sectionStrip = $mainHomeSections->count() % 2 === 0 ? 'primary' : 'secondary';
-    @endphp
-    @include('site.home-sections.carousel-news', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
-@endif
+    ?>
+    <?php echo $__env->make('site.home-sections.carousel-news', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php endif; ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -230,79 +208,27 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             });
         }
 
-        // Branch offices carousel — 3-up row, next arrow beside track
-        const branchesEl = document.querySelector('[data-branches-swiper]');
-        if (branchesEl) {
-            const branchesRow = branchesEl.closest('.service-area-branches__carousel-row');
-            const branchesSlides = branchesEl.querySelectorAll('.swiper-slide');
-            const branchesCount = branchesSlides.length;
-            const branchesNext = branchesRow?.querySelector('[data-branches-next]') ?? null;
-            const branchesCanAdvance = branchesCount > 1;
-            const branchesUseLoop = branchesCount > 3;
-
-            const branchesSwiper = new Swiper(branchesEl, {
-                slidesPerView: 1.15,
-                slidesPerGroup: 1,
-                spaceBetween: 16,
-                loop: branchesUseLoop,
-                rewind: branchesCanAdvance && !branchesUseLoop,
-                speed: 700,
-                grabCursor: true,
-                autoplay: branchesCount > 1 ? {
-                    delay: 4000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                } : false,
-                navigation: {
-                    nextEl: branchesNext,
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 18,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 20,
-                    },
-                },
-            });
-
-            if (branchesNext) {
-                branchesNext.disabled = !branchesCanAdvance;
-            }
-
-            if (branchesCount > 1 && branchesSwiper.autoplay) {
-                branchesSwiper.autoplay.start();
-            }
-        }
-
-        // Ship Supplies / What We Supply (content_2 — above service area)
-        const suppliesEl = document.querySelector('.supplies-swiper');
-        if (suppliesEl) {
-            const suppliesSlides = suppliesEl.querySelectorAll('.swiper-slide');
-            const suppliesLoop = suppliesSlides.length > 1;
-            new Swiper('.supplies-swiper', {
-                slidesPerView: 1,
-                spaceBetween: 24,
-                loop: suppliesLoop,
-                speed: 600,
-                autoplay: suppliesLoop ? {
-                    delay: 4000,
-                    disableOnInteraction: false,
-                } : false,
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 24,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 28,
-                    },
-                },
-            });
-        }
+        // Apatoto off: Ship Supplies / What We Supply carousel
+        // const suppliesEl = document.querySelector('.supplies-swiper');
+        // if (suppliesEl) {
+        //     new Swiper('.supplies-swiper', {
+        //         slidesPerView: 1,
+        //         spaceBetween: 24,
+        //         loop: true,
+        //         autoplay: {
+        //             delay: 4000,
+        //             disableOnInteraction: false,
+        //         },
+        //         breakpoints: {
+        //             640: {
+        //                 slidesPerView: 2
+        //             },
+        //             1024: {
+        //                 slidesPerView: 3
+        //             },
+        //         }
+        //     });
+        // }
 
         // Certificates / memberships logo carousel (arrows + autoplay)
         document.querySelectorAll('[data-certs-swiper]').forEach((el) => {
@@ -362,5 +288,9 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
         });
     });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('site.layouts.app', [
+    'title' => \App\Models\SiteDetail::pageTitle('Home'),
+    'metaDescription' => 'Maritime logistics, port operations, and trusted supply chain support.',
+], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

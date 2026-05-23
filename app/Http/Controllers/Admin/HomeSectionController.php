@@ -76,6 +76,11 @@ class HomeSectionController extends Controller
             'highlight_description' => isset($data['highlight_description']) && is_string($data['highlight_description']) ? trim($data['highlight_description']) : null,
             'steps' => $steps,
             'map_image_path' => $mapPath,
+            'branches_mini_title' => isset($data['branches_mini_title']) && is_string($data['branches_mini_title']) ? trim($data['branches_mini_title']) : null,
+            'branches_title' => isset($data['branches_title']) && is_string($data['branches_title']) ? trim($data['branches_title']) : null,
+            'branches_view_all_label' => isset($data['branches_view_all_label']) && is_string($data['branches_view_all_label']) ? trim($data['branches_view_all_label']) : null,
+            'branches_view_all_url' => isset($data['branches_view_all_url']) && is_string($data['branches_view_all_url']) ? trim($data['branches_view_all_url']) : null,
+            'branches_items' => $this->mergeServiceAreaBranchItems($request, $setting),
         ]);
 
         return redirect()
@@ -1248,6 +1253,52 @@ class HomeSectionController extends Controller
         }
 
         abort(404);
+    }
+
+    /**
+     * @return list<array{path: string, url: string|null, label: string|null}>
+     */
+    private function mergeServiceAreaBranchItems(Request $request, HomeServiceAreaSetting $setting): array
+    {
+        $existing = is_array($setting->branches_items) ? $setting->branches_items : [];
+        $inputs = $request->input('branch_items', []);
+        $uploads = $request->file('branch_items');
+        $max = max(count($existing), is_array($inputs) ? count($inputs) : 0, is_array($uploads) ? count($uploads) : 0);
+        $out = [];
+
+        for ($i = 0; $i < $max; $i++) {
+            $prev = is_array($existing[$i] ?? null) ? $existing[$i] : [];
+            $path = is_string($prev['path'] ?? null) ? trim($prev['path']) : '';
+            $existingPath = trim((string) $request->input('branch_items.'.$i.'.existing_path', $path));
+            if ($existingPath !== '') {
+                $path = $existingPath;
+            }
+
+            $file = is_array($uploads) ? ($uploads[$i]['file'] ?? null) : null;
+            if ($file instanceof UploadedFile) {
+                if ($path !== '') {
+                    $this->deleteStoredPath($path);
+                }
+                $path = $file->store('home-service-area/branches', 'public_site');
+            }
+
+            if ($path === '') {
+                continue;
+            }
+
+            $label = trim((string) $request->input('branch_items.'.$i.'.label', ''));
+            $subtitle = trim((string) $request->input('branch_items.'.$i.'.subtitle', ''));
+            $url = trim((string) $request->input('branch_items.'.$i.'.url', ''));
+
+            $out[] = [
+                'path' => $path,
+                'label' => $label !== '' ? $label : null,
+                'subtitle' => $subtitle !== '' ? $subtitle : null,
+                'url' => $url !== '' ? $url : null,
+            ];
+        }
+
+        return $out;
     }
 
     private function deleteStoredPath(mixed $path): void
