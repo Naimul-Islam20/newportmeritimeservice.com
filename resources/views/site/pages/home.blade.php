@@ -277,32 +277,32 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             }
         }
 
-        // Ship Supplies / What We Supply (content_2 — above service area)
-        const suppliesEl = document.querySelector('.supplies-swiper');
-        if (suppliesEl) {
-            const suppliesSlides = suppliesEl.querySelectorAll('.swiper-slide');
-            const suppliesLoop = suppliesSlides.length > 1;
-            new Swiper('.supplies-swiper', {
-                slidesPerView: 1,
-                spaceBetween: 24,
-                loop: suppliesLoop,
-                speed: 600,
-                autoplay: suppliesLoop ? {
-                    delay: 4000,
-                    disableOnInteraction: false,
-                } : false,
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 24,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 28,
-                    },
-                },
-            });
-        }
+        // Apatoto off: Ship Supplies / What We Supply (content_2 — above service area)
+        // const suppliesEl = document.querySelector('.supplies-swiper');
+        // if (suppliesEl) {
+        //     const suppliesSlides = suppliesEl.querySelectorAll('.swiper-slide');
+        //     const suppliesLoop = suppliesSlides.length > 1;
+        //     new Swiper('.supplies-swiper', {
+        //         slidesPerView: 1,
+        //         spaceBetween: 24,
+        //         loop: suppliesLoop,
+        //         speed: 600,
+        //         autoplay: suppliesLoop ? {
+        //             delay: 4000,
+        //             disableOnInteraction: false,
+        //         } : false,
+        //         breakpoints: {
+        //             640: {
+        //                 slidesPerView: 2,
+        //                 spaceBetween: 24,
+        //             },
+        //             1024: {
+        //                 slidesPerView: 3,
+        //                 spaceBetween: 28,
+        //             },
+        //         },
+        //     });
+        // }
 
         // Certificates / memberships logo carousel (arrows + autoplay)
         document.querySelectorAll('[data-certs-swiper]').forEach((el) => {

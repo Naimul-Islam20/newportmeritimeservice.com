@@ -1,5 +1,5 @@
-{{-- What We Supply (content_2) — above service area block when configured in admin --}}
-@if ($content2CarouselSection ?? null)
+{{-- Apatoto off: Ship Supplies / What We Supply (content_2) — above service area --}}
+@if (false && ($content2CarouselSection ?? null))
     @include('site.home-sections.carousel-content-2', [
         'section' => $content2CarouselSection,
         'items' => $content2CarouselItems ?? collect(),
