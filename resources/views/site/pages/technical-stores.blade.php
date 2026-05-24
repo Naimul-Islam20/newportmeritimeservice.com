@@ -14,8 +14,14 @@
         ['label' => 'Galley Stores', 'url' => '#'],
     ];
 
+    $provisionSubItems = [
+        ['label' => 'Dry Foods', 'url' => '#'],
+        ['label' => 'Frozen Foods', 'url' => '#'],
+        ['label' => 'Fresh Fruits & Vegetables', 'url' => '#'],
+        ['label' => 'Beverages', 'url' => '#'],
+    ];
+
     $navTopLevel = [
-        ['label' => 'Provision', 'url' => route('ship-supply')],
         ['label' => 'Transit Delivery', 'url' => route('our-services')],
         ['label' => 'Port Delivery', 'url' => route('our-services')],
         ['label' => 'Operations & Logistics', 'url' => route('our-services')],
@@ -84,6 +90,29 @@
                                     @endforeach
                                 </ul>
                             </div>
+
+                            <div class="service-detail__nav-group" data-service-nav-group>
+                                <button
+                                    type="button"
+                                    class="service-detail__nav-parent"
+                                    data-service-nav-toggle
+                                    aria-expanded="false"
+                                    aria-controls="service-nav-provision"
+                                >
+                                    <span>Provision</span>
+                                    <svg class="service-detail__nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                                <ul id="service-nav-provision" class="service-detail__nav-children">
+                                    @foreach ($provisionSubItems as $item)
+                                        <li>
+                                            <a href="{{ $item['url'] }}" class="service-detail__nav-child">{{ $item['label'] }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+
                             @foreach ($navTopLevel as $item)
                                 <a href="{{ $item['url'] }}" class="service-detail__nav-parent">
                                     <span>{{ $item['label'] }}</span>

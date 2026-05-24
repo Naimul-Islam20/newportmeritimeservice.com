@@ -1,199 +1,291 @@
 @extends('site.layouts.app', [
-    'title' => \App\Models\SiteDetail::pageTitle('Contact'),
-    'metaDescription' => 'Send us a message — we respond as soon as possible.',
+    'title' => \App\Models\SiteDetail::pageTitle('Contact Us'),
+    'metaDescription' => 'Contact Newport Maritime Service — phone, email and message form for enquiries worldwide.',
 ])
 
-@push('styles')
-    <style>
-        /* Full-bleed Google Maps; remove inline-gap below iframe */
-        .contact-map-section {
-            line-height: 0;
-        }
+@php
+    $sd = $siteDetails ?? null;
+    $defaultEmails = $sd && is_array($sd->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [];
+    $defaultPhones = $sd && is_array($sd->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [];
+    $defaultLocation = $sd ? trim((string) ($sd->location ?? '')) : '';
+    $defaultMap = $sd ? trim((string) ($sd->map ?? '')) : '';
 
-        .contact-map-section__heading {
-            line-height: normal;
-        }
+    $offices = [
+        [
+            'id' => 'istanbul',
+            'label' => 'Istanbul',
+            'active' => true,
+            'phone' => $defaultPhones[0] ?? '+90 212 671 24 80',
+            'email' => $defaultEmails[0] ?? 'gimas@gimas.com',
+            'address' => $defaultLocation !== '' ? $defaultLocation : 'Ikitelli OSB Aykosan San.Sit. 4 lu A-Blok No:232 Istanbul-Turkey',
+            'map' => $defaultMap,
+        ],
+        [
+            'id' => 'rotterdam',
+            'label' => 'Rotterdam',
+            'phone' => '+31 10 3027820',
+            'email' => 'rotterdam@gimas.com',
+            'address' => 'Jan Van Galenstraat 9, 3115 JG Schiedam, The Netherlands',
+            'map' => '',
+        ],
+        [
+            'id' => 'hamburg',
+            'label' => 'Hamburg',
+            'phone' => '',
+            'email' => 'hamburg@gimas.com',
+            'address' => 'Schlengendeich 13, 21107 Hamburg-Wilhelmsburg, Germany',
+            'map' => '',
+        ],
+        [
+            'id' => 'athens',
+            'label' => 'Athens',
+            'phone' => '+30 210 9403522',
+            'email' => 'athens@gimas.com',
+            'address' => 'Imittou 6, 3rd Floor, Palaio Faliro 175 64, Attica, Greece',
+            'map' => '',
+        ],
+        [
+            'id' => 'mersin',
+            'label' => 'Mersin',
+            'phone' => '+90 324 221 50 60',
+            'email' => 'mersin@gimas.com',
+            'address' => 'Karaduvar, Cumhuriyet Blv. No:133, Bakliyatcilar Sitesi E-Blok No:4 161-D, 33020 Mersin, Turkey',
+            'map' => '',
+        ],
+        [
+            'id' => 'tuzla',
+            'label' => 'Tuzla',
+            'phone' => '+90 216 513 12 92',
+            'email' => 'tuzla@gimas.com',
+            'address' => 'Aydıntepe, Sahil Blv. No:126/19, Denizciler Ticaret Merkezi 34947 Tuzla/Istanbul, Turkey',
+            'map' => '',
+        ],
+    ];
 
-        .contact-map-embed iframe,
-        .contact-map-section__frame {
-            display: block;
-            width: 100% !important;
-            max-width: 100% !important;
-            height: 360px !important;
-            min-height: 280px;
-            margin: 0;
-            padding: 0;
-            border: 0;
-            vertical-align: bottom;
-        }
-    </style>
-@endpush
+@endphp
 
 @section('content')
-    @php($sd = $siteDetails ?? null)
-    @php($loc = $sd ? trim((string) ($sd->location ?? '')) : '')
-    @php($emails = $sd && is_array($sd->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [])
-    @php($phones = $sd && is_array($sd->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [])
-    @php($mapRaw = $sd ? trim((string) ($sd->map ?? '')) : '')
-    @php($mapIsIframe = $mapRaw !== '' && stripos($mapRaw, '<iframe') !== false)
-    @php($mapIsUrl = $mapRaw !== '' && ! $mapIsIframe && filter_var($mapRaw, FILTER_VALIDATE_URL))
-    @php($mapEmbedUrl = null)
-    @if ($mapRaw === '' && $loc !== '')
-        @php($mapEmbedUrl = 'https://maps.google.com/maps?q=' . rawurlencode(preg_replace('/\s+/u', ' ', $loc)) . '&output=embed')
-    @endif
-    @php($showMap = $mapIsIframe || $mapIsUrl || filled($mapEmbedUrl))
+    <section class="relative flex h-[300px] w-full items-center overflow-hidden bg-secondary sm:h-[400px]">
+        <div class="absolute inset-0">
+            <img
+                src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop"
+                alt=""
+                class="h-full w-full object-cover opacity-60 mix-blend-overlay"
+            >
+            <div class="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
+        </div>
+        <div class="relative z-10 site-container">
+            <h1 class="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">Contact Us</h1>
+            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">
+                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
+                <span class="text-primary" aria-hidden="true">/</span>
+                <span class="text-primary">Contact Us</span>
+            </nav>
+        </div>
+    </section>
 
-    <section class="overflow-x-hidden bg-background pt-14 pb-14 sm:pt-20 {{ $showMap ? 'sm:pb-12' : 'sm:pb-20' }}">
+    <section class="contact-page site-section">
         <div class="site-container">
-            <div class="mx-auto max-w-2xl text-center">
-                <h1 class="font-serif text-4xl font-semibold text-foreground sm:text-5xl">
-                    Contact us
-                </h1>
-                <p class="mt-4 text-lg text-foreground/70">
-                    Share your enquiry—we’ll route it to the right team and get back to you shortly.
-                </p>
+            <h2 class="contact-page__title">Contact Us</h2>
+
+            <div class="contact-page__tabs-wrap">
+            <div class="contact-page__tabs" role="tablist" aria-label="Office locations">
+                @foreach ($offices as $office)
+                    <button
+                        type="button"
+                        role="tab"
+                        id="contact-tab-{{ $office['id'] }}"
+                        @class([
+                            'contact-page__tab',
+                            'contact-page__tab--active' => $office['active'] ?? false,
+                        ])
+                        data-contact-tab="{{ $office['id'] }}"
+                        aria-selected="{{ ($office['active'] ?? false) ? 'true' : 'false' }}"
+                        aria-controls="contact-panel-{{ $office['id'] }}"
+                    >
+                        {{ $office['label'] }}
+                    </button>
+                @endforeach
+            </div>
             </div>
 
-            <div class="mt-14 grid gap-12 lg:grid-cols-5 lg:gap-16">
-                <aside class="lg:col-span-2">
-                    <h2 class="text-base font-semibold uppercase tracking-wide text-secondary sm:text-lg">Contact details</h2>
+            <div class="contact-page__layout">
+                <div class="contact-page__info-col">
+                    @foreach ($offices as $office)
+                        <div
+                            id="contact-panel-{{ $office['id'] }}"
+                            class="contact-page__office-panel"
+                            data-contact-panel="{{ $office['id'] }}"
+                            role="tabpanel"
+                            aria-labelledby="contact-tab-{{ $office['id'] }}"
+                            {{ ($office['active'] ?? false) ? '' : 'hidden' }}
+                        >
+                            <h3 class="contact-page__info-title">Contact Info</h3>
 
-                    <div class="mt-8 space-y-6 text-base text-foreground/80 sm:text-[1.05rem]">
-                        @if ($loc !== '')
-                            <div>
-                                <h3 class="text-sm font-bold uppercase tracking-wide text-foreground/60">Location</h3>
-                                <div class="mt-2 text-base leading-relaxed text-foreground sm:text-lg">
-                                    {!! nl2br(e($loc)) !!}
-                                </div>
-                            </div>
-                        @endif
+                            @if (filled($office['phone'] ?? ''))
+                                <p class="contact-page__phone">
+                                    <span class="contact-page__phone-label">Phone :</span>
+                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $office['phone']) }}" class="contact-page__phone-number">{{ $office['phone'] }}</a>
+                                </p>
+                            @endif
 
-                        @if (count($emails) > 0)
-                            <div>
-                                <h3 class="text-sm font-bold uppercase tracking-wide text-foreground/60">Email</h3>
-                                <ul class="mt-2 space-y-2 text-base sm:text-lg">
-                                    @foreach ($emails as $email)
-                                        <li>
-                                            <a href="mailto:{{ $email }}" class="font-medium text-foreground underline decoration-primary/40 underline-offset-2 transition hover:text-primary">{{ $email }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                            @if (filled($office['email'] ?? ''))
+                                <p class="contact-page__email">
+                                    <span class="contact-page__icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/>
+                                        </svg>
+                                    </span>
+                                    <a href="mailto:{{ $office['email'] }}">{{ $office['email'] }}</a>
+                                </p>
+                            @endif
 
-                        @if (count($phones) > 0)
-                            <div>
-                                <h3 class="text-sm font-bold uppercase tracking-wide text-foreground/60">Phone</h3>
-                                <ul class="mt-2 space-y-2 text-base sm:text-lg">
-                                    @foreach ($phones as $phone)
-                                        @php($tel = preg_replace('/[^0-9+]/', '', $phone))
-                                        <li>
-                                            <a href="tel:{{ $tel }}" class="font-medium text-foreground underline decoration-primary/40 underline-offset-2 transition hover:text-primary">{{ $phone }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        @if ($loc === '' && count($emails) === 0 && count($phones) === 0)
-                            <p class="text-foreground/60">Contact information will appear here once it is configured.</p>
-                        @endif
-                    </div>
-                </aside>
-
-                <div class="lg:col-span-3">
-                <div class="rounded-2xl border border-foreground/10 bg-background p-8 shadow-sm shadow-foreground/5 sm:p-10">
-                    @if (session('status'))
-                        <div class="mb-8 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-secondary">
-                            {{ session('status') }}
+                            @if (filled($office['address'] ?? ''))
+                                <p class="contact-page__address">
+                                    <span class="contact-page__icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>
+                                        </svg>
+                                    </span>
+                                    <span class="contact-page__address-text">
+                                        {{ $office['address'] }}
+                                        <a href="#contact-map" class="contact-page__map-link">(View map)</a>
+                                    </span>
+                                </p>
+                            @endif
                         </div>
+                    @endforeach
+                </div>
+
+                <div class="contact-page__form-wrap">
+                    <h3 class="contact-page__form-title">Contact form</h3>
+
+                    @if (session('status'))
+                        <div class="contact-page__status">{{ session('status') }}</div>
                     @endif
 
-                    <form method="POST" action="{{ route('contact.store') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('contact.store') }}" class="contact-page__form" novalidate>
                         @csrf
 
-                        <div>
-                            <label for="full_name" class="mb-2 block text-sm font-semibold text-foreground">Full name</label>
-                            <input id="full_name" name="full_name" type="text" value="{{ old('full_name') }}" required
-                                class="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-foreground shadow-inner shadow-foreground/5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
-                                placeholder="Your name" autocomplete="name">
-                            @error('full_name')
-                                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <div class="contact-page__form-row contact-page__form-row--2">
+                            <label class="contact-page__field">
+                                <span class="contact-page__sr-only">Name (required)</span>
+                                <input type="text" name="name" value="{{ old('name') }}" placeholder="Name" required autocomplete="given-name">
+                            </label>
+                            <label class="contact-page__field">
+                                <span class="contact-page__sr-only">Surname (required)</span>
+                                <input type="text" name="surname" value="{{ old('surname') }}" placeholder="Surname" required autocomplete="family-name">
+                            </label>
+                        </div>
+                        @error('name')
+                            <p class="contact-page__error">{{ $message }}</p>
+                        @enderror
+                        @error('surname')
+                            <p class="contact-page__error">{{ $message }}</p>
+                        @enderror
+
+                        <div class="contact-page__form-row">
+                            <label class="contact-page__field">
+                                <span class="contact-page__sr-only">Company</span>
+                                <input type="text" name="company" value="{{ old('company') }}" placeholder="Company" autocomplete="organization">
+                            </label>
                         </div>
 
-                        <div class="grid gap-6 sm:grid-cols-2">
-                            <div>
-                                <label for="email" class="mb-2 block text-sm font-semibold text-foreground">Email</label>
-                                <input id="email" name="email" type="email" value="{{ old('email') }}" required
-                                    class="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-foreground shadow-inner outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
-                                    placeholder="you@company.com" autocomplete="email">
-                                @error('email')
-                                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label for="phone" class="mb-2 block text-sm font-semibold text-foreground">Phone</label>
-                                <input id="phone" name="phone" type="text" value="{{ old('phone') }}" required
-                                    class="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-foreground shadow-inner outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
-                                    placeholder="+880 …" autocomplete="tel">
-                                @error('phone')
-                                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div class="contact-page__form-row contact-page__form-row--2">
+                            <label class="contact-page__field">
+                                <span class="contact-page__sr-only">E-Mail (required)</span>
+                                <input type="email" name="email" value="{{ old('email') }}" placeholder="E-Mail" required autocomplete="email">
+                            </label>
+                            <label class="contact-page__field">
+                                <span class="contact-page__sr-only">Phone Number</span>
+                                <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Phone Number" autocomplete="tel">
+                            </label>
                         </div>
+                        @error('email')
+                            <p class="contact-page__error">{{ $message }}</p>
+                        @enderror
 
-                        <div>
-                            <label for="subject" class="mb-2 block text-sm font-semibold text-foreground">Subject</label>
-                            <input id="subject" name="subject" type="text" value="{{ old('subject') }}" required
-                                class="w-full rounded-xl border border-foreground/20 bg-background px-4 py-3 text-foreground shadow-inner outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
-                                placeholder="What is this about?">
-                            @error('subject')
-                                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <div class="contact-page__form-row">
+                            <label class="contact-page__field contact-page__field--message">
+                                <span class="contact-page__sr-only">Your Message (required)</span>
+                                <textarea name="message" rows="6" placeholder="Your Message" required>{{ old('message') }}</textarea>
+                            </label>
                         </div>
+                        @error('message')
+                            <p class="contact-page__error">{{ $message }}</p>
+                        @enderror
 
-                        <div>
-                            <label for="message" class="mb-2 block text-sm font-semibold text-foreground">Message</label>
-                            <textarea id="message" name="message" rows="6" required
-                                class="w-full resize-y rounded-xl border border-foreground/20 bg-background px-4 py-3 text-foreground shadow-inner outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
-                                placeholder="Details, timeline, port or vessel if relevant…">{{ old('message') }}</textarea>
-                            @error('message')
-                                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <button type="submit"
-                            class="w-full rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-secondary shadow-md transition hover:brightness-95 sm:w-auto sm:min-w-[200px]">
-                            Send message
-                        </button>
+                        <button type="submit" class="contact-page__submit">Send</button>
                     </form>
-                </div>
                 </div>
             </div>
         </div>
     </section>
 
-    @if ($showMap)
-        <section class="contact-map-section w-full border-t border-foreground/10" aria-label="Google Maps">
-            <div class="site-container contact-map-section__heading py-6">
-                <h2 class="text-sm font-semibold uppercase tracking-wide text-secondary">Find us on Google Maps</h2>
-            </div>
-                <div class="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden">
-                @if ($mapIsIframe)
-                    <div class="contact-map-embed w-full min-w-0">
-                        {!! $mapRaw !!}
+    <section id="contact-map" class="contact-page__map-section" aria-label="Map">
+        <div class="site-container">
+            <h3 class="contact-page__map-heading">View map:</h3>
+        </div>
+        <div class="contact-page__map-embed">
+            @foreach ($offices as $office)
+                @php
+                    $officeMap = trim((string) ($office['map'] ?? ''));
+                    $officeMapIframe = $officeMap !== '' && stripos($officeMap, '<iframe') !== false;
+                    $officeMapUrl = $officeMap !== '' && ! $officeMapIframe && filter_var($officeMap, FILTER_VALIDATE_URL);
+                    $officeEmbed = $officeMap === '' && filled($office['address'] ?? '')
+                        ? 'https://maps.google.com/maps?q=' . rawurlencode(preg_replace('/\s+/u', ' ', $office['address'])) . '&output=embed'
+                        : null;
+                    $officeShowMap = $officeMapIframe || $officeMapUrl || filled($officeEmbed);
+                @endphp
+                @if ($officeShowMap)
+                    <div
+                        class="contact-page__map-panel"
+                        data-contact-map-panel="{{ $office['id'] }}"
+                        {{ ($office['active'] ?? false) ? '' : 'hidden' }}
+                    >
+                        @if ($officeMapIframe)
+                            <div class="contact-page__map-iframe-wrap">{!! $officeMap !!}</div>
+                        @else
+                            <iframe
+                                title="Map — {{ $office['label'] }}"
+                                src="{{ $officeMapUrl ? $officeMap : $officeEmbed }}"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                allowfullscreen
+                            ></iframe>
+                        @endif
                     </div>
-                @else
-                    <iframe
-                        title="Google Maps"
-                        src="{{ $mapIsUrl ? $mapRaw : $mapEmbedUrl }}"
-                        class="contact-map-section__frame w-full min-w-0"
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                        allowfullscreen></iframe>
                 @endif
-            </div>
-        </section>
-    @endif
+            @endforeach
+        </div>
+    </section>
 @endsection
+
+@push('scripts')
+<script>
+(() => {
+    const tabs = document.querySelectorAll('[data-contact-tab]');
+    const panels = document.querySelectorAll('[data-contact-panel]');
+    const mapPanels = document.querySelectorAll('[data-contact-map-panel]');
+    if (tabs.length === 0) return;
+
+    tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            const id = tab.getAttribute('data-contact-tab');
+            tabs.forEach((t) => {
+                const active = t === tab;
+                t.setAttribute('aria-selected', active ? 'true' : 'false');
+                t.classList.toggle('contact-page__tab--active', active);
+            });
+            panels.forEach((panel) => {
+                panel.hidden = panel.getAttribute('data-contact-panel') !== id;
+            });
+            mapPanels.forEach((map) => {
+                map.hidden = map.getAttribute('data-contact-map-panel') !== id;
+            });
+        });
+    });
+
+})();
+</script>
+@endpush

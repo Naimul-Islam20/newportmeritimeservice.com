@@ -132,29 +132,48 @@ function initDesktopNavDropdowns() {
     });
 }
 
-/** Service detail sidebar: accordion toggles (e.g. Technical Stores sub-menu) */
-function initServiceDetailNav() {
-    const nav = document.querySelector("[data-service-detail-nav]");
+/** Sidebar accordion toggles (service detail + our team pages) */
+function initSidebarAccordionNav(navSelector, groupSelector, toggleSelector, openClass) {
+    const nav = document.querySelector(navSelector);
     if (!nav) {
         return;
     }
 
-    nav.querySelectorAll("[data-service-nav-toggle]").forEach((toggle) => {
+    nav.querySelectorAll(toggleSelector).forEach((toggle) => {
         toggle.addEventListener("click", () => {
-            const group = toggle.closest("[data-service-nav-group]");
+            const group = toggle.closest(groupSelector);
             if (!group) {
                 return;
             }
 
-            const isOpen = group.classList.toggle("service-detail__nav-group--open");
+            const isOpen = group.classList.toggle(openClass);
             toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
         });
     });
 }
 
+function initServiceDetailNav() {
+    initSidebarAccordionNav(
+        "[data-service-detail-nav]",
+        "[data-service-nav-group]",
+        "[data-service-nav-toggle]",
+        "service-detail__nav-group--open",
+    );
+}
+
+function initOurTeamNav() {
+    initSidebarAccordionNav(
+        "[data-our-team-nav]",
+        "[data-our-team-nav-group]",
+        "[data-our-team-nav-toggle]",
+        "our-team__nav-group--open",
+    );
+}
+
 function initSiteNav() {
     initDesktopNavDropdowns();
     initServiceDetailNav();
+    initOurTeamNav();
 }
 
 if (document.readyState === "loading") {

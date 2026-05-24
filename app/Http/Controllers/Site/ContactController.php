@@ -29,6 +29,10 @@ class ContactController extends Controller
             'message',
         ]);
 
+        if ($payload['phone'] === '') {
+            $payload['phone'] = '—';
+        }
+
         $contactMessage = ContactMessage::create($payload);
         AuditLogger::log('contact.submitted.web', $contactMessage, [], $request);
 

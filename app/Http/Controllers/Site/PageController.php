@@ -100,6 +100,55 @@ class PageController extends Controller
         ]);
     }
 
+    public function ourStory(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.our-story', [
+            'title' => SiteDetail::pageTitle('Our Story'),
+            'metaDescription' => 'Our story since 1992 — maritime supply, provision and logistics across ports worldwide.',
+        ]);
+    }
+
+    public function messageFromCeo(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.message-from-ceo', [
+            'title' => SiteDetail::pageTitle('Message from the CEO'),
+            'metaDescription' => 'A message from our CEO on experience, trust, and our vision for maritime supply and logistics.',
+        ]);
+    }
+
+    public function ourTeamManagement(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.our-team-management', [
+            'title' => SiteDetail::pageTitle('Our Team'),
+            'metaDescription' => 'Meet our management team and leadership across maritime supply, provision and operations.',
+        ]);
+    }
+
+    public function career(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.career', [
+            'title' => SiteDetail::pageTitle('Career'),
+            'metaDescription' => 'Career opportunities at Newport Maritime Service — HR vision, general applications and open positions.',
+            'siteDetails' => SiteDetail::query()->first(),
+        ]);
+    }
+
     public function aboutUs(): View
     {
         $aboutPage = AboutPage::singleton();
@@ -125,6 +174,18 @@ class PageController extends Controller
         return view('site.pages.where-we-are', [
             'title' => SiteDetail::pageTitle('Where We Are'),
             'metaDescription' => 'Our service areas and locations across the region.',
+        ]);
+    }
+
+    public function locations(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.locations', [
+            'title' => SiteDetail::pageTitle('Locations'),
+            'metaDescription' => 'We serve all ports and straits of Turkey and the ARA area — 365 days, 24 hours delivery across West Europe.',
         ]);
     }
 

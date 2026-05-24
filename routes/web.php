@@ -37,7 +37,12 @@ Route::get('/ship-supply', [PageController::class, 'shipSupply'])->name('ship-su
 Route::get('/technical-stores', [PageController::class, 'technicalStores'])->name('technical-stores');
 Route::get('/our-services', [PageController::class, 'ourServices'])->name('our-services');
 Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
+Route::get('/our-story', [PageController::class, 'ourStory'])->name('our-story');
+Route::get('/message-from-ceo', [PageController::class, 'messageFromCeo'])->name('message-from-ceo');
+Route::get('/our-team-management', [PageController::class, 'ourTeamManagement'])->name('our-team-management');
+Route::get('/career', [PageController::class, 'career'])->name('career');
 Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');
+Route::get('/locations', [PageController::class, 'locations'])->name('locations');
 Route::get('/award', [PageController::class, 'award'])->name('award');
 Route::get('/get-a-quote', [QuoteRequestController::class, 'create'])->name('quote.request');
 Route::post('/get-a-quote', [QuoteRequestController::class, 'store'])
