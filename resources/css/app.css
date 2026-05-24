@@ -3144,7 +3144,7 @@ button.service-detail__nav-parent:hover {
 
 /* Our Story page (Gimaş-style timeline) */
 .our-story {
-    --os-accent: #4fb3e8;
+    --os-accent: #46b5e5;
     --os-heading: #0c2f5c;
     --os-text: #5a6578;
     --os-rail: #d5dde6;
@@ -3195,21 +3195,26 @@ button.service-detail__nav-parent:hover {
 }
 
 .our-story__timeline {
+    --os-year-width: clamp(5.5rem, 11vw, 7.5rem);
+    --os-rail-offset: calc(var(--os-year-width) + clamp(1.25rem, 2.5vw, 2rem));
     position: relative;
     display: grid;
-    grid-template-columns: minmax(5.5rem, 7.5rem) 4px minmax(0, 1fr);
-    column-gap: clamp(1.5rem, 4vw, 2.75rem);
+    grid-template-columns: var(--os-year-width) minmax(0, 1fr);
+    column-gap: clamp(2rem, 4vw, 3rem);
     align-items: start;
 }
 
 .our-story__timeline-rail {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    width: 4px;
-    min-height: 100%;
-    margin-block: 0.25rem;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--os-rail-offset);
+    width: 2px;
+    margin: 0;
     background: var(--os-rail);
-    justify-self: center;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .our-story__milestone {
@@ -3217,6 +3222,8 @@ button.service-detail__nav-parent:hover {
 }
 
 .our-story__milestone-year {
+    position: relative;
+    z-index: 2;
     grid-column: 1;
     display: flex;
     align-items: flex-start;
@@ -3240,12 +3247,24 @@ button.service-detail__nav-parent:hover {
 }
 
 .our-story__milestone-body {
-    grid-column: 3;
+    position: relative;
+    z-index: 2;
+    grid-column: 2;
+    display: grid;
+    gap: 1.25rem;
     padding-bottom: 3rem;
 }
 
+@media (min-width: 640px) {
+    .our-story__milestone-body {
+        grid-template-columns: minmax(9rem, 13.5rem) minmax(0, 1fr);
+        gap: 1.5rem 2rem;
+        align-items: start;
+    }
+}
+
 .our-story__milestone-figure {
-    margin: 0 0 1.25rem;
+    margin: 0;
     overflow: hidden;
 }
 
@@ -3253,12 +3272,24 @@ button.service-detail__nav-parent:hover {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 16rem;
+    min-height: 8.5rem;
+    max-height: 11.5rem;
     object-fit: cover;
 }
 
+@media (min-width: 640px) {
+    .our-story__milestone-img {
+        min-height: 9.5rem;
+        max-height: 12.5rem;
+    }
+}
+
+.our-story__milestone-copy {
+    min-width: 0;
+}
+
 .our-story__milestone-title {
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.65rem;
     font-size: 1.125rem;
     font-weight: 700;
     color: var(--os-heading);

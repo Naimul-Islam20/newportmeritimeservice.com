@@ -21,19 +21,19 @@
             'year' => '2015',
             'title' => 'Mersin',
             'text' => 'Our services were rewarded by our customers and requests increased. We invested in an office, warehouse and entrepôt in 2015 to speed up services to vessels calling ports in the Mediterranean area.',
-            'image' => null,
+            'image' => 'https://images.unsplash.com/photo-1578575437136-9c8f86c42860?q=80&w=900&auto=format&fit=crop',
         ],
         [
             'year' => '2014',
             'title' => 'Athens',
             'text' => 'Our Athens marketing office has continued to serve the shipping industry with the support of our partners since 2014.',
-            'image' => null,
+            'image' => 'https://images.unsplash.com/photo-1533105079785-0994c150029c?q=80&w=900&auto=format&fit=crop',
         ],
         [
             'year' => '2005',
             'title' => 'Tuzla',
             'text' => 'In order to maintain and improve our services, we opened our Tuzla branch office close to the shipyards of this area.',
-            'image' => null,
+            'image' => 'https://images.unsplash.com/photo-1569263979104-865ab7cd8dae?q=80&w=900&auto=format&fit=crop',
         ],
         [
             'year' => '1992',
@@ -90,18 +90,18 @@
                             <span class="our-story__year-label">{{ $milestone['year'] }} -</span>
                         </div>
                         <div class="our-story__milestone-body">
-                            @if (! empty($milestone['image']))
-                                <figure class="our-story__milestone-figure">
-                                    <img
-                                        src="{{ $milestone['image'] }}"
-                                        alt=""
-                                        class="our-story__milestone-img"
-                                        loading="lazy"
-                                    >
-                                </figure>
-                            @endif
-                            <h3 class="our-story__milestone-title">{{ $milestone['title'] }}</h3>
-                            <p class="our-story__milestone-text">{{ $milestone['text'] }}</p>
+                            <figure class="our-story__milestone-figure">
+                                <img
+                                    src="{{ $milestone['image'] }}"
+                                    alt="{{ $milestone['title'] }}"
+                                    class="our-story__milestone-img"
+                                    loading="lazy"
+                                >
+                            </figure>
+                            <div class="our-story__milestone-copy">
+                                <h3 class="our-story__milestone-title">{{ $milestone['title'] }}</h3>
+                                <p class="our-story__milestone-text">{{ $milestone['text'] }}</p>
+                            </div>
                         </div>
                     </article>
                 @endforeach
