@@ -133,7 +133,7 @@ class AboutPage extends Model
 
             return [
                 'type' => 'youtube',
-                'embed_url' => 'https://www.youtube.com/embed/'.$id.'?rel=0',
+                'embed_url' => 'https://www.youtube.com/embed/'.$id.'?rel=0&autoplay=0',
             ];
         }
 

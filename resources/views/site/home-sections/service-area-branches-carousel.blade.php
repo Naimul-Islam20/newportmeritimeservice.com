@@ -8,12 +8,9 @@
     $items = is_array($branches['items'] ?? null) ? $branches['items'] : [];
     $hasViewAll = filled($viewAllLabel) && filled($viewAllUrl) && $viewAllUrl !== '#';
     $slideCount = count($items);
-    $waveBg = 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?q=80&w=1200&auto=format&fit=crop';
 @endphp
 
 <div class="service-area-branches">
-    <div class="service-area-branches__wave" style="background-image: url('{{ $waveBg }}');" aria-hidden="true"></div>
-
     <div class="service-area-branches__header">
         <div class="service-area-branches__headings">
             <p class="service-area-branches__eyebrow">{{ $mini }}</p>

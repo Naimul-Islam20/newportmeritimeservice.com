@@ -34,6 +34,7 @@ Route::any('/adimn/{any?}', function (?string $any = null) {
 })->where('any', '.*');
 
 Route::get('/ship-supply', [PageController::class, 'shipSupply'])->name('ship-supply');
+Route::get('/technical-stores', [PageController::class, 'technicalStores'])->name('technical-stores');
 Route::get('/our-services', [PageController::class, 'ourServices'])->name('our-services');
 Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
 Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');

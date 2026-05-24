@@ -132,8 +132,33 @@ function initDesktopNavDropdowns() {
     });
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDesktopNavDropdowns);
-} else {
+/** Service detail sidebar: accordion toggles (e.g. Technical Stores sub-menu) */
+function initServiceDetailNav() {
+    const nav = document.querySelector("[data-service-detail-nav]");
+    if (!nav) {
+        return;
+    }
+
+    nav.querySelectorAll("[data-service-nav-toggle]").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+            const group = toggle.closest("[data-service-nav-group]");
+            if (!group) {
+                return;
+            }
+
+            const isOpen = group.classList.toggle("service-detail__nav-group--open");
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+    });
+}
+
+function initSiteNav() {
     initDesktopNavDropdowns();
+    initServiceDetailNav();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSiteNav);
+} else {
+    initSiteNav();
 }

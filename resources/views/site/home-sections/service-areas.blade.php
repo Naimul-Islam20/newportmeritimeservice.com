@@ -20,10 +20,15 @@
     $highlightDescription = $serviceArea['highlight_description'] ?? '';
     $steps = is_array($serviceArea['steps'] ?? null) ? $serviceArea['steps'] : [];
     $branches = is_array($serviceArea['branches'] ?? null) ? $serviceArea['branches'] : [];
+    $serviceAreaBgUrl = asset('home-service-area/location-background-uzun.png');
 @endphp
 
 <section class="service-area site-section">
-    <div class="service-area__bg" aria-hidden="true"></div>
+    <div
+        class="service-area__bg"
+        style="background-image: url('{{ $serviceAreaBgUrl }}');"
+        aria-hidden="true"
+    ></div>
 
     <div class="relative z-10 site-container">
         @include('site.home-sections.service-area-branches-carousel', ['branches' => $branches])

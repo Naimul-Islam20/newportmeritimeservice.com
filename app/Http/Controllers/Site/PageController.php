@@ -74,6 +74,18 @@ class PageController extends Controller
         ]);
     }
 
+    public function technicalStores(Request $request): View
+    {
+        if ($v = $this->menuPageIfExists($request)) {
+            return $v;
+        }
+
+        return view('site.pages.technical-stores', [
+            'title' => SiteDetail::pageTitle('Technical Stores'),
+            'metaDescription' => 'Technical stores, engine stores, deck supplies, safety equipment and certified marine spare parts for vessels worldwide.',
+        ]);
+    }
+
     public function ourServices(Request $request): View
     {
         if ($v = $this->menuPageIfExists($request)) {

@@ -127,9 +127,9 @@
                         const iframe = modal?.querySelector('[data-youtube-iframe]');
                         if (!modal || !iframe || !embed) return;
                         const sep = embed.includes('?') ? '&' : '?';
-                        iframe.src = embed + sep + 'autoplay=1';
-                        modal.classList.remove('hidden');
+                        iframe.src = embed + sep + 'autoplay=0';
                         modal.classList.add('flex');
+                        modal.classList.remove('hidden');
                         modal.setAttribute('aria-hidden', 'false');
                         document.body.style.overflow = 'hidden';
                         return;

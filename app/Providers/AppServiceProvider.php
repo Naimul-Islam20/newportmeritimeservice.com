@@ -25,6 +25,7 @@ use App\Policies\SiteDetailPolicy;
 use App\Policies\SubMenuPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -46,6 +47,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('local') && ! $this->app->runningInConsole()) {
+            $root = request()->getSchemeAndHttpHost();
+            if (is_string($root) && $root !== '') {
+                URL::forceRootUrl($root);
+            }
+        }
+
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(AboutPage::class, AboutPagePolicy::class);
         Gate::policy(ContactMessage::class, ContactMessagePolicy::class);

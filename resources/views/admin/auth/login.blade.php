@@ -147,6 +147,12 @@
             <div class="error">{{ $errors->first() }}</div>
             @endif
 
+            @if (app()->environment('local'))
+            <p class="subtext" style="margin-bottom: 14px; padding: 10px 12px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; color: #0c4a6e;">
+                Local dev: <strong>{{ config('admin.email') }}</strong> / password from <code>ADMIN_PASSWORD</code> in .env
+            </p>
+            @endif
+
             <label for="email">Email</label>
             <input id="email" name="email" type="email" value="{{ old('email') }}" required>
 
