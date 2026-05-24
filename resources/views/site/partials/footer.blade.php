@@ -175,8 +175,18 @@
     </div>
 
     <div class="site-footer__copy">
-        <div class="site-container py-4 text-center text-sm text-white/70 sm:py-5">
-            &copy; {{ date('Y') }} {{ $footerSiteName !== '' ? strtoupper($footerSiteName) : 'NEWPORT MARITIME SERVICE' }}
+        <div class="site-footer__copy-inner site-container">
+            <div class="site-footer__copy-left">
+                <span class="site-footer__copy-primary">{{ date('Y') }} &copy; {{ $footerSiteName !== '' ? $footerSiteName : 'Newport Maritime Service' }}</span>
+                <span class="site-footer__copy-sep" aria-hidden="true"></span>
+                <span class="site-footer__copy-secondary">Maritime Logistics &amp; Port Solutions</span>
+            </div>
+            <a href="#top" class="site-footer__back-to-top" data-back-to-top>
+                <span>Back to top</span>
+                <span class="site-footer__back-to-top-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14l4-4 4 4"/></svg>
+                </span>
+            </a>
         </div>
     </div>
 </footer>

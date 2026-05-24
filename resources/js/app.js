@@ -170,10 +170,20 @@ function initOurTeamNav() {
     );
 }
 
+function initBackToTop() {
+    document.querySelectorAll("[data-back-to-top]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    });
+}
+
 function initSiteNav() {
     initDesktopNavDropdowns();
     initServiceDetailNav();
     initOurTeamNav();
+    initBackToTop();
 }
 
 if (document.readyState === "loading") {
