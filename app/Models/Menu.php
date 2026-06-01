@@ -109,6 +109,12 @@ class Menu extends Model
         if ($path === '/get-a-quote') {
             return route('quote.request');
         }
+        if ($path === '/locations') {
+            return route('locations');
+        }
+        if ($path === '/career') {
+            return route('career');
+        }
 
         return $this->resolvedHref();
     }
@@ -185,5 +191,39 @@ class Menu extends Model
         }
 
         return false;
+    }
+
+    public function adminSidebarHref(): string
+    {
+        return match ($this->normalizedPath()) {
+            '/career' => route('admin.career-page.edit'),
+            default => route('admin.menus.page-sections.index', $this),
+        };
+    }
+
+    public function adminSidebarIsActive(): bool
+    {
+        return match ($this->normalizedPath()) {
+            '/career' => request()->routeIs('admin.career-page.*'),
+            default => (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*'))
+                && request()->route('menu') instanceof self
+                && (int) request()->route('menu')->id === (int) $this->id,
+        };
+    }
+
+    /**
+     * Primary "OUR SERVICES" menu for header dropdown and service page sidebars.
+     */
+    public static function ourServicesMenu(): ?self
+    {
+        return self::query()
+            ->where('is_active', true)
+            ->where(function (Builder $q): void {
+                $q->where('url', '/our-services')
+                    ->orWhere('url', 'our-services')
+                    ->orWhereRaw('LOWER(label) LIKE ?', ['%our services%']);
+            })
+            ->with(['subMenus' => fn ($q) => $q->active()->ordered()])
+            ->first();
     }
 }

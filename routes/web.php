@@ -2,13 +2,19 @@
 
 use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CareerPageController;
+use App\Http\Controllers\Admin\CeoMessagePageController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuPageSectionController;
+use App\Http\Controllers\Admin\OurStoryPageController;
+use App\Http\Controllers\Admin\OurTeamPageController;
 use App\Http\Controllers\Admin\QuoteRequestController as AdminQuoteRequestController;
+use App\Http\Controllers\Admin\ServicePageController;
+use App\Http\Controllers\Admin\ServiceSidebarController;
 use App\Http\Controllers\Admin\SiteDetailController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UserController;
@@ -16,6 +22,7 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MenuPageController;
 use App\Http\Controllers\Site\PageController;
+use App\Http\Controllers\Site\QualityCertificateController;
 use App\Http\Controllers\Site\QuoteRequestController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +43,9 @@ Route::any('/adimn/{any?}', function (?string $any = null) {
 Route::get('/ship-supply', [PageController::class, 'shipSupply'])->name('ship-supply');
 Route::get('/technical-stores', [PageController::class, 'technicalStores'])->name('technical-stores');
 Route::get('/our-services', [PageController::class, 'ourServices'])->name('our-services');
+Route::get('/our-services/transit-delivery', [PageController::class, 'serviceTransitDelivery'])->name('service.transit-delivery');
+Route::get('/our-services/port-delivery', [PageController::class, 'servicePortDelivery'])->name('service.port-delivery');
+Route::get('/our-services/operations-logistics', [PageController::class, 'serviceOperationsLogistics'])->name('service.operations-logistics');
 Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
 Route::get('/our-story', [PageController::class, 'ourStory'])->name('our-story');
 Route::get('/message-from-ceo', [PageController::class, 'messageFromCeo'])->name('message-from-ceo');
@@ -43,6 +53,7 @@ Route::get('/our-team-management', [PageController::class, 'ourTeamManagement'])
 Route::get('/career', [PageController::class, 'career'])->name('career');
 Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');
 Route::get('/locations', [PageController::class, 'locations'])->name('locations');
+Route::get('/quality-certificates-memberships', [QualityCertificateController::class, 'index'])->name('quality-certificates');
 Route::get('/award', [PageController::class, 'award'])->name('award');
 Route::get('/get-a-quote', [QuoteRequestController::class, 'create'])->name('quote.request');
 Route::post('/get-a-quote', [QuoteRequestController::class, 'store'])
@@ -123,6 +134,31 @@ Route::prefix('admin')->group(function (): void {
 
         Route::get('about-page', [AboutPageController::class, 'edit'])->name('admin.about-page.edit');
         Route::put('about-page/{about_page}', [AboutPageController::class, 'update'])->name('admin.about-page.update');
+
+        Route::get('our-story-page', [OurStoryPageController::class, 'edit'])->name('admin.our-story-page.edit');
+        Route::put('our-story-page/{our_story_page}', [OurStoryPageController::class, 'update'])->name('admin.our-story-page.update');
+        Route::get('ceo-message-page', [CeoMessagePageController::class, 'edit'])->name('admin.ceo-message-page.edit');
+        Route::put('ceo-message-page/{ceo_message_page}', [CeoMessagePageController::class, 'update'])->name('admin.ceo-message-page.update');
+        Route::get('our-team-page', [OurTeamPageController::class, 'edit'])->name('admin.our-team-page.edit');
+        Route::put('our-team-page/{our_team_page}', [OurTeamPageController::class, 'update'])->name('admin.our-team-page.update');
+        Route::get('career-page', [CareerPageController::class, 'edit'])->name('admin.career-page.edit');
+        Route::put('career-page/{career_page}', [CareerPageController::class, 'update'])->name('admin.career-page.update');
+
+        Route::get('service-pages', [ServicePageController::class, 'index'])->name('admin.service-pages.index');
+        Route::get('service-pages/{service_page}/edit', [ServicePageController::class, 'edit'])->name('admin.service-pages.edit');
+        Route::put('service-pages/{service_page}', [ServicePageController::class, 'update'])->name('admin.service-pages.update');
+        Route::get('service-sidebar', [ServiceSidebarController::class, 'edit'])->name('admin.service-sidebar.edit');
+        Route::put('service-sidebar/{service_sidebar_setting}', [ServiceSidebarController::class, 'update'])->name('admin.service-sidebar.update');
+
+        Route::get('quality-certificates', [App\Http\Controllers\Admin\QualityCertificateController::class, 'index'])->name('admin.quality-certificates.index');
+        Route::put('quality-certificates/page', [App\Http\Controllers\Admin\QualityCertificateController::class, 'updatePage'])->name('admin.quality-certificates.page.update');
+        Route::post('quality-certificates/groups', [App\Http\Controllers\Admin\QualityCertificateController::class, 'storeGroup'])->name('admin.quality-certificates.groups.store');
+        Route::get('quality-certificates/groups/{certificate_group}/edit', [App\Http\Controllers\Admin\QualityCertificateController::class, 'editGroup'])->name('admin.quality-certificates.groups.edit');
+        Route::put('quality-certificates/groups/{certificate_group}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'updateGroup'])->name('admin.quality-certificates.groups.update');
+        Route::delete('quality-certificates/groups/{certificate_group}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'destroyGroup'])->name('admin.quality-certificates.groups.destroy');
+        Route::post('quality-certificates/groups/{certificate_group}/certificates', [App\Http\Controllers\Admin\QualityCertificateController::class, 'storeCertificate'])->name('admin.quality-certificates.groups.certificates.store');
+        Route::put('quality-certificates/groups/{certificate_group}/certificates/{quality_certificate}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'updateCertificate'])->name('admin.quality-certificates.groups.certificates.update');
+        Route::delete('quality-certificates/groups/{certificate_group}/certificates/{quality_certificate}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'destroyCertificate'])->name('admin.quality-certificates.groups.certificates.destroy');
 
         Route::get('about-page/{about_page}/page-sections', [MenuPageSectionController::class, 'indexAbout'])
             ->name('admin.about-page.page-sections.index');

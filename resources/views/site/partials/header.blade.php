@@ -8,7 +8,7 @@
         $topPhone = $topPhones[0] ?? null;
         $topBarLinkDefs = [
             ['label' => 'Contact Us', 'path' => '/contact'],
-            ['label' => 'Products', 'path' => '/ship-supply'],
+            // ['label' => 'Products', 'path' => '/ship-supply'],
             ['label' => 'Your Spare Parts', 'path' => '/get-a-quote'],
         ];
         $topBarLinks = collect($topBarLinkDefs)->map(function (array $item) use ($headerMenus) {

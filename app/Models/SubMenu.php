@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\Storage;
 
 class SubMenu extends Model
 {
@@ -102,6 +101,9 @@ class SubMenu extends Model
         if ($path === '/get-a-quote') {
             return route('quote.request');
         }
+        if ($path === '/locations') {
+            return route('locations');
+        }
 
         return $this->resolvedHref();
     }
@@ -160,5 +162,65 @@ class SubMenu extends Model
         $currentPath = rtrim($currentPath, '/') === '' ? '/' : rtrim($currentPath, '/');
 
         return $currentPath === $mine;
+    }
+
+    public function adminSidebarHref(): string
+    {
+        $path = $this->normalizedPath();
+        if ($path !== null) {
+            $servicePage = ServicePage::findByPath($path);
+            if ($servicePage) {
+                return route('admin.service-pages.edit', $servicePage);
+            }
+        }
+
+        return match ($path) {
+            '/about-us' => route('admin.about-page.edit'),
+            '/our-story' => route('admin.our-story-page.edit'),
+            '/message-from-ceo' => route('admin.ceo-message-page.edit'),
+            '/our-team-management' => route('admin.our-team-page.edit'),
+            '/career' => route('admin.career-page.edit'),
+            '/contact' => route('admin.contact-messages.index'),
+            default => route('admin.sub-menus.page-sections.index', $this),
+        };
+    }
+
+    public function adminSidebarIsActive(): bool
+    {
+        $path = $this->normalizedPath();
+
+        if ($path !== null) {
+            $servicePage = ServicePage::findByPath($path);
+            if ($servicePage) {
+                return request()->routeIs('admin.service-pages.edit')
+                    && request()->route('service_page') instanceof ServicePage
+                    && (int) request()->route('service_page')->id === (int) $servicePage->id;
+            }
+        }
+
+        if ($path === '/about-us') {
+            return request()->routeIs('admin.about-page.*');
+        }
+        if ($path === '/our-story') {
+            return request()->routeIs('admin.our-story-page.*');
+        }
+        if ($path === '/message-from-ceo') {
+            return request()->routeIs('admin.ceo-message-page.*');
+        }
+        if ($path === '/our-team-management') {
+            return request()->routeIs('admin.our-team-page.*');
+        }
+        if ($path === '/career') {
+            return request()->routeIs('admin.career-page.*');
+        }
+        if ($path === '/contact') {
+            return request()->routeIs('admin.contact-messages.*');
+        }
+
+        $routeSub = request()->route('sub_menu');
+
+        return (request()->routeIs('admin.sub-menus.edit') || request()->routeIs('admin.sub-menus.page-sections.*'))
+            && $routeSub instanceof self
+            && (int) $routeSub->id === (int) $this->id;
     }
 }

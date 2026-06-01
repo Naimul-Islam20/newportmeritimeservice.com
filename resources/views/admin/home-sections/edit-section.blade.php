@@ -182,7 +182,6 @@
             </div>
 
         @elseif ($formType === 'logo_carousel')
-            @php($logoItems = is_array(data_get($d, 'items')) ? array_values(data_get($d, 'items')) : [])
             <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
                 <div style="font-weight:700; margin-bottom:10px;">Section header</div>
                 <div style="margin-top:10px;">
@@ -200,39 +199,16 @@
                     </div>
                     <div>
                         <label for="lc_button_url">Link URL</label>
-                        <input id="lc_button_url" name="button_url" value="{{ old('button_url', $section->button_url) }}" placeholder="/page or https://…">
+                        <input id="lc_button_url" name="button_url" value="{{ old('button_url', $section->button_url) }}" placeholder="/quality-certificates-memberships">
                     </div>
                 </div>
             </div>
 
-            <div style="border:1px solid #e5e7eb; border-radius:10px; background:#fff; padding:14px; margin-top:12px;">
-                <div style="font-weight:700; margin-bottom:10px;">Logos</div>
-                @foreach ($logoItems as $li => $logo)
-                    @if (is_array($logo) && (is_string(data_get($logo, 'path')) && data_get($logo, 'path') !== '' || filled(data_get($logo, 'title'))))
-                        <div style="display:grid; grid-template-columns: 100px 1fr auto; gap:12px; align-items:start; padding:10px 0; border-bottom:1px solid #f1f5f9;">
-                            @if (is_string(data_get($logo, 'path')) && data_get($logo, 'path') !== '')
-                                <img src="{{ asset(data_get($logo, 'path')) }}" alt="" style="width:100px; height:70px; object-fit:contain; background:#f3f4f6; border-radius:6px; padding:6px;">
-                            @else
-                                <div style="width:100px; height:70px; background:#f3f4f6; border-radius:6px;"></div>
-                            @endif
-                            <div>
-                                <label style="font-size:12px;">Title (fallback if no image)</label>
-                                <input name="logo_titles[{{ $li }}]" value="{{ old('logo_titles.'.$li, data_get($logo, 'title')) }}" style="width:100%; max-width:360px;">
-                                <label style="font-size:12px; margin-top:8px; display:block;">Optional URL</label>
-                                <input name="logo_urls[{{ $li }}]" value="{{ old('logo_urls.'.$li, data_get($logo, 'url')) }}" style="width:100%; max-width:360px;" placeholder="https://…">
-                            </div>
-                            <label style="display:flex; align-items:center; gap:6px; font-size:12px; white-space:nowrap;">
-                                <input type="checkbox" name="logo_remove[]" value="{{ $li }}"> Remove
-                            </label>
-                        </div>
-                    @endif
-                @endforeach
-                <div id="lcNewLogoWrap" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;"></div>
-                <div style="margin-top:10px;">
-                    <button type="button" class="btn btn-muted" id="lcAddLogoBtn">Add logo</button>
-                </div>
-                @error('logo_items') <div class="error">{{ $message }}</div> @enderror
-                @error('logo_items.*.file') <div class="error">{{ $message }}</div> @enderror
+            <div style="border:1px solid #dbeafe; border-radius:10px; background:#eff6ff; padding:14px; margin-top:12px;">
+                <p style="margin:0; font-size:13px; line-height:1.5;">
+                    Carousel logos are loaded from <a href="{{ route('admin.quality-certificates.index') }}">Admin → Quality Certificates</a>.
+                    Add sections and upload thumbnail + PDF there; they appear on the home page automatically.
+                </p>
             </div>
 
         @elseif ($formType === 'text_input')

@@ -3,24 +3,41 @@
 namespace App\Providers;
 
 use App\Models\AboutPage;
+use App\Models\CareerPage;
+use App\Models\CeoMessagePage;
+use App\Models\CertificateGroup;
+use App\Models\CertificatePage;
 use App\Models\ContactMessage;
 use App\Models\HeroSlide;
 use App\Models\HomeSection;
 use App\Models\HomeServiceAreaSetting;
 use App\Models\HomeVisualFramesSetting;
 use App\Models\Menu;
+use App\Models\OurStoryPage;
+use App\Models\OurTeamPage;
+use App\Models\QualityCertificate;
 use App\Models\QuoteRequest;
+use App\Models\ServicePage;
+use App\Models\ServiceSidebarSetting;
 use App\Models\SiteDetail;
 use App\Models\SubMenu;
 use App\Models\User;
 use App\Policies\AboutPagePolicy;
+use App\Policies\CareerPagePolicy;
+use App\Policies\CeoMessagePagePolicy;
+use App\Policies\CertificateGroupPolicy;
+use App\Policies\CertificatePagePolicy;
 use App\Policies\ContactMessagePolicy;
 use App\Policies\HeroSlidePolicy;
 use App\Policies\HomeSectionPolicy;
 use App\Policies\HomeServiceAreaSettingPolicy;
 use App\Policies\HomeVisualFramesSettingPolicy;
 use App\Policies\MenuPolicy;
-use App\Policies\QuoteRequestPolicy;
+use App\Policies\OurStoryPagePolicy;
+use App\Policies\OurTeamPagePolicy;
+use App\Policies\QualityCertificatePolicy;
+use App\Policies\ServicePagePolicy;
+use App\Policies\ServiceSidebarSettingPolicy;
 use App\Policies\SiteDetailPolicy;
 use App\Policies\SubMenuPolicy;
 use App\Policies\UserPolicy;
@@ -55,7 +72,16 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(CertificatePage::class, CertificatePagePolicy::class);
+        Gate::policy(CertificateGroup::class, CertificateGroupPolicy::class);
+        Gate::policy(QualityCertificate::class, QualityCertificatePolicy::class);
         Gate::policy(AboutPage::class, AboutPagePolicy::class);
+        Gate::policy(CareerPage::class, CareerPagePolicy::class);
+        Gate::policy(OurStoryPage::class, OurStoryPagePolicy::class);
+        Gate::policy(CeoMessagePage::class, CeoMessagePagePolicy::class);
+        Gate::policy(OurTeamPage::class, OurTeamPagePolicy::class);
+        Gate::policy(ServicePage::class, ServicePagePolicy::class);
+        Gate::policy(ServiceSidebarSetting::class, ServiceSidebarSettingPolicy::class);
         Gate::policy(ContactMessage::class, ContactMessagePolicy::class);
         Gate::policy(HeroSlide::class, HeroSlidePolicy::class);
         Gate::policy(HomeSection::class, HomeSectionPolicy::class);
@@ -69,9 +95,15 @@ class AppServiceProvider extends ServiceProvider
         View::composer('site.partials.header', function ($view): void {
             $view->with('headerMenus', Menu::query()
                 ->where('is_active', true)
+                // Hidden from navbar (remove a path to show again)
+                ->where(function ($q): void {
+                    $q->whereNotIn('url', ['/ship-supply', 'ship-supply', '/award', 'award'])
+                        ->whereRaw('LOWER(label) NOT LIKE ?', ['%ship supply%'])
+                        ->whereRaw('LOWER(label) NOT LIKE ?', ['%award%']);
+                })
                 ->orderBy('sort_order')
                 ->orderBy('id')
-                ->with(['subMenus' => fn($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('id')])
+                ->with(['subMenus' => fn ($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('id')])
                 ->get());
             $view->with('siteDetails', SiteDetail::query()->first());
         });
@@ -103,7 +135,7 @@ class AppServiceProvider extends ServiceProvider
             $menus = Menu::query()
                 ->orderBy('sort_order')
                 ->orderBy('id')
-                ->with(['subMenus' => fn($q) => $q->orderBy('sort_order')->orderBy('id')])
+                ->with(['subMenus' => fn ($q) => $q->orderBy('sort_order')->orderBy('id')])
                 ->get()
                 ->map(function (Menu $menu): ?Menu {
                     if ($menu->isFormPageMenu()) {

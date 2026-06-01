@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HeroSlide;
 use App\Models\HomeSection;
 use App\Models\HomeServiceAreaSetting;
+use App\Models\QualityCertificate;
 use App\Models\SubMenu;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -47,11 +48,16 @@ class HomeController extends Controller
             $sectionItems[$section->id] = $q->get();
         }
 
+        $hasCertificatesCarousel = $homeSections->contains(
+            fn (HomeSection $section) => $section->block_type === 'logo_carousel',
+        );
+
         return view('site.pages.home', [
             'heroSlides' => HeroSlide::query()->ordered()->get(),
             'homeSections' => $homeSections,
             'sectionItems' => $sectionItems,
             'serviceArea' => HomeServiceAreaSetting::displayPayload(),
+            'homeCertificates' => $hasCertificatesCarousel ? QualityCertificate::forHomeCarousel() : collect(),
         ]);
     }
 }

@@ -4,7 +4,13 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
+use App\Models\CareerPage;
+use App\Models\CeoMessagePage;
 use App\Models\Menu;
+use App\Models\OurStoryPage;
+use App\Models\OurTeamPage;
+use App\Models\ServicePage;
+use App\Models\ServiceSidebarSetting;
 use App\Models\SiteDetail;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
@@ -12,12 +18,21 @@ use Illuminate\View\View;
 
 class PageController extends Controller
 {
+    /**
+     * Paths with dedicated Blade + admin page models — do not render generic menu-page layout.
+     *
+     * @var list<string>
+     */
     private function menuPageIfExists(Request $request): ?View
     {
         $rawPath = $request->path();
         $path = $rawPath === '' ? '/' : '/'.ltrim($rawPath, '/');
         $path = rtrim($path, '/') === '' ? '/' : rtrim($path, '/');
         $pathAlt = ltrim($path, '/');
+
+        if (in_array($path, $this->dedicatedPagePaths(), true)) {
+            return null;
+        }
 
         $sub = SubMenu::query()
             ->where(function ($q) use ($path, $pathAlt): void {
@@ -64,40 +79,64 @@ class PageController extends Controller
 
     public function shipSupply(Request $request): View
     {
-        if ($v = $this->menuPageIfExists($request)) {
-            return $v;
-        }
-
-        return view('site.pages.ship-supply', [
-            'title' => SiteDetail::pageTitle('Ship Supply'),
-            'metaDescription' => 'Provisions, stores, and deck supplies for vessels and port operations.',
-        ]);
+        return $this->serviceDetailPage($request, 'provision');
     }
 
     public function technicalStores(Request $request): View
     {
-        if ($v = $this->menuPageIfExists($request)) {
-            return $v;
-        }
-
-        return view('site.pages.technical-stores', [
-            'title' => SiteDetail::pageTitle('Technical Stores'),
-            'metaDescription' => 'Technical stores, engine stores, deck supplies, safety equipment and certified marine spare parts for vessels worldwide.',
-        ]);
+        return $this->serviceDetailPage($request, 'technical-stores');
     }
 
     public function ourServices(Request $request): View
+    {
+        return $this->serviceDetailPage($request, 'what-we-do');
+    }
+
+    public function serviceTransitDelivery(Request $request): View
+    {
+        return $this->serviceDetailPage($request, 'transit-delivery');
+    }
+
+    public function servicePortDelivery(Request $request): View
+    {
+        return $this->serviceDetailPage($request, 'port-delivery');
+    }
+
+    public function serviceOperationsLogistics(Request $request): View
+    {
+        return $this->serviceDetailPage($request, 'operations-logistics');
+    }
+
+    private function serviceDetailPage(Request $request, string $slug): View
     {
         if ($v = $this->menuPageIfExists($request)) {
             return $v;
         }
 
-        return view('site.pages.simple', [
-            'title' => SiteDetail::pageTitle('Our Services'),
-            'metaDescription' => 'Maritime logistics, documentation, and operational support services.',
-            'heading' => 'Our Services',
-            'lead' => 'From berth coordination to stakeholder communication, we support the full lifecycle of your port call.',
+        $page = ServicePage::resolvedForPublic($slug);
+        $sidebar = ServiceSidebarSetting::resolvedForPublic($page->open_nav_group_id, $page->path);
+
+        return view('site.pages.service-detail', [
+            'page' => $page,
+            'sidebar' => $sidebar,
         ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function dedicatedPagePaths(): array
+    {
+        return array_values(array_unique(array_merge(
+            [
+                '/our-story',
+                '/message-from-ceo',
+                '/our-team-management',
+                '/locations',
+                '/career',
+            ],
+            ServicePage::dedicatedPaths(),
+        )));
     }
 
     public function ourStory(Request $request): View
@@ -106,9 +145,12 @@ class PageController extends Controller
             return $v;
         }
 
+        $story = OurStoryPage::resolvedForPublic();
+
         return view('site.pages.our-story', [
-            'title' => SiteDetail::pageTitle('Our Story'),
-            'metaDescription' => 'Our story since 1992 — maritime supply, provision and logistics across ports worldwide.',
+            'title' => SiteDetail::pageTitle($story->hero_title),
+            'metaDescription' => $story->meta_description,
+            'story' => $story,
         ]);
     }
 
@@ -118,9 +160,12 @@ class PageController extends Controller
             return $v;
         }
 
+        $ceo = CeoMessagePage::resolvedForPublic();
+
         return view('site.pages.message-from-ceo', [
             'title' => SiteDetail::pageTitle('Message from the CEO'),
-            'metaDescription' => 'A message from our CEO on experience, trust, and our vision for maritime supply and logistics.',
+            'metaDescription' => $ceo->meta_description,
+            'ceo' => $ceo,
         ]);
     }
 
@@ -130,9 +175,12 @@ class PageController extends Controller
             return $v;
         }
 
+        $team = OurTeamPage::resolvedForPublic();
+
         return view('site.pages.our-team-management', [
-            'title' => SiteDetail::pageTitle('Our Team'),
-            'metaDescription' => 'Meet our management team and leadership across maritime supply, provision and operations.',
+            'title' => SiteDetail::pageTitle($team->hero_title),
+            'metaDescription' => $team->meta_description,
+            'team' => $team,
         ]);
     }
 
@@ -142,10 +190,12 @@ class PageController extends Controller
             return $v;
         }
 
+        $career = CareerPage::resolvedForPublic();
+
         return view('site.pages.career', [
-            'title' => SiteDetail::pageTitle('Career'),
-            'metaDescription' => 'Career opportunities at Newport Maritime Service — HR vision, general applications and open positions.',
-            'siteDetails' => SiteDetail::query()->first(),
+            'title' => SiteDetail::pageTitle($career->hero_title),
+            'metaDescription' => $career->meta_description,
+            'career' => $career,
         ]);
     }
 

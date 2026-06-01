@@ -16,12 +16,12 @@
         [
             'title' => 'All Ports of Turkey',
             'image' => 'https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=900&auto=format&fit=crop',
-            'url' => '#',
+            'url' => url('/locations/all-ports-of-turkey'),
         ],
         [
             'title' => 'Ports in the ARA area',
             'image' => 'https://images.unsplash.com/photo-1467269209838-ff998a88a88c?q=80&w=900&auto=format&fit=crop',
-            'url' => '#',
+            'url' => url('/locations/ports-in-the-ara-area'),
         ],
     ];
 

@@ -151,7 +151,11 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             'content2SectionStrip' => $content2SectionStrip,
         ])
     @endif
-    @include('site.home-sections.certificates-carousel', ['section' => $section, 'sectionStrip' => $sectionStrip])
+    @include('site.home-sections.certificates-carousel', [
+        'section' => $section,
+        'sectionStrip' => $sectionStrip,
+        'homeCertificates' => $homeCertificates ?? collect(),
+    ])
 @elseif ($section->block_type === 'image')
 @include('site.menu-page-sections.image-block', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'text_input')

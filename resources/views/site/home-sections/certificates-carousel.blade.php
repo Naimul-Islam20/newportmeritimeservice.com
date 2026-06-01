@@ -1,12 +1,15 @@
-{{-- Quality Certificates & Memberships — logo carousel --}}
+{{-- Quality Certificates & Memberships — carousel from admin-uploaded certificates --}}
 @php
-    $d = is_array($section->data ?? null) ? $section->data : [];
-    $items = $section->logoCarouselItems();
+    $certificates = $homeCertificates ?? collect();
     $title = filled($section->title) ? trim($section->title) : 'Quality Certificates & Memberships';
     $subtitlePrefix = filled($section->description) ? trim($section->description) : 'Click to see all our';
     $linkLabel = filled($section->button_label) ? trim($section->button_label) : 'Quality Certificates & Memberships';
     $linkUrl = $section->resolvedButtonHref();
-    $hasLink = $linkUrl !== '#' && filled($linkLabel);
+    $defaultCertsPageUrl = route('quality-certificates');
+    if ($linkUrl === '#' || $linkUrl === '') {
+        $linkUrl = $defaultCertsPageUrl;
+    }
+    $hasLink = filled($linkLabel);
     $swiperId = 'certs-swiper-'.$section->id;
 @endphp
 
@@ -24,7 +27,7 @@
                     @endif
                 </p>
             </div>
-            @if (count($items) > 0)
+            @if ($certificates->isNotEmpty())
                 <div class="certs-carousel__nav" aria-label="Certificates carousel controls">
                     <button type="button" id="certs-prev-{{ $section->id }}" class="certs-carousel__arrow certs-carousel__arrow--prev" aria-label="Previous">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -42,36 +45,29 @@
 
         <div class="swiper certs-carousel__swiper" id="{{ $swiperId }}" data-certs-swiper data-section-id="{{ $section->id }}">
             <div class="swiper-wrapper">
-                @forelse ($items as $item)
+                @forelse ($certificates as $cert)
                     @php
-                        $logoPath = data_get($item, 'path');
-                        $logoUrl = is_string($logoPath) && $logoPath !== '' ? \App\Support\PublicUploadUrl::fromPath($logoPath) : '';
-                        $logoTitle = is_string(data_get($item, 'title')) ? trim(data_get($item, 'title')) : '';
-                        $logoHref = data_get($item, 'url');
-                        $logoHref = is_string($logoHref) && trim($logoHref) !== '' ? trim($logoHref) : null;
+                        $imgUrl = $cert->imagePublicUrl();
+                        $cardHref = $cert->carouselHref();
                     @endphp
                     <div class="swiper-slide">
-                        @if ($logoHref)
-                            <a href="{{ $section->resolvedButtonHrefFor($logoHref) }}" class="certs-carousel__card certs-carousel__card--link">
-                        @else
-                            <div class="certs-carousel__card">
-                        @endif
-                            @if ($logoUrl !== '')
-                                <img src="{{ $logoUrl }}" alt="{{ $logoTitle ?: 'Certificate logo' }}" class="certs-carousel__logo" loading="lazy" decoding="async">
-                            @elseif ($logoTitle !== '')
-                                <span class="certs-carousel__placeholder">{{ $logoTitle }}</span>
+                        <a
+                            href="{{ $cardHref }}"
+                            class="certs-carousel__card certs-carousel__card--link"
+                            title="{{ $cert->title }}"
+                        >
+                            @if ($imgUrl !== '')
+                                <img src="{{ $imgUrl }}" alt="{{ $cert->title }}" class="certs-carousel__logo" loading="lazy" decoding="async">
+                            @else
+                                <span class="certs-carousel__placeholder">{{ $cert->title }}</span>
                             @endif
-                        @if ($logoHref)
-                            </a>
-                        @else
-                            </div>
-                        @endif
+                        </a>
                     </div>
                 @empty
                     <div class="swiper-slide">
-                        <div class="certs-carousel__card certs-carousel__card--empty">
-                            <span class="certs-carousel__placeholder">Add certificate logos in admin</span>
-                        </div>
+                        <a href="{{ $defaultCertsPageUrl }}" class="certs-carousel__card certs-carousel__card--link certs-carousel__card--empty">
+                            <span class="certs-carousel__placeholder">Upload certificates in Admin → Quality Certificates</span>
+                        </a>
                     </div>
                 @endforelse
             </div>
