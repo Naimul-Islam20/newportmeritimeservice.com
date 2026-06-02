@@ -610,6 +610,7 @@
                     <a class="{{ request()->routeIs('admin.quality-certificates.*') ? 'active' : '' }}" href="{{ route('admin.quality-certificates.index') }}">Quality Certificates</a>
                     <a class="{{ request()->routeIs('admin.service-pages.*') || request()->routeIs('admin.service-sidebar.*') ? 'active' : '' }}" href="{{ route('admin.service-pages.index') }}">Our Services pages</a>
                     <a class="{{ request()->routeIs('admin.career-page.*') ? 'active' : '' }}" href="{{ route('admin.career-page.edit') }}">Career page</a>
+                    <a class="{{ request()->routeIs('admin.where-we-are-locations.*') ? 'active' : '' }}" href="{{ route('admin.where-we-are-locations.index') }}">Where We Are — locations</a>
                     @php($sidebarAboutPage = \App\Models\AboutPage::query()->first())
                     @if ($sidebarAboutPage)
                         <a class="{{ request()->routeIs('admin.about-page.page-sections.*') ? 'active' : '' }}"

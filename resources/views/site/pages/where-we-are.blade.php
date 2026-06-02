@@ -94,6 +94,22 @@
                             </div>
                         </div>
 
+                        @if (! empty($locations))
+                            <hr class="border-foreground/15">
+                            <div>
+                                <h4 class="text-lg font-bold text-[#334155]">Our offices</h4>
+                                <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+                                    @foreach ($locations as $loc)
+                                        <li>
+                                            <a href="{{ route('where-we-are.location', $loc->slug) }}" class="text-[17px] font-medium text-primary transition hover:underline">
+                                                {{ $loc->hero_title }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <hr class="border-foreground/15">
 
                         <!-- Why Chittagong -->

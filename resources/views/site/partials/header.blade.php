@@ -97,19 +97,7 @@
                         </span>
                         @endunless
                     </a>
-                    <div class="site-desktop-nav__dropdown" role="menu" aria-label="{{ $menu->label }}">
-                        <div class="site-desktop-dropdown-panel flex flex-col gap-0.5 rounded-xl border border-black/[0.08] bg-white p-1.5 shadow-lg shadow-secondary/10 ring-1 ring-black/[0.04]">
-                            @foreach ($menu->subMenus as $child)
-                            <a href="{{ $child->siteNavHref() }}" role="menuitem"
-                                @class([
-                                    'site-desktop-dropdown-panel__link',
-                                    'site-desktop-dropdown-panel__link--active' => $child->isCurrent(),
-                                ])>
-                                {{ $child->label }}
-                            </a>
-                            @endforeach
-                        </div>
-                    </div>
+                    @include('site.partials.desktop-nav-submenu', ['menu' => $menu])
                 </div>
                 @else
                 <a href="{{ $menu->siteNavHref() }}"

@@ -25,6 +25,19 @@
                 @error('label') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
+                <label for="parent_sub_menu_id">Nest under (flyout parent)</label>
+                <select id="parent_sub_menu_id" name="parent_sub_menu_id">
+                    <option value="">— Top level —</option>
+                    @foreach ($parentSubMenus as $parent)
+                        <option value="{{ $parent->id }}" data-menu-id="{{ $parent->menu_id }}" @selected((string) old('parent_sub_menu_id') === (string) $parent->id)>
+                            {{ $parent->menu?->label }} → {{ $parent->label }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('parent_sub_menu_id') <div class="error">{{ $message }}</div> @enderror
+                <div style="color:#64748b;font-size:12px;margin-top:6px;">Use for city links under “Where We Are”, etc.</div>
+            </div>
+            <div>
                 <label for="url">Sub menu URL</label>
                 <input id="url" name="url" value="{{ old('url') }}" placeholder="Optional (auto if blank)">
                 @error('url') <div class="error">{{ $message }}</div> @enderror

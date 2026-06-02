@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateServicePageRequest;
+use App\Models\Menu;
 use App\Models\ServicePage;
+use App\Models\SubMenu;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ServicePageController extends Controller
@@ -24,9 +27,13 @@ class ServicePageController extends Controller
     {
         $this->authorize('update', $service_page);
 
+        $cardSubMenu = $this->resolveServiceCardSubMenu($service_page);
+
         return view('admin.service-pages.edit', [
             'page' => $service_page,
             'publicUrl' => ServicePage::publicUrlForSlug($service_page->slug),
+            'cardSubMenu' => $cardSubMenu,
+            'cardIconUrl' => $cardSubMenu?->coverImageUrl() ?? '',
         ]);
     }
 
@@ -39,6 +46,7 @@ class ServicePageController extends Controller
         $data = $request->validated();
         unset($data['hero_background_file'], $data['remove_hero_background']);
         unset($data['content_image_file'], $data['remove_content_image']);
+        unset($data['card_icon_file'], $data['remove_card_icon']);
         unset(
             $data['gallery_image_0_file'],
             $data['gallery_image_1_file'],
@@ -82,6 +90,32 @@ class ServicePageController extends Controller
         foreach ($prevGallery as $oldPath) {
             if (is_string($oldPath) && $oldPath !== '' && ! in_array($oldPath, $data['gallery_images'], true)) {
                 ServicePage::deleteManagedUpload($oldPath);
+            }
+        }
+
+        $cardSubMenu = $this->resolveServiceCardSubMenu($service_page);
+        if ($cardSubMenu) {
+            if ($request->hasFile('card_icon_file')) {
+                $newPath = $request->file('card_icon_file')->store('sub-menus', 'public_site');
+
+                if ($cardSubMenu->cover_image_path && Storage::disk('public_site')->exists($cardSubMenu->cover_image_path)) {
+                    Storage::disk('public_site')->delete($cardSubMenu->cover_image_path);
+                }
+                if ($cardSubMenu->cover_image_path && Storage::disk('public')->exists($cardSubMenu->cover_image_path)) {
+                    Storage::disk('public')->delete($cardSubMenu->cover_image_path);
+                }
+
+                $cardSubMenu->cover_image_path = $newPath;
+                $cardSubMenu->save();
+            } elseif ($request->boolean('remove_card_icon')) {
+                if ($cardSubMenu->cover_image_path && Storage::disk('public_site')->exists($cardSubMenu->cover_image_path)) {
+                    Storage::disk('public_site')->delete($cardSubMenu->cover_image_path);
+                }
+                if ($cardSubMenu->cover_image_path && Storage::disk('public')->exists($cardSubMenu->cover_image_path)) {
+                    Storage::disk('public')->delete($cardSubMenu->cover_image_path);
+                }
+                $cardSubMenu->cover_image_path = null;
+                $cardSubMenu->save();
             }
         }
 
@@ -179,5 +213,28 @@ class ServicePageController extends Controller
         }
 
         return array_values(array_filter($slots, fn (string $p) => $p !== ''));
+    }
+
+    private function resolveServiceCardSubMenu(ServicePage $servicePage): ?SubMenu
+    {
+        $servicesMenu = Menu::ourServicesMenu();
+        if (! $servicesMenu) {
+            return null;
+        }
+
+        $targetPath = trim((string) ($servicePage->path ?? ''));
+        $targetPath = $targetPath === '' ? null : (rtrim('/'.ltrim($targetPath, '/'), '/') ?: '/');
+        if (! $targetPath) {
+            return null;
+        }
+
+        return $servicesMenu->subMenus
+            ->first(function (SubMenu $sub) use ($targetPath): bool {
+                if ((int) ($sub->parent_sub_menu_id ?? 0) !== 0) {
+                    return false;
+                }
+
+                return $sub->normalizedPath() === $targetPath;
+            });
     }
 }

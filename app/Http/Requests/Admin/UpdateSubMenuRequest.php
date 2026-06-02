@@ -23,6 +23,15 @@ class UpdateSubMenuRequest extends FormRequest
     {
         return [
             'menu_id' => ['required', 'integer', Rule::exists('menus', 'id')],
+            'parent_sub_menu_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('sub_menus', 'id')->where(function ($q) {
+                    $q->where('menu_id', $this->input('menu_id'))
+                        ->whereNull('parent_sub_menu_id')
+                        ->where('id', '!=', $this->route('sub_menu')?->id);
+                }),
+            ],
             'label' => ['required', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:2048'],
             'description' => ['nullable', 'string', 'max:5000'],

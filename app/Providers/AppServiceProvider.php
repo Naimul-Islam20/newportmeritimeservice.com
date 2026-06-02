@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AboutPage;
 use App\Models\CareerPage;
+use App\Models\WhereWeAreLocation;
 use App\Models\CeoMessagePage;
 use App\Models\CertificateGroup;
 use App\Models\CertificatePage;
@@ -24,6 +25,7 @@ use App\Models\SubMenu;
 use App\Models\User;
 use App\Policies\AboutPagePolicy;
 use App\Policies\CareerPagePolicy;
+use App\Policies\WhereWeAreLocationPolicy;
 use App\Policies\CeoMessagePagePolicy;
 use App\Policies\CertificateGroupPolicy;
 use App\Policies\CertificatePagePolicy;
@@ -77,6 +79,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(QualityCertificate::class, QualityCertificatePolicy::class);
         Gate::policy(AboutPage::class, AboutPagePolicy::class);
         Gate::policy(CareerPage::class, CareerPagePolicy::class);
+        Gate::policy(WhereWeAreLocation::class, WhereWeAreLocationPolicy::class);
         Gate::policy(OurStoryPage::class, OurStoryPagePolicy::class);
         Gate::policy(CeoMessagePage::class, CeoMessagePagePolicy::class);
         Gate::policy(OurTeamPage::class, OurTeamPagePolicy::class);
@@ -103,7 +106,19 @@ class AppServiceProvider extends ServiceProvider
                 })
                 ->orderBy('sort_order')
                 ->orderBy('id')
-                ->with(['subMenus' => fn ($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('id')])
+                ->with([
+                    'subMenus' => fn ($q) => $q
+                        ->whereNull('parent_sub_menu_id')
+                        ->where('is_active', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('id')
+                        ->with([
+                            'children' => fn ($c) => $c
+                                ->where('is_active', true)
+                                ->orderBy('sort_order')
+                                ->orderBy('id'),
+                        ]),
+                ])
                 ->get());
             $view->with('siteDetails', SiteDetail::query()->first());
         });

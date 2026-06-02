@@ -34,6 +34,19 @@ class Menu extends Model
         return $this->hasMany(SubMenu::class, 'menu_id');
     }
 
+    /** Top-level submenu items (excludes nested children). */
+    public function topLevelSubMenus(): HasMany
+    {
+        return $this->hasMany(SubMenu::class, 'menu_id')->whereNull('parent_sub_menu_id');
+    }
+
+    public function hasFlyoutSubMenus(): bool
+    {
+        $subs = $this->relationLoaded('subMenus') ? $this->subMenus : $this->subMenus()->get();
+
+        return $subs->contains(fn (SubMenu $s) => $s->hasChildren());
+    }
+
     public function pageSections(): MorphMany
     {
         return $this->morphMany(MenuPageSection::class, 'sectionable');
@@ -224,6 +237,27 @@ class Menu extends Model
                     ->orWhereRaw('LOWER(label) LIKE ?', ['%our services%']);
             })
             ->with(['subMenus' => fn ($q) => $q->active()->ordered()])
+            ->first();
+    }
+
+    /**
+     * Primary BLOG menu for blog category navigation (News / Events / Gallery / Recipes / TV).
+     */
+    public static function blogMenu(): ?self
+    {
+        return self::query()
+            ->where('is_active', true)
+            ->where(function (Builder $q): void {
+                $q->where('url', '/blog')
+                    ->orWhere('url', 'blog')
+                    ->orWhereRaw('LOWER(label) LIKE ?', ['%blog%']);
+            })
+            ->with([
+                'subMenus' => fn (Builder $q) => $q
+                    ->active()
+                    ->whereNull('parent_sub_menu_id')
+                    ->ordered(),
+            ])
             ->first();
     }
 }

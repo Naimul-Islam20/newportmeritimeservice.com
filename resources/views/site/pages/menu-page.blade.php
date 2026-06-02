@@ -10,6 +10,10 @@
     'heroImageUrl' => $heroImageUrl ?? null,
 ])
 
+@if (isset($blogNavMenu) && $blogNavMenu)
+    @include('site.partials.blog-nav-tabs', ['blogNavMenu' => $blogNavMenu])
+@endif
+
 @if (isset($submenuPaginator) && $submenuPaginator->total() > 0)
     @include('site.partials.menu-submenu-grid', ['submenuPaginator' => $submenuPaginator])
 @endif

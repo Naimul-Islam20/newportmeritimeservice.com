@@ -1,0 +1,994 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: May 23, 2026 at 06:39 AM
+-- Server version: 8.4.7
+-- PHP Version: 8.3.27
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `port-meritime`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `about_pages`
+--
+
+CREATE TABLE `about_pages` (
+  `id` bigint UNSIGNED NOT NULL,
+  `hero_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hero_background` text COLLATE utf8mb4_unicode_ci,
+  `trust_image` text COLLATE utf8mb4_unicode_ci,
+  `trust_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `trust_description` longtext COLLATE utf8mb4_unicode_ci,
+  `stat1_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stat1_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stat2_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stat2_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stat3_value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stat3_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mission_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mission_body` longtext COLLATE utf8mb4_unicode_ci,
+  `vision_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vision_body` longtext COLLATE utf8mb4_unicode_ci,
+  `cta_eyebrow` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cta_heading` text COLLATE utf8mb4_unicode_ci,
+  `cta_background` text COLLATE utf8mb4_unicode_ci,
+  `cta_button_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cta_video_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `about_pages`
+--
+
+INSERT INTO `about_pages` (`id`, `hero_title`, `hero_background`, `trust_image`, `trust_title`, `trust_description`, `stat1_value`, `stat1_label`, `stat2_value`, `stat2_label`, `stat3_value`, `stat3_label`, `mission_title`, `mission_body`, `vision_title`, `vision_body`, `cta_eyebrow`, `cta_heading`, `cta_background`, `cta_button_label`, `cta_video_url`, `created_at`, `updated_at`) VALUES
+(1, 'About Us', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-09 13:47:40', '2026-05-18 11:44:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_logs`
+--
+
+CREATE TABLE `audit_logs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `actor_id` bigint UNSIGNED DEFAULT NULL,
+  `action` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target_id` bigint UNSIGNED DEFAULT NULL,
+  `meta` json DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`id`, `actor_id`, `action`, `target_type`, `target_id`, `meta`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@erp17.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:53:12', '2026-05-03 05:53:12'),
+(2, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@erp17.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:53:37', '2026-05-03 05:53:37'),
+(3, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@erp17.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:53:48', '2026-05-03 05:53:48'),
+(4, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@portmeritime.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:56:40', '2026-05-03 05:56:40'),
+(5, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@portmeritime.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:56:47', '2026-05-03 05:56:47'),
+(6, NULL, 'admin.login.failed', NULL, NULL, '{\"email\": \"admin@portmeritime.com\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 05:56:59', '2026-05-03 05:56:59'),
+(7, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 06:00:33', '2026-05-03 06:00:33'),
+(8, 2, 'admin.user.updated', 'App\\Models\\User', 1, '{\"role\": \"admin\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 06:01:18', '2026-05-03 06:01:18'),
+(9, 2, 'contact.submitted.web', 'App\\Models\\ContactMessage', 1, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-03 06:11:07', '2026-05-03 06:11:07'),
+(10, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-04 07:35:34', '2026-05-04 07:35:34'),
+(11, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-06 08:06:31', '2026-05-06 08:06:31'),
+(12, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-06 15:58:34', '2026-05-06 15:58:34'),
+(13, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-07 05:07:34', '2026-05-07 05:07:34'),
+(14, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 3, '{\"label\": \"SHIP REPAIR & MAINTENANCE\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-07 10:28:21', '2026-05-07 10:28:21'),
+(15, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 4, '{\"label\": \"PROVISION AND BOND STORE\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-07 10:48:19', '2026-05-07 10:48:19'),
+(16, 2, 'admin.sub_menu.updated', 'App\\Models\\SubMenu', 4, '{\"label\": \"PROVISION AND BOND STORE\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-07 11:32:01', '2026-05-07 11:32:01'),
+(17, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-08 08:19:55', '2026-05-08 08:19:55'),
+(18, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-08 13:36:24', '2026-05-08 13:36:24'),
+(19, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-09 05:37:00', '2026-05-09 05:37:00'),
+(20, 2, 'admin.menu.updated', 'App\\Models\\Menu', 4, '{\"label\": \"Ship Supply\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-09 13:21:26', '2026-05-09 13:21:26'),
+(21, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-14 06:38:57', '2026-05-14 06:38:57'),
+(22, 2, 'admin.contact_message.read', 'App\\Models\\ContactMessage', 1, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-14 06:46:00', '2026-05-14 06:46:00'),
+(23, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-16 08:53:17', '2026-05-16 08:53:17'),
+(24, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 05:54:47', '2026-05-17 05:54:47'),
+(25, 2, 'admin.sub_menu.updated', 'App\\Models\\SubMenu', 3, '{\"label\": \"SHIP REPAIR & MAINTENANCE\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 05:55:28', '2026-05-17 05:55:28'),
+(26, 2, 'admin.sub_menu.updated', 'App\\Models\\SubMenu', 3, '{\"label\": \"SHIP REPAIR & MAINTENANCE\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 05:55:52', '2026-05-17 05:55:52'),
+(27, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 15:57:21', '2026-05-17 15:57:21'),
+(28, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 5, '{\"label\": \"Repair & Maintenance\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:09:36', '2026-05-17 16:09:36'),
+(29, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 6, '{\"label\": \"Marine Safety Annual Inspection & Survey\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:10:24', '2026-05-17 16:10:24'),
+(30, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 7, '{\"label\": \"Agency Services\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:10:39', '2026-05-17 16:10:39'),
+(31, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 8, '{\"label\": \"Custom Clearance\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:10:55', '2026-05-17 16:10:55'),
+(32, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 9, '{\"label\": \"Rental Services\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:11:09', '2026-05-17 16:11:09'),
+(33, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 10, '{\"label\": \"Hull & Tank Cleaning\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:11:20', '2026-05-17 16:11:20'),
+(34, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 11, '{\"label\": \"Garbage & Waste Oil Disposal\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:11:32', '2026-05-17 16:11:32'),
+(35, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 12, '{\"label\": \"Chipping & Painting\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:11:50', '2026-05-17 16:11:50'),
+(36, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 13, '{\"label\": \"General Store Supply\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:12:02', '2026-05-17 16:12:02'),
+(37, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 14, '{\"label\": \"Provision & Bond Stores\", \"menu_id\": \"5\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:12:18', '2026-05-17 16:12:18'),
+(38, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 15, '{\"label\": \"Provision & Bond Stores\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:13:06', '2026-05-17 16:13:06'),
+(39, 2, 'admin.sub_menu.deleted', NULL, NULL, '{\"label\": \"Provision & Bond Stores\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:13:32', '2026-05-17 16:13:32'),
+(40, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 16, '{\"label\": \"Spare Parts\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:14:00', '2026-05-17 16:14:00'),
+(41, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 17, '{\"label\": \"Electronics &Navigation Equipment\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:14:16', '2026-05-17 16:14:16'),
+(42, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 18, '{\"label\": \"Gases & Chemical\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:14:30', '2026-05-17 16:14:30'),
+(43, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 19, '{\"label\": \"Marine Paints\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:14:40', '2026-05-17 16:14:40'),
+(44, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 20, '{\"label\": \"Lubricant Oil\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:14:51', '2026-05-17 16:14:51'),
+(45, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 21, '{\"label\": \"Heavy Equipment\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:15:02', '2026-05-17 16:15:02'),
+(46, 2, 'admin.sub_menu.created', 'App\\Models\\SubMenu', 22, '{\"label\": \"Medical Stores\", \"menu_id\": \"4\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:15:12', '2026-05-17 16:15:12'),
+(47, 2, 'admin.sub_menu.deleted', NULL, NULL, '{\"label\": \"PROVISION AND BOND STORE\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:15:31', '2026-05-17 16:15:31'),
+(48, 2, 'admin.sub_menu.deleted', NULL, NULL, '{\"label\": \"SHIP REPAIR & MAINTENANCE\"}', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-17 16:16:29', '2026-05-17 16:16:29'),
+(49, 2, 'admin.login.success', 'App\\Models\\User', 2, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-18 05:32:05', '2026-05-18 05:32:05'),
+(50, 2, 'quote.submitted.web', 'App\\Models\\QuoteRequest', 1, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-18 12:20:07', '2026-05-18 12:20:07'),
+(51, 2, 'admin.logout', NULL, NULL, '[]', '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-05-18 12:29:30', '2026-05-18 12:29:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache`
+--
+
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('erp17-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0', 'i:1;', 1779106867),
+('erp17-cache-da4b9237bacccdf19c0760cab7aec4a8359010b0:timer', 'i:1779106867;', 1779106867);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_locks`
+--
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_messages`
+--
+
+CREATE TABLE `contact_messages` (
+  `id` bigint UNSIGNED NOT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unread',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `contact_messages`
+--
+
+INSERT INTO `contact_messages` (`id`, `full_name`, `email`, `phone`, `subject`, `message`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Tashya Poole', 'mikymujab@mailinator.com', '+1 (699) 183-4785', 'Fugiat rerum esse p', 'Quidem sed iste reru', 'read', '2026-05-03 06:11:07', '2026-05-14 06:46:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hero_slides`
+--
+
+CREATE TABLE `hero_slides` (
+  `id` bigint UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `button_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `button_url` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sort_order` int UNSIGNED NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `hero_slides`
+--
+
+INSERT INTO `hero_slides` (`id`, `title`, `description`, `button_label`, `button_url`, `image_path`, `sort_order`, `created_at`, `updated_at`) VALUES
+(3, 'Welcome Merchant Marine Supply and Trading International', 'From high-quality provisions, equipment, and spare parts to top-tier maintenance and repair solutions, we offer a one-stop solution tailored to meet the unique needs of your fleet.', 'contact us', '/contact', 'hero-slides/GgoGXgwbeT9A55sGkRQjeOaAieR4aMOTNFoBZH9K.jpg', 1, '2026-05-18 09:09:11', '2026-05-18 10:28:04'),
+(4, 'Global Marine Supply Solutions', 'Providing reliable ship supplies, spare parts, and technical support services to ensure smooth and efficient maritime operations worldwide.', 'GET A QUOTE', '/get-a-quote', 'hero-slides/GcSUhL3JkqHgrGcmEQ0HNjOsEXl6lI2U9G4rmx18.jpg', 2, '2026-05-18 09:37:31', '2026-05-18 10:28:16'),
+(5, 'Trusted Marine Service Partner', 'Providing efficient ship supply, repair support, and operational services for smooth and safe maritime journeys across the world.', 'GET A QUOTE', '/get-a-quote', 'hero-slides/Jeqa2s8GpO8KSJ23urdXFVAMu0Jslx5vacEkWcX1.webp', 3, '2026-05-18 09:41:59', '2026-05-18 10:28:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_sections`
+--
+
+CREATE TABLE `home_sections` (
+  `id` bigint UNSIGNED NOT NULL,
+  `block_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `variant` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `two_column_mode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `layout_width` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_alt` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `menu_id` bigint UNSIGNED DEFAULT NULL,
+  `mini_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `points` json DEFAULT NULL,
+  `left_content` json DEFAULT NULL,
+  `right_content` json DEFAULT NULL,
+  `data` json DEFAULT NULL,
+  `button_label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `button_url` varchar(2048) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort_order` int UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `home_sections`
+--
+
+INSERT INTO `home_sections` (`id`, `block_type`, `variant`, `two_column_mode`, `layout_width`, `image_path`, `image_alt`, `menu_id`, `mini_title`, `title`, `description`, `points`, `left_content`, `right_content`, `data`, `button_label`, `button_url`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'carousel', 'simple', NULL, NULL, NULL, NULL, 5, 'OUR SERVICES', 'What We Do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2026-05-07 10:43:28', '2026-05-07 10:43:28'),
+(2, 'carousel', 'content_2', NULL, NULL, NULL, NULL, 4, 'SHIP SUPPLIES', 'What We Supply', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 1, '2026-05-07 10:48:58', '2026-05-07 11:30:24'),
+(4, 'two_column', 'about', 'image_details', 'short', 'home-sections/NxemY18lLEiR8TBbC8ylL0nFaXTUvgwfFDN6XHPN.png', 'hghfh', NULL, 'ABOUT US', 'InnovativeShip Supply and services', 'We are capable to supply high-quality products and services at competitive prices for vessels of all sizes. Our services cater to a wide range of vessels including Container ships, Tankers, Cruise ships, Bulk carriers, Ferries, Tug boats, and Naval vessels that visit ports throughout Bangladesh.', NULL, NULL, NULL, '{\"image_side\": \"left\"}', 'Learn more', '/about-us', 4, 1, '2026-05-07 12:24:09', '2026-05-18 11:39:15'),
+(5, 'two_column', 'about', 'image_details', 'short', 'home-sections/VWFerLHkBlzwMipKVkBM9n4mZiVJsFpqmmyItQLa.jpg', 'marchent marine', NULL, 'Why Choose Us', 'Trusted By ThousandsOf Happy Customers', 'Rest easy knowing that your marine supply, repair, and maintenance requirements are managed by dedicated professionals who consistently deliver top-notch results.', NULL, NULL, NULL, '{\"image_side\": \"right\"}', 'Learn more', '/about-us', 5, 1, '2026-05-07 12:40:59', '2026-05-18 11:38:50'),
+(7, 'two_column', 'mission_vision', 'both_sides_details', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{\"title\": \"Our Vision\", \"points\": [], \"button_url\": null, \"mini_title\": null, \"description\": \"Our vision is to redefine maritime support across South Asia by becoming the most trusted single-source partner for global fleets. We are building a future where operational excellence, environmental responsibility, and long-term client partnerships go hand in hand — driving sustainable growth and establishing Newport Maritime Service as a symbol of industry leadership for generations to come.\", \"button_label\": null}', '{\"title\": \"Our Mission\", \"points\": [], \"button_url\": null, \"mini_title\": null, \"description\": \"At Newport Maritime Service, our mission is to ensure uninterrupted vessel operations across Bangladeshi ports by delivering government-certified, round-the-clock marine solutions. From marine spares and ship supplies to waste management and technical services, we are committed to providing every client with unwavering reliability, competitive value, and full regulatory compliance — because we understand that at sea, there is no room for compromise.\", \"button_label\": null}', NULL, NULL, NULL, 7, 1, '2026-05-07 13:40:33', '2026-05-07 13:40:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_service_area_settings`
+--
+
+CREATE TABLE `home_service_area_settings` (
+  `id` bigint UNSIGNED NOT NULL,
+  `mini_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `map_image_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `highlight_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `highlight_description` text COLLATE utf8mb4_unicode_ci,
+  `steps` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `home_service_area_settings`
+--
+
+INSERT INTO `home_service_area_settings` (`id`, `mini_title`, `title`, `map_image_path`, `highlight_title`, `highlight_description`, `steps`, `created_at`, `updated_at`) VALUES
+(1, 'Service Areas', 'Locations', 'home-service-area/IPjFAeOZTHy5676vJWI2ml6b1V2OcxfhPQds967G.jpg', 'End to end supply', 'We pride ourselves on our delivery and operate 365 days, 24 hours non-stop in all of the ports and straits of Turkey and the ARA area.', '[\"Getting Order\", \"Preparing order and\\r\\npackaging process\", \"Safe delivery service in\\r\\nthe refrigerated trucks\", \"On-time delivery\"]', '2026-05-09 10:41:24', '2026-05-09 10:41:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_visual_frames_settings`
+--
+
+CREATE TABLE `home_visual_frames_settings` (
+  `id` bigint UNSIGNED NOT NULL,
+  `mini_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `gallery` json DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_batches`
+--
+
+CREATE TABLE `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menus`
+--
+
+CREATE TABLE `menus` (
+  `id` bigint UNSIGNED NOT NULL,
+  `label` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `page_content` longtext COLLATE utf8mb4_unicode_ci,
+  `sort_order` int UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `show_submenus_on_page` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `menus`
+--
+
+INSERT INTO `menus` (`id`, `label`, `url`, `description`, `page_content`, `sort_order`, `is_active`, `show_submenus_on_page`, `created_at`, `updated_at`) VALUES
+(1, 'Home', '/', NULL, NULL, 0, 1, 0, '2026-05-06 08:24:10', '2026-05-06 08:24:10'),
+(4, 'Ship Supply', '/ship-supply', NULL, NULL, 10, 1, 1, '2026-05-06 08:24:10', '2026-05-09 13:21:26'),
+(5, 'Our Services', '/our-services', NULL, NULL, 20, 1, 0, '2026-05-06 08:24:10', '2026-05-06 08:24:10'),
+(6, 'Award', '/award', NULL, NULL, 30, 1, 0, '2026-05-06 08:24:10', '2026-05-06 08:24:10'),
+(7, 'Contact', '/contact', NULL, NULL, 40, 1, 0, '2026-05-06 08:24:10', '2026-05-06 08:24:10'),
+(8, 'GET A QUOTE', '/get-a-quote', NULL, NULL, 50, 1, 0, '2026-05-06 08:24:10', '2026-05-06 08:24:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_page_sections`
+--
+
+CREATE TABLE `menu_page_sections` (
+  `id` bigint UNSIGNED NOT NULL,
+  `sectionable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sectionable_id` bigint UNSIGNED NOT NULL,
+  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `data` json DEFAULT NULL,
+  `sort_order` int UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `menu_page_sections`
+--
+
+INSERT INTO `menu_page_sections` (`id`, `sectionable_type`, `sectionable_id`, `type`, `title`, `data`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'App\\Models\\SubMenu', 2, 'two_column_image_details', 'Expanding Our Maritime Presence Across National and International Ports', '{\"points\": [null], \"image_path\": \"page-sections/images/pSTu556fVbQPPYM3bmE5jdoStFldmWGlAeZm6bTE.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"With a strong operational network and dependable marine support services, we proudly serve vessels, shipping companies, and offshore operations across major ports worldwide. Our commitment to quality, timely delivery, and professional service enables us to support global maritime activities with efficiency and reliability.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-09 09:35:23', '2026-05-18 11:55:20'),
+(2, 'App\\Models\\SubMenu', 2, 'two_column_image_details', 'Our Global Service Network', '{\"points\": [null], \"image_path\": \"page-sections/images/PnDIGNHqSyFf4rvs2Bj44behYnbB7AeCW1LCYrJm.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": \"Through a well-connected maritime support network, we provide reliable ship supply, technical assistance, and logistics services across multiple regional and international ports. Our experienced team works closely with vessel operators and shipping companies to ensure smooth operations, fast response times, and dependable support wherever it is needed.\", \"layout_width\": \"short\"}', 2, 1, '2026-05-09 09:36:57', '2026-05-18 11:57:34'),
+(9, 'App\\Models\\Menu', 4, 'two_column_image_details', 'ffddafa', '{\"points\": [null], \"image_path\": \"page-sections/images/3Ki6y9tctm2AdxwcXHnnWSl5BgJwTgTkyAHC0DH4.jpg\", \"image_side\": \"left\", \"mini_title\": \"ABOUT US\", \"description\": \"afdfaf\", \"layout_width\": \"short\"}', 1, 1, '2026-05-17 07:46:33', '2026-05-17 07:46:33'),
+(10, 'App\\Models\\Menu', 4, 'two_column_image_details', 'dafdaf', '{\"points\": [null], \"image_path\": \"page-sections/images/cnqEtSBJ2NNZukCY03ofGaDyJyyYX9OOUXwqUxvT.png\", \"image_side\": \"right\", \"mini_title\": \"SHIP SUPPLIES\", \"description\": \"adfaf\", \"layout_width\": \"short\"}', 2, 1, '2026-05-17 07:46:56', '2026-05-17 07:46:56'),
+(11, 'App\\Models\\Menu', 4, 'two_column_image_details', 'Vestibulum condimentum convallis nisi id', '{\"points\": [null], \"image_path\": \"page-sections/images/jX95EQhMCDPDMddwExIuMZ70gaPZKq9BKZIj0fLV.webp\", \"image_side\": \"left\", \"mini_title\": \"SHIP SUPPLIES\", \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium, eros eu fermentum congue, lectus nisl varius mi, quis pharetra enim sem eu nunc. Maecenas sed condimentum leo. Curabitur sit amet sapien dictum, consequat mi ac, eleifend dolor. Fusce id massa ac lorem condimentum vestibulum. Pellentesque ex neque, auctor at eleifend ut, commodo quis odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur urna eros, cursus non diam quis, dictum eleifend sem. Integer a dictum nunc. Donec malesuada ligula ac diam tincidunt hendrerit. Proin ligula augue, vulputate vitae augue sit amet, dictum vehicula ipsum. Ut lorem felis, volutpat at aliquet at, vestibulum eget dolor. Donec mollis sit amet ex eget finibus. Sed vitae sapien eu magna semper ornare. Vivamus condimentum ipsum tortor, eu dapibus felis fringilla efficitur.\\r\\n\\r\\nAenean varius eleifend fermentum. Fusce tincidunt euismod est, quis pharetra lacus cursus sed. Sed vel risus augue. Nullam vitae placerat erat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis eu elementum libero. Sed ultricies mollis tincidunt. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.\\r\\n\\r\\nUt sed gravida leo, vitae blandit elit. Fusce consequat neque et erat luctus luctus. Pellentesque nec ultrices augue. Vestibulum pulvinar tempor facilisis. Vivamus sed ante ante. Mauris ac lacus cursus, consectetur ante sed, ultricies ante. Suspendisse pellentesque risus tempor, elementum risus a, iaculis felis. Aliquam pulvinar et magna non fermentum. Nulla ipsum magna, auctor malesuada egestas id, sagittis vel sapien. Vestibulum condimentum convallis nisi id consectetur. Pellentesque quis nunc augue. Nunc convallis eleifend ligula, sit amet aliquam nunc vehicula at.\", \"layout_width\": \"full\"}', 3, 1, '2026-05-17 08:02:37', '2026-05-17 08:02:37'),
+(12, 'App\\Models\\Menu', 6, 'image', 'Awards and Accreditations', '{\"image_path\": \"page-sections/images/wICRSFbzCsq2yK3NZNE5hAMjnjKZbwIfZfuidrWk.png\", \"mini_title\": \"Check out our\", \"description\": \"With a focus on excellence, we offer a broad selection of top-notch marine services\", \"extra_gallery\": [{\"path\": \"page-sections/images/ezuQ5FqV7ik1EgDkLNkqzWZyyUgd16kqBRq4eK6G.png\", \"title\": null}], \"image_caption\": null}', 6, 1, '2026-05-17 16:36:25', '2026-05-17 16:52:54'),
+(15, 'App\\Models\\AboutPage', 1, 'two_column_two_side_details', NULL, '{\"left_title\": \"Our Mission\", \"sort_order\": \"2\", \"right_title\": \"Our Vision\", \"left_description\": \"At Merchant Marine, our mission is to ensure vessels are fully stocked and prepared for their journeys by providing top-quality ship chandlery services. We offer a comprehensive range of supplies, from maintenance and safety equipment to fresh provisions, with a focus on reliability and efficiency.\", \"right_description\": \"Our vision is to be Bangladesh\'s leading ship chandlery service provider, recognized for exceptional service and commitment to quality. We aim to set industry standards for innovation and customer satisfaction, supporting the global maritime community with solutions that meet the evolving needs of the shipping industry.\"}', 2, 1, '2026-05-17 17:37:47', '2026-05-17 19:08:58'),
+(16, 'App\\Models\\AboutPage', 1, 'two_column_image_details', 'Our Services', '{\"points\": [\"Technical Services for engine and deck maintenance, repairs, and spare parts supply\", \"Engine & Deck Stores including tools, equipment, and consumables from trusted manufacturers\", \"Provision of fresh and frozen food, vegetables, and essential crew supplies\", \"Safety Equipment such as life-saving appliances, fire-fighting systems, and PPE with certification support\", \"Ship Waste Disposal services compliant with international environmental regulations\", \"Marine & Offshore Repairs for routine maintenance and emergency support\", \"Miscellaneous Stores including cleaning, office, and personal care items\", \"Pest Control services to maintain a safe and hygienic onboard environment\", \"Medical Assistance with first aid kits, medicines, and emergency support\", \"Customs Clearance handling documentation and regulatory procedures\", \"Surveys & Inspections including cargo, condition, and safety assessments\", \"Cash to Master services ensuring secure cash delivery to vessels\", \"Deliveries to Vessel with timely and reliable onboard supply services\"], \"image_path\": \"page-sections/images/11Y9aY79S89PcPIAsEG3ymQZwKSlP2EQc1DBT3y1.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": \"At Merchant Marine, we provide a complete range of ship chandling and maritime support services to ensure smooth and efficient vessel operations.\", \"layout_width\": \"short\"}', 4, 1, '2026-05-17 18:18:42', '2026-05-17 18:27:42'),
+(17, 'App\\Models\\AboutPage', 1, 'two_column_image_details', 'Why Merchant Marine', '{\"points\": [\"Comprehensive one-stop solution for all maritime supply and service needs\", \"Certified Quality Management Systems (ISO 9001:2015 & ISO 22000:2018) ensuring global standards\", \"Highly experienced technical and operational team with deep industry expertise\", \"Strong global supplier and local vendor network for competitive and reliable sourcing\", \"Customer-centric approach focused on timely delivery and operational efficiency\", \"Commitment to innovation and sustainability through eco-friendly maritime solutions\"], \"image_path\": \"page-sections/images/zAV9lF14Yo43iaolBheLk1LOcaHg2mjwuhzFd3Fx.webp\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"Merchant Marine stands out as a trusted partner in the maritime industry through its commitment to quality, reliability, and innovation.\", \"layout_width\": \"short\"}', 2, 1, '2026-05-17 18:52:31', '2026-05-17 19:08:31'),
+(18, 'App\\Models\\AboutPage', 1, 'text_input', 'Our Journey', '{\"points\": null, \"image_path\": null, \"mini_title\": null, \"description\": \"Merchant Marine was founded with a clear mission—to support the maritime industry in Bangladesh by providing reliable and high-quality ship chandling services.\\r\\n\\r\\nStarting with essential provisions and basic marine supplies, the company gradually expanded its services in response to the growing needs of the shipping industry. Over time, we developed a strong portfolio that now includes technical services, engine and deck stores, safety equipment, and complete marine support solutions.\\r\\n\\r\\nThrough continuous innovation, we introduced advanced inventory management systems to improve efficiency and delivery accuracy. We also embraced environmental responsibility by offering sustainable ship waste disposal services in compliance with international regulations.\\r\\n\\r\\nToday, Merchant Marine stands as a trusted and evolving maritime service provider, dedicated to quality, reliability, and long-term partnerships with clients worldwide.\", \"bottom_description\": null}', 6, 1, '2026-05-17 18:55:44', '2026-05-17 18:55:44'),
+(19, 'App\\Models\\AboutPage', 1, 'text_input', 'ABOUT US', '{\"points\": [\"Full-Service Marine Supply: Deck stores, engine, cabin, and bonded supplies\", \"Provisions: Fresh and frozen food and vegetables.\", \"Safety Equipment: Life-saving appliances, fire-fighting gear, personal protective items, inspection & certification (NKK, DNV-GL, RINA, BV, ABS, CCS, KR, etc.)\", \"Marine Publications and Charts: British Admiralty charts and other essential publications.\"], \"image_path\": null, \"mini_title\": null, \"description\": \"At Merchant Marine, we ensure your ship never lacks essential goods or supplies. Our chandlery services save your crew the hassle of searching for necessary items while at sea, which can be particularly challenging without international currency.\\r\\n\\r\\nMerchant Marine fulfills your ship\'s orders with meticulous attention to detail and rapid delivery. When you choose our ship chandling services, you can rest assured that your vessel will be well-provisioned upon reaching our ports. We offer a wide range of services, including maintenance supplies, cleaning compounds, and food stores for the crew.\\r\\n\\r\\nWe have revolutionized the ship supply industry in Bangladesh, serving ports in Chittagong, Mongla, Payra, and Matarbari. Our commitment is to meet the growing demands of our customers with outstanding service and a quality guarantee.\\r\\n\\r\\nAs a leading ship chandler, we are equipped with excellent infrastructure, allowing us to assist you with:\", \"bottom_description\": \"Merchant Marine is the choice you should consider for quality products, a wide variety of supplies, and a team that understands your needs. We are ready to work with you to ensure your ship is always supplied on time and within budget.\"}', 1, 1, '2026-05-17 18:57:34', '2026-05-17 19:06:54'),
+(21, 'App\\Models\\SubMenu', 15, 'two_column_image_details', 'Fresh & Quality Marine Provisions', '{\"points\": [null], \"image_path\": \"page-sections/images/kNZhbogYv7yrqnZzfz9C4EtJD8r32L8ORZJCavN3.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide complete marine provision solutions with fresh, hygienic, and carefully sourced products for vessels of all types. Our experienced supply team ensures timely delivery, consistent quality, and competitive pricing to support smooth onboard operations.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 06:18:28', '2026-05-18 06:18:28'),
+(22, 'App\\Models\\SubMenu', 15, 'two_column_image_details', 'Our Provision Supply Includes', '{\"points\": [\"Fresh fruits & vegetables\", \"Poultry, meat & seafood\", \"Dairy products & eggs\", \"Frozen food items\", \"Rice, cereals & grains\", \"Snacks & packaged foods\", \"Beverages & soft drinks\"], \"image_path\": \"page-sections/images/GYo63g4RBxLP42qFwzA3nxxbE3SY3ArKTTqb2f6k.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 06:25:57', '2026-05-18 06:28:14'),
+(23, 'App\\Models\\SubMenu', 15, 'two_column_image_details', 'Premium Bond Store Products', '{\"points\": [\"Wine & spirits\", \"Beer & beverages\", \"Cigarettes & tobacco products\", \"Chocolates & confectionery\", \"Toiletries & grooming items\", \"Personal care products\"], \"image_path\": \"page-sections/images/S5gOwyOIsxA3ENBuqgZ9ZdUbg5QgZjwKJKitRDYM.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 3, 1, '2026-05-18 06:27:16', '2026-05-18 06:29:19'),
+(24, 'App\\Models\\SubMenu', 13, 'two_column_image_details', 'General Store Supplies for Marine Vessels', '{\"points\": [null], \"image_path\": \"page-sections/images/RmctbdCZXpMwdkmqoXNnsZK4PlHJyyuCZZ0dkFDy.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide comprehensive general store supply services for all types of vessels, ensuring that every essential onboard requirement is met efficiently. Based on IMPA & ISSA catalogue standards, our supply solutions cover everything from cabin to deck and engine stores.\\r\\n\\r\\nWith a strong global sourcing network and experienced marine supply team, we are currently serving hundreds of vessels across multiple clients, ensuring timely delivery, consistent quality, and competitive pricing wherever the ship is located.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 06:36:50', '2026-05-18 06:36:50'),
+(25, 'App\\Models\\SubMenu', 13, 'two_column_image_details', 'Our General Store Supply Includes', '{\"points\": [\"Galley & accommodation cleaning materials\", \"Crew welfare & safety products\", \"Onboard drinking water solutions\", \"Reusable stainless steel bottles\", \"Galley and cabin stores\", \"Slop chest stores\", \"Clothing & linen products\", \"Tableware & kitchenware\"], \"image_path\": \"page-sections/images/QZpkLYH981Zv1RWMfu1BrsBUTtnOZnRvGSbyAQm7.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 06:39:25', '2026-05-18 06:39:25'),
+(26, 'App\\Models\\SubMenu', 16, 'two_column_image_details', 'Marine Spare Parts Supply', '{\"points\": [null], \"image_path\": \"page-sections/images/ApDqwoEQN0PJYsPfwCSMzC1lu8IC6OfwWFec78Fi.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We are a trusted supplier of marine spare parts, providing reliable solutions for a wide range of vessels and maritime industries. With a strong inventory and efficient sourcing network, we ensure quick availability and timely delivery of essential machinery and equipment parts.\\r\\n\\r\\nOur focus is to minimize vessel downtime by supplying high-quality spare parts from leading Japanese, European, and international brands with dependable service and competitive pricing.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 06:44:44', '2026-05-18 06:47:27'),
+(27, 'App\\Models\\SubMenu', 16, 'two_column_image_details', NULL, '{\"points\": [\"Main engine spare parts\", \"Auxiliary engine components\", \"Air compressors\", \"Refrigeration & air conditioning systems\", \"Deck machinery parts\", \"Turbochargers\", \"Pumps & boiler parts\", \"Oil purifiers\", \"Heat exchangers\", \"Oily water separators\", \"Automation & control systems\", \"Chain cable & deck equipment\"], \"image_path\": \"page-sections/images/l4pLaa5kQtWBSVrGPc4vv7fRPW48qEM0eW1LKVub.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 06:47:11', '2026-05-18 06:47:11'),
+(28, 'App\\Models\\SubMenu', 17, 'two_column_image_details', 'Electronics & Navigation Equipment Supply', '{\"points\": [null], \"image_path\": \"page-sections/images/jj1dJIiTFK6XMlkjzOAZQaMPEoGamFaCYNMlv3gY.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide reliable marine electronics and navigation equipment to ensure safe and efficient vessel operations. Our solutions support accurate navigation, communication, and onboard monitoring systems for all types of ships. With a strong sourcing network and trusted international brands, we deliver high-quality equipment with timely support and competitive pricing.\\r\\n\\r\\nOur goal is to enhance vessel safety and operational efficiency through advanced marine technology and dependable service.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 06:52:48', '2026-05-18 06:52:48'),
+(29, 'App\\Models\\SubMenu', 17, 'two_column_image_details', 'Our Electronics & Navigation Equipment Includes', '{\"points\": [\"Radar systems\", \"GPS & navigation systems\", \"Echo sounders\", \"Gyro compass\", \"Automatic Identification System (AIS)\", \"VHF/UHF communication systems\", \"Marine radios & intercom systems\", \"Engine monitoring systems\", \"Alarm & control panels\", \"Bridge navigation equipment\"], \"image_path\": \"page-sections/images/LsA5fjyHcGgDEGo3pTP9ctnaeWbMtoKUOh2TpkEZ.png\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 06:57:43', '2026-05-18 06:57:43'),
+(30, 'App\\Models\\SubMenu', 18, 'two_column_image_details', 'Gases, Chemicals & Marine Paint Solutions', '{\"points\": [null], \"image_path\": \"page-sections/images/SrEBOx4Td0AL3ugZo4RHKyjUDdRIDWUiGN7ZCe63.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide a complete range of marine gases, chemicals, and paint solutions designed to support safe and efficient vessel operations. Our products are widely used for cleaning, maintenance, protection, and operational performance across all types of ships, including cargo vessels, tankers, and offshore units.\\r\\n\\r\\nWith a strong supply network and reliable logistics support, we ensure timely delivery of high-quality marine-grade products that meet international safety and performance standards.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 07:03:43', '2026-05-18 07:03:43'),
+(31, 'App\\Models\\SubMenu', 18, 'two_column_image_details', 'Our Products Include', '{\"points\": [\"Marine cleaning chemicals\", \"Degreasers & rust removers\", \"Fuel additives\", \"Water treatment chemicals\", \"Tank cleaning solutions\", \"Marine paints & coatings\", \"Surface protection materials\", \"Industrial marine gases\", \"Engine room maintenance chemicals\", \"Safety-approved chemical solutions\"], \"image_path\": \"page-sections/images/j5tULTCfoDdXq1feEjkKK06B2kTsboIVs147Dmgz.png\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 07:05:33', '2026-05-18 07:05:33'),
+(32, 'App\\Models\\SubMenu', 19, 'two_column_image_details', 'Marine Paints & Protective Coatings', '{\"points\": [null], \"image_path\": \"page-sections/images/VEBtIVqFoWQLk3hh5o3g50hlU5YDAa1Fndm3M3eC.png\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We supply high-quality marine paints and protective coating solutions designed to ensure long-lasting protection of vessels against corrosion, harsh sea conditions, and environmental damage. Our products are suitable for all types of ships including cargo vessels, tankers, offshore units, and fishing fleets.\\r\\n\\r\\nWith reliable sourcing from trusted international brands, we ensure durable performance, strong adhesion, and compliance with marine industry standards.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 07:10:42', '2026-05-18 07:10:42'),
+(33, 'App\\Models\\SubMenu', 19, 'two_column_image_details', 'Marine Paint Products', '{\"points\": [\"Anti-corrosive coatings\", \"Anti-fouling paints\", \"Primer coatings\", \"Epoxy coatings\", \"Zinc-rich primers\", \"Hull protection paints\", \"Deck coatings\", \"Heat-resistant coatings\", \"Marine touch-up paints\", \"Surface preparation materials\"], \"image_path\": \"page-sections/images/pO3WxSlkZVQCOpgYzgD5F1mSvVxtsZkhj0P0M5QO.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 07:13:14', '2026-05-18 07:13:14'),
+(34, 'App\\Models\\SubMenu', 20, 'two_column_image_details', NULL, '{\"points\": [null], \"image_path\": \"page-sections/images/Ng3gbY266ls6PnEz4dXhIz7UTCL85Et9eQaw6Ug3.jpg\", \"image_side\": \"right\", \"mini_title\": \"Lubricant Oil Supply\", \"description\": \"We supply high-quality marine lubricant oils designed to ensure smooth engine performance, reduce friction, and extend machinery life. Our products are suitable for all types of marine engines and equipment, helping vessels maintain efficiency and operational reliability during long voyages.\\r\\n\\r\\nWith a strong sourcing network and trusted international brands, we ensure consistent quality, timely delivery, and cost-effective solutions for all marine lubrication needs.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 07:18:53', '2026-05-18 07:18:53'),
+(35, 'App\\Models\\SubMenu', 20, 'two_column_image_details', 'Lubricant Oil Types', '{\"points\": [\"Marine engine cylinder oil\", \"System oil & crankcase oil\", \"Hydraulic oil\", \"Gear oil\", \"Compressor oil\", \"Turbine oil\", \"Refrigeration oil\", \"Marine grease\", \"Rust preventive oil\", \"Special purpose industrial lubricants\"], \"image_path\": \"page-sections/images/th0DRsAXYDMISMuZZCY5euniPwRTRYo4atl4iynM.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 07:20:34', '2026-05-18 07:20:34'),
+(36, 'App\\Models\\SubMenu', 21, 'two_column_image_details', 'Heavy Equipment Supply', '{\"points\": [null], \"image_path\": \"page-sections/images/JvCk1h5Cj2VUsRT3yOdQ39N3m4909F6XHnBra0VG.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide a wide range of heavy equipment supply solutions for marine, shipyard, and industrial operations. Our equipment supports loading, lifting, construction, maintenance, and operational activities onboard and at ports.\\r\\n\\r\\nWith reliable sourcing from trusted global manufacturers, we ensure durable performance, operational safety, and timely delivery to meet urgent and long-term project requirements.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 07:29:19', '2026-05-18 07:29:19'),
+(37, 'App\\Models\\SubMenu', 21, 'two_column_image_details', 'Our Heavy Equipment Includes', '{\"points\": [\"Cranes & lifting equipment\", \"Winches & hoisting systems\", \"Hydraulic machinery\", \"Air compressors\", \"Generators & power units\", \"Pumps & pumping systems\", \"Forklifts & handling equipment\", \"Welding machines & tools\", \"Marine workshop machinery\", \"Deck machinery systems\"], \"image_path\": \"page-sections/images/RmctbdCZXpMwdkmqoXNnsZK4PlHJyyuCZZ0dkFDy.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 07:41:30', '2026-05-18 07:41:30'),
+(38, 'App\\Models\\SubMenu', 22, 'text_input', 'Medical Stores Supply', '{\"points\": null, \"image_path\": null, \"mini_title\": null, \"description\": \"We provide a complete range of marine medical store supplies to ensure the health, safety, and well-being of crew members onboard. Our products are carefully sourced to meet international maritime medical standards, ensuring reliability and compliance for all types of vessels.\", \"bottom_description\": \"With a strong supply network and timely delivery service, we support ships with essential medical items required for emergency care, routine treatment, and onboard health management.\"}', 1, 1, '2026-05-18 08:12:20', '2026-05-18 08:12:20'),
+(39, 'App\\Models\\SubMenu', 22, 'two_column_image_details', 'Medical Stores Range', '{\"points\": [\"First aid kits & medical boxes\", \"Essential medicines & tablets\", \"Pain relief & fever medicines\", \"Antibiotics & antiseptics\", \"Bandages & wound care items\", \"Medical gloves & PPE items\", \"Surgical tools & instruments\", \"Thermometers & basic diagnostic tools\", \"Sea sickness & motion sickness medicines\", \"Emergency medical supplies\"], \"image_path\": \"page-sections/images/kNZhbogYv7yrqnZzfz9C4EtJD8r32L8ORZJCavN3.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:12:20', '2026-05-18 08:12:20'),
+(40, 'App\\Models\\SubMenu', 5, 'two_column_image_details', 'Repair & Maintenance Services', '{\"points\": [null], \"image_path\": \"page-sections/images/rIvzHYuXrGr07qiibIrcLRXutByQqKtHGDJJcNVr.webp\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide comprehensive repair and maintenance solutions for marine vessels to ensure safe, efficient, and uninterrupted operations. Our skilled technical team supports routine servicing, emergency repairs, and preventive maintenance for a wide range of onboard systems and machinery.\\r\\n\\r\\nWith a strong focus on quality workmanship and timely response, we help reduce downtime and extend the operational life of vessel equipment.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:17:20', '2026-05-18 08:17:20'),
+(41, 'App\\Models\\SubMenu', 5, 'two_column_image_details', 'Repair & Maintenance Range', '{\"points\": [\"Main engine repair & servicing\", \"Auxiliary engine maintenance\", \"Deck machinery repair\", \"Pump system servicing\", \"Electrical & automation systems\", \"Refrigeration & HVAC maintenance\", \"Hydraulic system repair\", \"Boiler maintenance\", \"Safety equipment inspection\", \"General onboard technical support\"], \"image_path\": \"page-sections/images/zhKEMbbiAvUiDMzqehPcudMWHNYS3Bsf4SlugfQd.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:19:21', '2026-05-18 08:19:21'),
+(42, 'App\\Models\\SubMenu', 6, 'two_column_image_details', 'Marine Safety Annual Inspection & Survey', '{\"points\": [null], \"image_path\": \"page-sections/images/LTQfcMWPm6O5UXFiRaRcTmXgDKbRONQhM1ORzgvh.webp\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide professional marine safety inspection and survey services to ensure vessels remain fully compliant with international maritime safety regulations. Our experienced survey team conducts thorough annual inspections to identify risks, verify safety standards, and maintain operational readiness.\\r\\n\\r\\nWe support all types of vessels with reliable inspection solutions that enhance safety, reduce risks, and ensure smooth certification processes.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:20:36', '2026-05-18 08:20:36'),
+(43, 'App\\Models\\SubMenu', 6, 'two_column_image_details', 'Inspection & Survey Coverage', '{\"points\": [\"Annual safety inspection\", \"Hull condition survey\", \"Engine room inspection\", \"Fire safety system check\", \"Life-saving appliances inspection\", \"Navigation equipment survey\", \"Cargo safety inspection\", \"Electrical system safety check\", \"Emergency equipment verification\", \"Compliance & certification support\"], \"image_path\": \"page-sections/images/fO6jWf5KQzxRhcYFcEJRV8yIdM7v1a0os9kdHC5U.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:23:34', '2026-05-18 08:23:34'),
+(44, 'App\\Models\\SubMenu', 7, 'two_column_image_details', 'Agency Services', '{\"points\": [null], \"image_path\": \"page-sections/images/MmT9LU0IWiLfGCF18v8cpg53KDsaMcHeO58NLg3V.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide professional marine agency services to support vessels during port calls with smooth coordination and efficient handling of all operational requirements. Our experienced team ensures fast turnaround, reliable communication, and complete assistance for shipowners, operators, and crew.\\r\\n\\r\\nWe act as a trusted local partner, managing all port-related formalities and services to ensure seamless vessel operations.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:26:58', '2026-05-18 08:26:58'),
+(45, 'App\\Models\\SubMenu', 7, 'two_column_image_details', 'Our Agency Services Include', '{\"points\": [\"Port clearance & documentation\", \"Crew change assistance\", \"Immigration & customs support\", \"Bunker coordination\", \"Fresh water & provisions arrangement\", \"Spare parts delivery coordination\", \"Repair & maintenance support handling\", \"Cargo operation assistance\", \"Husbandry services\", \"24/7 vessel support services\"], \"image_path\": \"page-sections/images/xAlaGnocx0H0d74ZlylrpBP6seA0E2Ygm4kjj61f.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:30:47', '2026-05-18 08:30:47'),
+(46, 'App\\Models\\SubMenu', 8, 'two_column_image_details', 'Custom Clearance Services', '{\"points\": [null], \"image_path\": \"page-sections/images/EKFbbKQf1CXJ8mBtmCt5zw8ihWZ6z37y5FWSDunD.png\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide reliable and efficient customs clearance services for marine vessels and shipping operations. Our experienced team ensures smooth handling of import and export documentation, regulatory compliance, and port formalities to minimize delays and operational disruptions.\\r\\n\\r\\nWith strong coordination with customs authorities and port officials, we ensure fast clearance and hassle-free vessel operations.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:33:58', '2026-05-18 08:33:58'),
+(47, 'App\\Models\\SubMenu', 8, 'two_column_image_details', 'Our Clearance Services Include', '{\"points\": [null, \"Import & export documentation\", \"Customs duty processing\", \"Cargo clearance handling\", \"Port authority coordination\", \"Shipping documentation support\", \"Regulatory compliance assistance\", \"Inspection coordination\", \"Tax & duty advisory support\", \"Vessel clearance formalities\", \"Emergency clearance support\"], \"image_path\": \"page-sections/images/GXjzQjxNsGfWS63oaOS8RTsDZEPRGu2DHxqu3Cga.jpg\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:36:21', '2026-05-18 08:36:21'),
+(48, 'App\\Models\\SubMenu', 9, 'two_column_image_details', 'Rental Services for Marine & Port Operations', '{\"points\": [\"marine equipment rental shipyard\", \"port crane rental operations\", \"forklift rental port container yard\", \"generator rental ship power supply\", \"welding machine rental ship repair\", \"shipyard tools rental service\"], \"image_path\": \"page-sections/images/CyiMkGGdw2Y403ltHaUms8QOTRtKMXXdOD83H68A.jpg\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide reliable rental services for marine, shipyard, and port operations to support vessel maintenance, cargo handling, and onboard requirements. Our rental solutions are designed to offer flexible, cost-effective, and timely equipment access for short-term and long-term needs.\\r\\n\\r\\nWith a strong support network, we ensure well-maintained equipment and quick availability to keep operations running smoothly without delays.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:39:13', '2026-05-18 08:39:13'),
+(50, 'App\\Models\\SubMenu', 9, 'two_column_image_details', 'Flexible & Fast Equipment Support', '{\"points\": [null], \"image_path\": \"page-sections/images/9zba1lxvYYfNczctcpuDhvhCZitKmXtqEm9sebXG.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": \"We ensure quick delivery and flexible rental solutions to meet urgent operational needs at ports and shipyards. Our team provides reliable equipment support with proper maintenance and technical assistance for safe and efficient operations.\", \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:41:47', '2026-05-18 08:41:47'),
+(51, 'App\\Models\\SubMenu', 10, 'two_column_image_details', 'Hull & Tank Cleaning Services', '{\"points\": [null], \"image_path\": \"page-sections/images/SxRFI2O2R7KzR9EGtE12MPyvb5VnDpfA8C3E9erc.gif\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide professional hull and tank cleaning services to ensure vessel efficiency, safety, and compliance with marine environmental standards. Our experienced team uses advanced techniques and equipment to remove marine growth, sludge, and residues, improving overall vessel performance and fuel efficiency.\\r\\n\\r\\nOur services are suitable for all types of vessels including cargo ships, tankers, and offshore units, ensuring safe and effective cleaning operations at ports and anchorage areas.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:44:29', '2026-05-18 08:44:29'),
+(52, 'App\\Models\\SubMenu', 10, 'two_column_image_details', 'Our Cleaning Services Include', '{\"points\": [\"Underwater hull cleaning\", \"Tank cleaning & degassing\", \"Sludge removal\", \"Cargo tank washing\", \"High-pressure water jet cleaning\", \"Marine growth removal\", \"Fuel tank cleaning\", \"Chemical cleaning solutions\", \"Bilge & ballast tank cleaning\", \"Inspection after cleaning\"], \"image_path\": \"page-sections/images/jXXkKtoKPHDaYfoWiH0MBiqm03llP9QVDjwIiMxp.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:51:01', '2026-05-18 08:51:01'),
+(53, 'App\\Models\\SubMenu', 11, 'two_column_image_details', 'Garbage & Waste Oil Disposal Services', '{\"points\": [null], \"image_path\": \"page-sections/images/HHClXkbZeFq55AMhc6IfHGNEhJT6BOISU6yNCOoI.webp\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide safe and environmentally responsible garbage and waste oil disposal services for all types of vessels. Our solutions ensure full compliance with MARPOL regulations and international maritime environmental standards.\\r\\n\\r\\nWe handle ship-generated waste with proper collection, segregation, and disposal methods to protect marine ecosystems and maintain port authority compliance.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:54:58', '2026-05-18 08:54:58'),
+(54, 'App\\Models\\SubMenu', 11, 'two_column_image_details', 'Our Waste Management Services Include', '{\"points\": [\"Garbage collection & segregation\", \"Waste oil removal\", \"Oily sludge disposal\", \"Bilge water disposal\", \"Sewage handling support\", \"Hazardous waste management\", \"Incineration coordination\", \"Recycling support services\", \"MARPOL compliance handling\", \"Port disposal documentation\"], \"image_path\": \"page-sections/images/DUnty3VdLeZeUS7UmksTdCxkHIcHyYOEfyrQRO55.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 08:56:49', '2026-05-18 08:56:49'),
+(55, 'App\\Models\\SubMenu', 12, 'two_column_image_details', 'Chipping & Painting Services', '{\"points\": [null], \"image_path\": \"page-sections/images/al21vKERgmio1ENDaZ5DVnN2dNk2LKT0E255uLsI.webp\", \"image_side\": \"right\", \"mini_title\": null, \"description\": \"We provide professional chipping and painting services for marine vessels to ensure long-lasting protection against corrosion and harsh marine environments. Our skilled team handles surface preparation, rust removal, and high-quality coating applications to maintain vessel strength, appearance, and safety standards.\\r\\n\\r\\nOur services are suitable for all types of ships including cargo vessels, tankers, and offshore units, ensuring reliable maintenance and extended vessel life.\", \"layout_width\": \"short\"}', 1, 1, '2026-05-18 08:58:30', '2026-05-18 08:58:30'),
+(56, 'App\\Models\\SubMenu', 12, 'two_column_image_details', 'Our Services Include', '{\"points\": [\"Rust removal & chipping work\", \"Surface cleaning & preparation\", \"Hull painting & coating\", \"Deck painting services\", \"Anti-corrosion coating application\", \"Touch-up painting repairs\", \"Epoxy coating application\", \"Primer coating work\", \"Maintenance painting service\", \"Safety coating application\"], \"image_path\": \"page-sections/images/ALHN6ijahx9pLEtFODn6dX2t3z3JiMq32kkDFLlx.webp\", \"image_side\": \"left\", \"mini_title\": null, \"description\": null, \"layout_width\": \"short\"}', 2, 1, '2026-05-18 09:04:21', '2026-05-18 09:04:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2026_02_17_104732_create_contact_messages_table', 1),
+(5, '2026_02_17_104958_create_personal_access_tokens_table', 1),
+(6, '2026_04_22_120000_add_role_to_users_table', 1),
+(7, '2026_04_22_120100_create_audit_logs_table', 1),
+(8, '2026_04_23_100000_add_full_name_and_phone_to_contact_messages_table', 1),
+(9, '2026_05_06_120000_create_menus_table', 2),
+(10, '2026_05_06_130000_create_sub_menus_table_and_migrate_data', 3),
+(11, '2026_05_06_154900_drop_open_in_new_tab_from_menus_and_sub_menus', 4),
+(12, '2026_05_06_160000_create_hero_slides_table', 5),
+(13, '2026_05_07_122900_create_site_details_table', 6),
+(14, '2026_05_07_124000_add_map_and_default_image_to_site_details_table', 7),
+(15, '2026_05_07_161500_create_home_sections_table', 8),
+(16, '2026_05_07_161600_add_description_and_cover_image_to_sub_menus_table', 8),
+(17, '2026_05_07_163300_add_description_to_menus_table', 9),
+(18, '2026_05_07_175000_add_published_at_to_sub_menus_table', 10),
+(19, '2026_05_07_181200_add_two_column_fields_to_home_sections_table', 11),
+(20, '2026_05_07_182900_add_image_fields_to_home_sections_table', 12),
+(21, '2026_05_07_183600_add_button_fields_to_home_sections_table', 13),
+(22, '2026_05_07_184500_add_description_to_home_sections_table', 14),
+(23, '2026_05_07_185200_add_points_to_home_sections_table', 15),
+(24, '2026_05_07_193000_add_side_contents_to_home_sections_table', 16),
+(25, '2026_05_08_000000_add_page_content_to_menus_and_sub_menus', 17),
+(26, '2026_05_09_000000_create_menu_page_sections_table', 18),
+(27, '2026_05_09_000001_add_header_and_footer_logo_to_site_details_table', 19),
+(28, '2026_05_09_000002_add_footer_background_image_enabled_to_site_details_table', 20),
+(29, '2026_05_09_000003_drop_footer_background_image_enabled_from_site_details_table', 21),
+(30, '2026_05_09_200000_create_home_service_area_settings_table', 22),
+(31, '2026_05_09_210000_create_quote_requests_table', 23),
+(32, '2026_05_09_120000_add_theme_colors_to_site_details_table', 24),
+(33, '2026_05_09_120000_add_show_submenus_on_page_to_menus_table', 25),
+(34, '2026_05_09_180000_create_about_pages_table', 26),
+(35, '2026_05_10_120000_replace_trust_text_columns_on_about_pages_table', 27),
+(36, '2026_05_10_130000_drop_meta_description_from_about_pages_table', 28),
+(37, '2026_05_10_140000_add_breadcrumb_home_label_and_seed_about_pages', 29),
+(38, '2026_05_10_160000_drop_breadcrumb_home_label_from_about_pages_table', 30),
+(39, '2026_05_14_000000_create_home_visual_frames_settings_table', 31),
+(40, '2026_05_16_000000_add_section_strip_colors_to_site_details_table', 32),
+(41, '2026_05_16_100000_add_site_name_and_meta_description_to_site_details_table', 33),
+(42, '2026_05_18_100000_add_data_to_home_sections_table', 34),
+(43, '2026_05_18_120000_add_favicon_path_to_site_details_table', 35);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint UNSIGNED NOT NULL,
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_requests`
+--
+
+CREATE TABLE `quote_requests` (
+  `id` bigint UNSIGNED NOT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vessel_or_reference` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `request_details` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `timeline` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unread',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `quote_requests`
+--
+
+INSERT INTO `quote_requests` (`id`, `full_name`, `email`, `phone`, `company`, `vessel_or_reference`, `request_details`, `timeline`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Kieran Mcguire', 'pyhovibawu@mailinator.com', '+1 (422) 293-9035', 'Black and Albert Associates', 'Incididunt sunt sint', 'Commodi quia exercit', 'Reprehenderit bland', 'unread', '2026-05-18 12:20:07', '2026-05-18 12:20:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('qfsT7wmMQEJLAmCbbYlBQ8GsElI1D50eQSdKgjIf', NULL, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMzR0MTlMZ2c0ZU9Ea1N5Q0VLaDloZEIzY0hoWUN2UGVvTFZMaHd6USI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9sb2dpbiI7czo1OiJyb3V0ZSI7czoxMToiYWRtaW4ubG9naW4iO319', 1779107370);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `site_details`
+--
+
+CREATE TABLE `site_details` (
+  `id` bigint UNSIGNED NOT NULL,
+  `site_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `favicon_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` text COLLATE utf8mb4_unicode_ci,
+  `location` text COLLATE utf8mb4_unicode_ci,
+  `map` text COLLATE utf8mb4_unicode_ci,
+  `emails` json DEFAULT NULL,
+  `phones` json DEFAULT NULL,
+  `social_links` json DEFAULT NULL,
+  `default_image_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `header_logo_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `footer_logo_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_brand_navy` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_brand_navy_mid` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_brand_accent` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_brand_accent_hover` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_brand_topbar_muted` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_footer_overlay_base` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_footer_overlay_opacity` tinyint UNSIGNED DEFAULT NULL,
+  `theme_section_strip_a` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_section_strip_b` varchar(7) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `site_details`
+--
+
+INSERT INTO `site_details` (`id`, `site_name`, `favicon_path`, `meta_description`, `location`, `map`, `emails`, `phones`, `social_links`, `default_image_path`, `header_logo_path`, `footer_logo_path`, `theme_brand_navy`, `theme_brand_navy_mid`, `theme_brand_accent`, `theme_brand_accent_hover`, `theme_brand_topbar_muted`, `theme_footer_overlay_base`, `theme_footer_overlay_opacity`, `theme_section_strip_a`, `theme_section_strip_b`, `created_at`, `updated_at`) VALUES
+(1, 'new port maritime', NULL, NULL, 'Office Address: 1110/B, Hasna Tower (6th Floor), Agrabad C/A, Chittagong.', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16049.934399229991!2d91.81426178545637!3d22.33384105935151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30acd8af50c02d75%3A0xe1d4e6f7a73c4bb4!2sChattogram!5e1!3m2!1sen!2sbd!4v1778136226465!5m2!1sen!2sbd\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '[\"merchantmarinecgp@gmail.com\", \"supplies@merchant-marine.net\", \"accounts@merchant-marine.net\", \"common@merchant-marine.net\", \"engineer@merchant-marine.net\", \"dhanveer@merchant-marine.net\"]', '[\"+880 1674815509\"]', '{\"twitter\": \"https://www.facebook.com/\", \"youtube\": \"https://www.facebook.com/\", \"facebook\": \"https://www.facebook.com/\", \"linkedin\": \"https://www.facebook.com/\", \"instagram\": \"https://www.facebook.com/\"}', 'site/jVLGqwOpwXuTIdVtv3lCPCcWcQ9NwsUvLX6r7KFQ.jpg', 'site/wJsq9Ya1NAv4a9gn7jTD48DbA5cCpwxvnf27e4tG.png', 'site/RRIwHXB9Ls1Wsr6B4r3Hpm7wPOHB59kzm3VcO0Mp.png', '#112a6d', NULL, '#45cff2', NULL, NULL, NULL, NULL, '#edf6fd', '#fbfbf3', '2026-05-07 06:34:53', '2026-05-18 11:26:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sub_menus`
+--
+
+CREATE TABLE `sub_menus` (
+  `id` bigint UNSIGNED NOT NULL,
+  `menu_id` bigint UNSIGNED NOT NULL,
+  `label` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `page_content` longtext COLLATE utf8mb4_unicode_ci,
+  `cover_image_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `published_at` date DEFAULT NULL,
+  `sort_order` int UNSIGNED NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sub_menus`
+--
+
+INSERT INTO `sub_menus` (`id`, `menu_id`, `label`, `url`, `description`, `page_content`, `cover_image_path`, `published_at`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 'About Us', '/about-us', 'Test desc 1778151225', NULL, NULL, NULL, 0, 1, '2026-05-06 08:24:10', '2026-05-07 10:53:45'),
+(2, 1, 'WHERE WE ARE', '/where-we-are', NULL, NULL, NULL, NULL, 1, 1, '2026-05-06 08:24:10', '2026-05-06 08:24:10'),
+(5, 5, 'Repair & Maintenance', '/our-services/repair-maintenance', NULL, NULL, NULL, NULL, 3, 1, '2026-05-17 16:09:36', '2026-05-17 16:09:36'),
+(6, 5, 'Marine Safety Annual Inspection & Survey', '/our-services/marine-safety-annual-inspection-survey', NULL, NULL, NULL, NULL, 4, 1, '2026-05-17 16:10:24', '2026-05-17 16:10:24'),
+(7, 5, 'Agency Services', '/our-services/agency-services', NULL, NULL, NULL, NULL, 5, 1, '2026-05-17 16:10:39', '2026-05-17 16:10:39'),
+(8, 5, 'Custom Clearance', '/our-services/custom-clearance', NULL, NULL, NULL, NULL, 6, 1, '2026-05-17 16:10:55', '2026-05-17 16:10:55'),
+(9, 5, 'Rental Services', '/our-services/rental-services', NULL, NULL, NULL, NULL, 7, 1, '2026-05-17 16:11:09', '2026-05-17 16:11:09'),
+(10, 5, 'Hull & Tank Cleaning', '/our-services/hull-tank-cleaning', NULL, NULL, NULL, NULL, 8, 1, '2026-05-17 16:11:20', '2026-05-17 16:11:20'),
+(11, 5, 'Garbage & Waste Oil Disposal', '/our-services/garbage-waste-oil-disposal', NULL, NULL, NULL, NULL, 9, 1, '2026-05-17 16:11:32', '2026-05-17 16:11:32'),
+(12, 5, 'Chipping & Painting', '/our-services/chipping-painting', NULL, NULL, NULL, NULL, 10, 1, '2026-05-17 16:11:50', '2026-05-17 16:11:50'),
+(13, 4, 'General Store Supply', '/ship-supply/general-store-supply', NULL, NULL, NULL, NULL, 11, 1, '2026-05-17 16:12:02', '2026-05-17 16:12:02'),
+(15, 4, 'Provision & Bond Stores', '/ship-supply/provision-bond-stores', NULL, NULL, NULL, NULL, 13, 1, '2026-05-17 16:13:06', '2026-05-17 16:13:06'),
+(16, 4, 'Spare Parts', '/ship-supply/spare-parts', NULL, NULL, NULL, NULL, 14, 1, '2026-05-17 16:14:00', '2026-05-17 16:14:00'),
+(17, 4, 'Electronics &Navigation Equipment', '/ship-supply/electronics-navigation-equipment', NULL, NULL, NULL, NULL, 15, 1, '2026-05-17 16:14:16', '2026-05-17 16:14:16'),
+(18, 4, 'Gases & Chemical', '/ship-supply/gases-chemical', NULL, NULL, NULL, NULL, 16, 1, '2026-05-17 16:14:30', '2026-05-17 16:14:30'),
+(19, 4, 'Marine Paints', '/ship-supply/marine-paints', NULL, NULL, NULL, NULL, 17, 1, '2026-05-17 16:14:40', '2026-05-17 16:14:40'),
+(20, 4, 'Lubricant Oil', '/ship-supply/lubricant-oil', NULL, NULL, NULL, NULL, 18, 1, '2026-05-17 16:14:51', '2026-05-17 16:14:51'),
+(21, 4, 'Heavy Equipment', '/ship-supply/heavy-equipment', NULL, NULL, NULL, NULL, 19, 1, '2026-05-17 16:15:02', '2026-05-17 16:15:02'),
+(22, 4, 'Medical Stores', '/ship-supply/medical-stores', NULL, NULL, NULL, NULL, 20, 1, '2026-05-17 16:15:12', '2026-05-17 16:15:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin',
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Administrator', 'admin@example.com', '2026-05-03 05:56:24', '$2y$12$GpjumrrDOTCifZ3SeYHFOu/XF.GvmeSyP5zmpEeHl32hpvfsMykKC', 'admin', NULL, '2026-05-03 05:54:34', '2026-05-03 06:01:18'),
+(2, 'Administrator', 'admin@portmeritime.com', NULL, '$2y$12$rxywIohwWz889ib0R6GHPu5G5bHEIsgPja0gOzqvm82QMklJWqFSq', 'super_admin', NULL, '2026-05-03 05:59:51', '2026-05-03 05:59:51');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `about_pages`
+--
+ALTER TABLE `about_pages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `audit_logs_actor_id_foreign` (`actor_id`),
+  ADD KEY `audit_logs_target_type_target_id_index` (`target_type`,`target_id`),
+  ADD KEY `audit_logs_action_index` (`action`);
+
+--
+-- Indexes for table `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`),
+  ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `hero_slides`
+--
+ALTER TABLE `hero_slides`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `home_sections`
+--
+ALTER TABLE `home_sections`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `home_sections_menu_id_foreign` (`menu_id`);
+
+--
+-- Indexes for table `home_service_area_settings`
+--
+ALTER TABLE `home_service_area_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `home_visual_frames_settings`
+--
+ALTER TABLE `home_visual_frames_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menus`
+--
+ALTER TABLE `menus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu_page_sections`
+--
+ALTER TABLE `menu_page_sections`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `mps_sectionable_sort` (`sectionable_type`,`sectionable_id`,`sort_order`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
+  ADD KEY `personal_access_tokens_expires_at_index` (`expires_at`);
+
+--
+-- Indexes for table `quote_requests`
+--
+ALTER TABLE `quote_requests`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Indexes for table `site_details`
+--
+ALTER TABLE `site_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sub_menus`
+--
+ALTER TABLE `sub_menus`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sub_menus_menu_id_foreign` (`menu_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `about_pages`
+--
+ALTER TABLE `about_pages`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
+-- AUTO_INCREMENT for table `contact_messages`
+--
+ALTER TABLE `contact_messages`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `hero_slides`
+--
+ALTER TABLE `hero_slides`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `home_sections`
+--
+ALTER TABLE `home_sections`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `home_service_area_settings`
+--
+ALTER TABLE `home_service_area_settings`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `home_visual_frames_settings`
+--
+ALTER TABLE `home_visual_frames_settings`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `menus`
+--
+ALTER TABLE `menus`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `menu_page_sections`
+--
+ALTER TABLE `menu_page_sections`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `quote_requests`
+--
+ALTER TABLE `quote_requests`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `site_details`
+--
+ALTER TABLE `site_details`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `sub_menus`
+--
+ALTER TABLE `sub_menus`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  ADD CONSTRAINT `audit_logs_actor_id_foreign` FOREIGN KEY (`actor_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `home_sections`
+--
+ALTER TABLE `home_sections`
+  ADD CONSTRAINT `home_sections_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `sub_menus`
+--
+ALTER TABLE `sub_menus`
+  ADD CONSTRAINT `sub_menus_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

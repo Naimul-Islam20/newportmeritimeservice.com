@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ServicePageController;
 use App\Http\Controllers\Admin\ServiceSidebarController;
 use App\Http\Controllers\Admin\SiteDetailController;
 use App\Http\Controllers\Admin\SubMenuController;
+use App\Http\Controllers\Admin\WhereWeAreLocationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
@@ -52,6 +53,8 @@ Route::get('/message-from-ceo', [PageController::class, 'messageFromCeo'])->name
 Route::get('/our-team-management', [PageController::class, 'ourTeamManagement'])->name('our-team-management');
 Route::get('/career', [PageController::class, 'career'])->name('career');
 Route::get('/where-we-are', [PageController::class, 'whereWeAre'])->name('where-we-are');
+Route::get('/where-we-are/{location}/ports/{port}', [PageController::class, 'whereWeArePort'])->name('where-we-are.port');
+Route::get('/where-we-are/{slug}', [PageController::class, 'whereWeAreLocation'])->name('where-we-are.location');
 Route::get('/locations', [PageController::class, 'locations'])->name('locations');
 Route::get('/quality-certificates-memberships', [QualityCertificateController::class, 'index'])->name('quality-certificates');
 Route::get('/award', [PageController::class, 'award'])->name('award');
@@ -143,6 +146,14 @@ Route::prefix('admin')->group(function (): void {
         Route::put('our-team-page/{our_team_page}', [OurTeamPageController::class, 'update'])->name('admin.our-team-page.update');
         Route::get('career-page', [CareerPageController::class, 'edit'])->name('admin.career-page.edit');
         Route::put('career-page/{career_page}', [CareerPageController::class, 'update'])->name('admin.career-page.update');
+
+        Route::get('where-we-are-locations', [WhereWeAreLocationController::class, 'index'])->name('admin.where-we-are-locations.index');
+        Route::get('where-we-are-locations/create', [WhereWeAreLocationController::class, 'create'])->name('admin.where-we-are-locations.create');
+        Route::post('where-we-are-locations', [WhereWeAreLocationController::class, 'store'])->name('admin.where-we-are-locations.store');
+        Route::get('where-we-are-locations/{where_we_are_location}/edit', [WhereWeAreLocationController::class, 'edit'])->name('admin.where-we-are-locations.edit');
+        Route::put('where-we-are-locations/{where_we_are_location}', [WhereWeAreLocationController::class, 'update'])->name('admin.where-we-are-locations.update');
+        Route::get('where-we-are-locations/{where_we_are_location}/ports/{port}/edit', [\App\Http\Controllers\Admin\WhereWeArePortController::class, 'edit'])->name('admin.where-we-are-ports.edit');
+        Route::put('where-we-are-locations/{where_we_are_location}/ports/{port}', [\App\Http\Controllers\Admin\WhereWeArePortController::class, 'update'])->name('admin.where-we-are-ports.update');
 
         Route::get('service-pages', [ServicePageController::class, 'index'])->name('admin.service-pages.index');
         Route::get('service-pages/{service_page}/edit', [ServicePageController::class, 'edit'])->name('admin.service-pages.edit');

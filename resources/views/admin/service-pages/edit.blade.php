@@ -160,6 +160,25 @@
             @endif
         </div>
 
+        <h2 style="margin:24px 0 12px;font-size:15px;">Card icon/image (What We Do cards)</h2>
+        @if ($cardSubMenu)
+            <div>
+                <label for="card_icon_file">Card icon for "{{ $cardSubMenu->label }}"</label>
+                <input id="card_icon_file" name="card_icon_file" type="file" accept="image/*">
+                <p style="margin:6px 0 0;color:#64748b;font-size:12px;">This image is used in /our-services card grid.</p>
+                @if (filled($cardIconUrl))
+                    <div style="margin-top:8px;">
+                        <img src="{{ $cardIconUrl }}" alt="" style="max-width:220px;border-radius:8px;border:1px solid #e2e8f0;">
+                        <label style="display:flex;gap:8px;margin-top:8px;font-size:13px;">
+                            <input type="checkbox" name="remove_card_icon" value="1"> Remove card icon
+                        </label>
+                    </div>
+                @endif
+            </div>
+        @else
+            <p style="margin:0;color:#b91c1c;font-size:13px;">No matching top-level sub-menu found under "Our Services". Create/update sub-menu URL to match this page path first.</p>
+        @endif
+
         <h2 style="margin:24px 0 12px;font-size:15px;">Why choose us</h2>
         <div>
             <label for="why_heading">Section heading</label>

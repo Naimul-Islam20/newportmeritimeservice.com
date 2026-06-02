@@ -47,6 +47,8 @@ class UpdateServicePageRequest extends FormRequest
             'service_columns.*.*' => ['nullable', 'string', 'max:255'],
             'content_image_file' => ['nullable', 'image', 'max:5120'],
             'remove_content_image' => ['sometimes', 'boolean'],
+            'card_icon_file' => ['nullable', 'image', 'max:5120'],
+            'remove_card_icon' => ['sometimes', 'boolean'],
             'why_heading' => ['nullable', 'string', 'max:255'],
             'why_paragraphs' => ['nullable', 'array'],
             'why_paragraphs.*' => ['nullable', 'string', 'max:5000'],

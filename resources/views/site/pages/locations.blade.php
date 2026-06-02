@@ -21,7 +21,7 @@
         [
             'title' => 'Ports in the ARA area',
             'image' => 'https://images.unsplash.com/photo-1467269209838-ff998a88a88c?q=80&w=900&auto=format&fit=crop',
-            'url' => url('/locations/ports-in-the-ara-area'),
+            'url' => route('where-we-are.port', ['rotterdam', 'port-of-rotterdam']),
         ],
     ];
 

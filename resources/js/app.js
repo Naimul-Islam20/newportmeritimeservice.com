@@ -170,6 +170,84 @@ function initOurTeamNav() {
     );
 }
 
+function initWhereLocationNav() {
+    document.querySelectorAll("[data-where-location-nav-group]").forEach((group) => {
+        const toggle = group.querySelector("[data-where-location-nav-toggle]");
+        if (!toggle) {
+            return;
+        }
+        toggle.addEventListener("click", () => {
+            const open = group.classList.toggle("service-detail__nav-group--open");
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+    });
+}
+
+/** Gimaş-style WHO WE ARE flyout: locations column only on hover over parent with children */
+function initNavFlyout() {
+    document.querySelectorAll("[data-nav-flyout]").forEach((root) => {
+        const flyout = root.querySelector(".site-desktop-nav__flyout");
+        const secondary = root.querySelector("[data-nav-flyout-secondary]");
+        const panels = root.querySelectorAll("[data-nav-flyout-panel]");
+        const parents = root.querySelectorAll("[data-nav-flyout-parent]");
+        const topLevelParents = root.querySelectorAll(
+            ".site-desktop-nav__flyout-parent:not([data-nav-flyout-parent])",
+        );
+
+        if (! flyout || ! secondary) {
+            return;
+        }
+
+        const alignSecondaryToParent = (link) => {
+            secondary.style.top = `${link.offsetTop}px`;
+        };
+
+        const closeSecondary = () => {
+            secondary.hidden = true;
+            secondary.style.top = "";
+            flyout.classList.remove("site-desktop-nav__flyout--has-secondary");
+            panels.forEach((panel) => {
+                panel.hidden = true;
+            });
+            parents.forEach((link) => {
+                link.classList.remove("site-desktop-nav__flyout-parent--active");
+            });
+        };
+
+        const openSecondary = (id, link) => {
+            secondary.hidden = false;
+            flyout.classList.add("site-desktop-nav__flyout--has-secondary");
+            panels.forEach((panel) => {
+                panel.hidden = panel.dataset.navFlyoutPanel !== String(id);
+            });
+            parents.forEach((parentLink) => {
+                parentLink.classList.toggle(
+                    "site-desktop-nav__flyout-parent--active",
+                    parentLink.dataset.navFlyoutParent === String(id),
+                );
+            });
+            if (link) {
+                alignSecondaryToParent(link);
+            }
+        };
+
+        parents.forEach((link) => {
+            link.addEventListener("mouseenter", () => {
+                const id = link.dataset.navFlyoutParent;
+                if (id) {
+                    openSecondary(id, link);
+                }
+            });
+        });
+
+        topLevelParents.forEach((link) => {
+            link.addEventListener("mouseenter", closeSecondary);
+        });
+
+        flyout.addEventListener("mouseleave", closeSecondary);
+    });
+}
+
 function initBackToTop() {
     document.querySelectorAll("[data-back-to-top]").forEach((link) => {
         link.addEventListener("click", (event) => {
@@ -181,7 +259,9 @@ function initBackToTop() {
 
 function initSiteNav() {
     initDesktopNavDropdowns();
+    initNavFlyout();
     initServiceDetailNav();
+    initWhereLocationNav();
     initOurTeamNav();
     initBackToTop();
 }

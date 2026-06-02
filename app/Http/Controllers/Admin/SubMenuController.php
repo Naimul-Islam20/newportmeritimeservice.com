@@ -79,6 +79,12 @@ class SubMenuController extends Controller
         return view('admin.sub-menus.create', [
             'menus' => $menus,
             'nextSortOrder' => $nextSortOrder,
+            'parentSubMenus' => SubMenu::query()
+                ->with('menu')
+                ->whereNull('parent_sub_menu_id')
+                ->orderBy('menu_id')
+                ->orderBy('sort_order')
+                ->get(),
         ]);
     }
 
@@ -129,6 +135,13 @@ class SubMenuController extends Controller
         return view('admin.sub-menus.edit', [
             'subMenu' => $sub_menu,
             'menus' => $menus,
+            'parentSubMenus' => SubMenu::query()
+                ->with('menu')
+                ->whereNull('parent_sub_menu_id')
+                ->where('id', '!=', $sub_menu->id)
+                ->orderBy('menu_id')
+                ->orderBy('sort_order')
+                ->get(),
         ]);
     }
 

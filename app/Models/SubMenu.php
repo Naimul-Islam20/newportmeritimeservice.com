@@ -6,6 +6,7 @@ use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class SubMenu extends Model
@@ -14,6 +15,7 @@ class SubMenu extends Model
 
     protected $fillable = [
         'menu_id',
+        'parent_sub_menu_id',
         'label',
         'url',
         'description',
@@ -55,6 +57,25 @@ class SubMenu extends Model
     public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_sub_menu_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_sub_menu_id');
+    }
+
+    public function hasChildren(): bool
+    {
+        if ($this->relationLoaded('children')) {
+            return $this->children->isNotEmpty();
+        }
+
+        return $this->children()->where('is_active', true)->exists();
     }
 
     public function pageSections(): MorphMany
@@ -103,6 +124,9 @@ class SubMenu extends Model
         }
         if ($path === '/locations') {
             return route('locations');
+        }
+        if ($path !== null && preg_match('#^/where-we-are/([^/]+)$#', $path, $m)) {
+            return route('where-we-are.location', $m[1]);
         }
 
         return $this->resolvedHref();
@@ -161,7 +185,31 @@ class SubMenu extends Model
         $currentPath = $current === '' ? '/' : '/'.ltrim($current, '/');
         $currentPath = rtrim($currentPath, '/') === '' ? '/' : rtrim($currentPath, '/');
 
-        return $currentPath === $mine;
+        if ($currentPath === $mine) {
+            return true;
+        }
+
+        if ($mine !== null && preg_match('#^/where-we-are/([^/]+)$#', $mine, $m)) {
+            return request()->routeIs('where-we-are.location')
+                && request()->route('slug') === $m[1];
+        }
+
+        return false;
+    }
+
+    public function isActiveBranch(): bool
+    {
+        if ($this->isCurrent()) {
+            return true;
+        }
+
+        foreach ($this->relationLoaded('children') ? $this->children : $this->children()->get() as $child) {
+            if ($child->isCurrent() || $child->isActiveBranch()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function adminSidebarHref(): string
@@ -181,8 +229,20 @@ class SubMenu extends Model
             '/our-team-management' => route('admin.our-team-page.edit'),
             '/career' => route('admin.career-page.edit'),
             '/contact' => route('admin.contact-messages.index'),
-            default => route('admin.sub-menus.page-sections.index', $this),
+            default => $this->adminSidebarHrefForPath($path),
         };
+    }
+
+    private function adminSidebarHrefForPath(?string $path): string
+    {
+        if ($path !== null && preg_match('#^/where-we-are/([^/]+)$#', $path, $m)) {
+            $location = WhereWeAreLocation::query()->where('slug', $m[1])->first();
+            if ($location) {
+                return route('admin.where-we-are-locations.edit', $location);
+            }
+        }
+
+        return route('admin.sub-menus.page-sections.index', $this);
     }
 
     public function adminSidebarIsActive(): bool
@@ -215,6 +275,14 @@ class SubMenu extends Model
         }
         if ($path === '/contact') {
             return request()->routeIs('admin.contact-messages.*');
+        }
+
+        if ($path !== null && preg_match('#^/where-we-are/([^/]+)$#', $path, $m)) {
+            $routeLocation = request()->route('where_we_are_location');
+
+            return request()->routeIs('admin.where-we-are-locations.*')
+                && $routeLocation instanceof WhereWeAreLocation
+                && $routeLocation->slug === $m[1];
         }
 
         $routeSub = request()->route('sub_menu');
