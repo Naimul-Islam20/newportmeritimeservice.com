@@ -30,3 +30,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+.htaccess
+*.zip
+public/__MACOSX/
+public/error_log
