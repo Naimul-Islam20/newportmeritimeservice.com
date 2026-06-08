@@ -545,14 +545,21 @@ class MenuPageSectionController extends Controller
             ->with('status', 'Section deleted.');
     }
 
-    public function indexSubMenu(SubMenu $sub_menu): View
+    public function indexSubMenu(Request $request, SubMenu $sub_menu): View|RedirectResponse
     {
         $this->authorize('update', $sub_menu);
+
+        if ($sub_menu->isNavDropdownCategory() && ! $request->boolean('layout')) {
+            return redirect()->route('admin.sub-menus.manage', $sub_menu);
+        }
 
         return view('admin.menu-page-sections.index', [
             'pageTitle' => 'Page sections',
             'ownerLabel' => $sub_menu->label,
             'backUrl' => route('admin.sub-menus.index'),
+            'manageUrl' => $sub_menu->isNavDropdownCategory()
+                ? route('admin.sub-menus.manage', $sub_menu)
+                : null,
             'createUrl' => route('admin.sub-menus.page-sections.create', $sub_menu),
             'detailsUrl' => route('admin.sub-menus.edit', $sub_menu),
             'sections' => $sub_menu->pageSections()->ordered()->get(),

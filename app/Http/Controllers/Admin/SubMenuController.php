@@ -54,12 +54,95 @@ class SubMenuController extends Controller
         return $candidate;
     }
 
+    private function uniquePathUnderBase(string $basePath, ?int $ignoreId = null): string
+    {
+        $base = rtrim($basePath, '/');
+        $candidate = $base;
+        $i = 2;
+
+        while ($this->urlTakenByAny($candidate, $ignoreId)) {
+            $candidate = $base.'-'.$i;
+            $i++;
+        }
+
+        return $candidate;
+    }
+
+    /**
+     * Blog category posts must live under /blog/news/slug (not /blog/slug).
+     */
+    private function resolveStoredUrl(Menu $menu, string $label, ?int $parentId, string $rawUrl, ?int $ignoreId = null): string
+    {
+        $url = trim($rawUrl);
+        if ($url !== '' && ! preg_match('#^https?://#i', $url) && ! str_starts_with($url, '/')) {
+            $url = '/'.$url;
+        }
+
+        if ($url !== '') {
+            return $url;
+        }
+
+        $parent = $parentId ? SubMenu::query()->find($parentId) : null;
+        if ($parent?->isNavDropdownCategory()) {
+            $slug = Str::slug($label) ?: 'item';
+
+            return $this->uniquePathUnderBase($parent->suggestCategoryPostUrl($slug), $ignoreId);
+        }
+
+        return $this->uniqueSubMenuPath($menu, $label, $ignoreId);
+    }
+
+    public function manageCategory(SubMenu $sub_menu): View
+    {
+        $this->authorize('update', $sub_menu);
+
+        abort_unless($sub_menu->isNavDropdownCategory(), 404);
+
+        return view('admin.category-content.index', [
+            'category' => $sub_menu,
+            'items' => $sub_menu->categoryItems(repairOrphans: true),
+            'createUrl' => route('admin.sub-menus.create', [
+                'menu_id' => $sub_menu->menu_id,
+                'parent_sub_menu_id' => $sub_menu->id,
+            ]),
+            'pageSectionsUrl' => route('admin.sub-menus.page-sections.index', ['sub_menu' => $sub_menu, 'layout' => 1]),
+        ]);
+    }
+
+    private function redirectAfterSubMenuSave(SubMenu $subMenu): RedirectResponse
+    {
+        if ($subMenu->parent_sub_menu_id) {
+            $parent = SubMenu::query()->find($subMenu->parent_sub_menu_id);
+            if ($parent?->isNavDropdownCategory()) {
+                return redirect()
+                    ->route('admin.sub-menus.manage', $parent)
+                    ->with('status', 'Saved successfully.');
+            }
+        }
+
+        if ($subMenu->isNavDropdownCategory()) {
+            return redirect()
+                ->route('admin.sub-menus.manage', $subMenu)
+                ->with('status', 'Saved successfully.');
+        }
+
+        if ($subMenu->isBlogCategoryPost()) {
+            return redirect()
+                ->route('admin.sub-menus.edit', $subMenu)
+                ->with('status', 'Content saved successfully.');
+        }
+
+        return redirect()
+            ->route('admin.sub-menus.page-sections.index', $subMenu)
+            ->with('status', 'Sub-menu saved successfully.');
+    }
+
     public function index(): View
     {
         $this->authorize('viewAny', SubMenu::class);
 
         $subMenus = SubMenu::query()
-            ->with('menu')
+            ->with(['menu', 'parent'])
             ->ordered()
             ->latest('id')
             ->paginate(50)
@@ -76,9 +159,14 @@ class SubMenuController extends Controller
         $lastSort = (int) (SubMenu::query()->max('sort_order') ?? 0);
         $nextSortOrder = $lastSort + 1;
 
+        $preselectedMenuId = request()->integer('menu_id') ?: null;
+        $preselectedParentId = request()->integer('parent_sub_menu_id') ?: null;
+
         return view('admin.sub-menus.create', [
             'menus' => $menus,
             'nextSortOrder' => $nextSortOrder,
+            'preselectedMenuId' => $preselectedMenuId,
+            'preselectedParentId' => $preselectedParentId,
             'parentSubMenus' => SubMenu::query()
                 ->with('menu')
                 ->whereNull('parent_sub_menu_id')
@@ -96,15 +184,10 @@ class SubMenuController extends Controller
         }
 
         $menu = Menu::query()->findOrFail((int) $data['menu_id']);
-        $url = isset($data['url']) && is_string($data['url']) ? trim($data['url']) : '';
-        if ($url !== '' && ! preg_match('#^https?://#i', $url) && ! str_starts_with($url, '/')) {
-            $url = '/'.$url;
-        }
-        if ($url === '') {
-            $data['url'] = $this->uniqueSubMenuPath($menu, (string) $data['label']);
-        } else {
-            $data['url'] = $url;
-        }
+        $parentId = isset($data['parent_sub_menu_id']) ? (int) $data['parent_sub_menu_id'] : null;
+        $rawUrl = isset($data['url']) && is_string($data['url']) ? $data['url'] : '';
+
+        $data['url'] = $this->resolveStoredUrl($menu, (string) $data['label'], $parentId, $rawUrl);
 
         $coverPath = null;
         if ($request->hasFile('cover_image')) {
@@ -114,6 +197,12 @@ class SubMenuController extends Controller
         unset($data['cover_image']);
         $data['cover_image_path'] = $coverPath;
 
+        $data['parent_sub_menu_id'] = SubMenu::resolveCategoryParentSubMenuId(
+            $menu,
+            (string) $data['url'],
+            $parentId,
+        );
+
         $subMenu = SubMenu::create($data);
 
         AuditLogger::log('admin.sub_menu.created', $subMenu, [
@@ -121,9 +210,7 @@ class SubMenuController extends Controller
             'menu_id' => $subMenu->menu_id,
         ], $request);
 
-        return redirect()
-            ->route('admin.sub-menus.page-sections.index', $subMenu)
-            ->with('status', 'Sub-menu created successfully.');
+        return $this->redirectAfterSubMenuSave($subMenu);
     }
 
     public function edit(SubMenu $sub_menu): View
@@ -151,15 +238,10 @@ class SubMenuController extends Controller
         $data['sort_order'] = $data['sort_order'] ?? 0;
 
         $menu = Menu::query()->findOrFail((int) $data['menu_id']);
-        $url = isset($data['url']) && is_string($data['url']) ? trim($data['url']) : '';
-        if ($url !== '' && ! preg_match('#^https?://#i', $url) && ! str_starts_with($url, '/')) {
-            $url = '/'.$url;
-        }
-        if ($url === '') {
-            $data['url'] = $this->uniqueSubMenuPath($menu, (string) $data['label'], $sub_menu->id);
-        } else {
-            $data['url'] = $url;
-        }
+        $parentId = isset($data['parent_sub_menu_id']) ? (int) $data['parent_sub_menu_id'] : null;
+        $rawUrl = isset($data['url']) && is_string($data['url']) ? $data['url'] : '';
+
+        $data['url'] = $this->resolveStoredUrl($menu, (string) $data['label'], $parentId, $rawUrl, $sub_menu->id);
 
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('sub-menus', 'public_site');
@@ -175,10 +257,17 @@ class SubMenuController extends Controller
         }
 
         unset($data['cover_image']);
+
+        $data['parent_sub_menu_id'] = SubMenu::resolveCategoryParentSubMenuId(
+            $menu,
+            (string) $data['url'],
+            $parentId,
+        );
+
         $sub_menu->fill($data);
 
         if (! $sub_menu->isDirty()) {
-            return redirect()->route('admin.sub-menus.page-sections.index', $sub_menu)->with('warning', 'No changes found. Sub-menu was not updated.');
+            return $this->redirectAfterSubMenuSave($sub_menu)->with('warning', 'No changes found. Sub-menu was not updated.');
         }
 
         $sub_menu->save();
@@ -188,9 +277,7 @@ class SubMenuController extends Controller
             'menu_id' => $sub_menu->menu_id,
         ], $request);
 
-        return redirect()
-            ->route('admin.sub-menus.page-sections.index', $sub_menu)
-            ->with('status', 'Sub-menu updated successfully.');
+        return $this->redirectAfterSubMenuSave($sub_menu);
     }
 
     public function destroy(SubMenu $sub_menu): RedirectResponse

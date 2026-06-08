@@ -12,7 +12,8 @@
                 @foreach ($blogNavMenu->subMenus as $child)
                     @php
                         $path = $child->normalizedPath();
-                        $isActive = $path !== null && $path === $currentPath;
+                        $isActive = $path !== null
+                            && ($currentPath === $path || str_starts_with($currentPath, $path.'/'));
                     @endphp
                     <a href="{{ $child->siteNavHref() }}"
                         @class([

@@ -23,11 +23,10 @@ class MenuSeeder extends Seeder
 
         $whoWeArePages = [
             ['label' => 'About Us', 'url' => '/about-us', 'sort_order' => 0],
-            ['label' => 'Where We Are', 'url' => '/where-we-are', 'sort_order' => 1],
-            ['label' => 'Our Story', 'url' => '/our-story', 'sort_order' => 2],
-            ['label' => 'Message from the CEO', 'url' => '/message-from-ceo', 'sort_order' => 3],
-            ['label' => 'Our Team', 'url' => '/our-team-management', 'sort_order' => 4],
-            ['label' => 'Contact Us', 'url' => '/contact', 'sort_order' => 5],
+            ['label' => 'Where we are', 'url' => '/where-we-are', 'sort_order' => 1],
+            ['label' => 'Our Values - Mission & Vision', 'url' => '/our-values-mission-vision', 'sort_order' => 2],
+            ['label' => 'Our commitment', 'url' => '/our-commitment', 'sort_order' => 3],
+            ['label' => 'Why Choose NewPort?', 'url' => '/why-choose-newport', 'sort_order' => 4],
         ];
 
         foreach ($whoWeArePages as $page) {
@@ -41,7 +40,7 @@ class MenuSeeder extends Seeder
         }
 
         $top = [
-            ['label' => 'Ship Supply', 'url' => '/ship-supply', 'sort_order' => 10],
+            ['label' => 'SHIP SUPPLY', 'url' => '/ship-supply', 'sort_order' => 15],
             ['label' => 'Our Services', 'url' => '/our-services', 'sort_order' => 20],
             ['label' => 'Award', 'url' => '/award', 'sort_order' => 30],
             ['label' => 'GET A QUOTE', 'url' => '/get-a-quote', 'sort_order' => 50],
@@ -54,6 +53,110 @@ class MenuSeeder extends Seeder
                 'sort_order' => $row['sort_order'],
                 'is_active' => true,
             ]);
+        }
+
+        $shipSupply = Menu::query()->where('url', '/ship-supply')->first();
+        $shipSupplyPages = [
+            ['label' => 'Provision And Bond Store', 'url' => '/ship-supply/provision-and-bond-store', 'sort_order' => 0],
+            ['label' => 'Deck And Engine Stores', 'url' => '/ship-supply/deck-and-engine-stores', 'sort_order' => 1],
+            ['label' => 'Spare Parts Supply & Export', 'url' => '/ship-supply/spare-parts-supply-export', 'sort_order' => 2],
+            ['label' => 'Cabin, Salon & galley Stores', 'url' => '/ship-supply/cabin-salon-galley-stores', 'sort_order' => 3],
+            ['label' => 'Marine Paints & Chemicals', 'url' => '/ship-supply/marine-paints-chemicals', 'sort_order' => 4],
+            ['label' => 'Gases and Oxygen Supply', 'url' => '/ship-supply/gases-and-oxygen-supply', 'sort_order' => 5],
+            ['label' => 'Marine Lubes and Greases', 'url' => '/ship-supply/marine-lubes-and-greases', 'sort_order' => 6],
+            ['label' => 'Chains – Ropes – Shackles', 'url' => '/ship-supply/chains-ropes-shackles', 'sort_order' => 7],
+            ['label' => 'Safety Equipment', 'url' => '/ship-supply/safety-equipment', 'sort_order' => 8],
+            ['label' => 'Navigation Equipment', 'url' => '/ship-supply/navigation-equipment', 'sort_order' => 9],
+            ['label' => 'BA Chart – Publication', 'url' => '/ship-supply/ba-chart-publication', 'sort_order' => 10],
+        ];
+
+        if ($shipSupply) {
+            foreach ($shipSupplyPages as $page) {
+                SubMenu::query()->create([
+                    'menu_id' => $shipSupply->id,
+                    'label' => $page['label'],
+                    'url' => $page['url'],
+                    'sort_order' => $page['sort_order'],
+                    'is_active' => true,
+                ]);
+            }
+        }
+
+        $ourServices = Menu::query()->where('url', '/our-services')->first();
+        $ourServicesPages = [
+            [
+                'label' => 'Ship Repair & Maintenance',
+                'url' => '/our-services/ship-repair-maintenance',
+                'description' => 'Crane, Grab, Shell Plate, hull structure, Engine, Ac, compressors, Motor, etc.',
+                'sort_order' => 0,
+            ],
+            [
+                'label' => 'LSA & FFA Annual Inspection',
+                'url' => '/our-services/lsa-ffa-annual-inspection',
+                'description' => null,
+                'sort_order' => 1,
+            ],
+            [
+                'label' => 'Life Raft Maintenance',
+                'url' => '/our-services/life-raft-maintenance',
+                'description' => null,
+                'sort_order' => 2,
+            ],
+            [
+                'label' => 'Bunkering Service',
+                'url' => '/our-services/bunkering-service',
+                'description' => 'Reliable delivery of LSMGO (0.1%), VLSFO (0.5%), and HSFO via our owned barges. De-bunkering: Safe offloading of off-spec or contaminated fuel, adhering to environmental and safety regulations. Lubricant Supply: Quality marine lubricants and greases for engines and machinery, delivered in bulk or drums. Also we do De-bunkering, De-Slopping.',
+                'sort_order' => 3,
+            ],
+            [
+                'label' => 'Waste Disposal',
+                'url' => '/our-services/waste-disposal',
+                'description' => 'Sludge & Garbage Discharge, De-bunkering, De-Slopping.',
+                'sort_order' => 4,
+            ],
+            [
+                'label' => 'Cargo Hold Cleaning',
+                'url' => '/our-services/cargo-hold-cleaning',
+                'description' => 'Cargo Hatch, Tank & Engine Room Cleaning.',
+                'sort_order' => 5,
+            ],
+            [
+                'label' => 'Chipping, Painting & Surface Treatment',
+                'url' => '/our-services/chipping-painting-surface-treatment',
+                'description' => null,
+                'sort_order' => 6,
+            ],
+            [
+                'label' => 'Underwater Hull & Propeller Cleaning',
+                'url' => '/our-services/underwater-hull-propeller-cleaning',
+                'description' => 'Expert Hull Cleaning, Propeller Cleaning & Polishing, Underwater Debris Removal, Underwater Inspections.',
+                'sort_order' => 7,
+            ],
+            [
+                'label' => 'Agency Service',
+                'url' => '/our-services/agency-service',
+                'description' => 'Ship spare in transit, Shipment custom clearance & onboard delivery, Crew Changes, Shore grab rental — Both Auto & Manual, Fender Service, Other husbandry needs of the Ship Owners.',
+                'sort_order' => 8,
+            ],
+            [
+                'label' => 'Other Service',
+                'url' => '/our-services/other-service',
+                'description' => 'Import-Export, Logistics Services, Trading.',
+                'sort_order' => 9,
+            ],
+        ];
+
+        if ($ourServices) {
+            foreach ($ourServicesPages as $page) {
+                SubMenu::query()->create([
+                    'menu_id' => $ourServices->id,
+                    'label' => $page['label'],
+                    'url' => $page['url'],
+                    'description' => $page['description'],
+                    'sort_order' => $page['sort_order'],
+                    'is_active' => true,
+                ]);
+            }
         }
 
         $blog = Menu::query()->create([

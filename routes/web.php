@@ -10,15 +10,19 @@ use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuPageSectionController;
+use App\Http\Controllers\Admin\OurServicesSubMenuController;
 use App\Http\Controllers\Admin\OurStoryPageController;
 use App\Http\Controllers\Admin\OurTeamPageController;
 use App\Http\Controllers\Admin\QuoteRequestController as AdminQuoteRequestController;
 use App\Http\Controllers\Admin\ServicePageController;
 use App\Http\Controllers\Admin\ServiceSidebarController;
 use App\Http\Controllers\Admin\SiteDetailController;
+use App\Http\Controllers\Admin\ShipSupplySubMenuController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\WhereWeAreLocationController;
+use App\Http\Controllers\Admin\WhoWeAreSubMenuController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Site\BlogCommentController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MenuPageController;
@@ -68,6 +72,10 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('contact.store');
 
+Route::post('/blog/comments/{sub_menu}', [BlogCommentController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('blog.comments.store');
+
 // Dynamic menu/sub-menu pages (must stay after all explicit site routes above).
 Route::get('/{any}', [MenuPageController::class, 'show'])
     ->where('any', '^(?!admin($|/)).+');
@@ -98,6 +106,9 @@ Route::prefix('admin')->group(function (): void {
             ->except(['show'])
             ->names('admin.menus');
 
+        Route::patch('menus/{menu}/toggle-active', [MenuController::class, 'toggleActive'])
+            ->name('admin.menus.toggle-active');
+
         Route::get('menus/{menu}/page-sections', [MenuPageSectionController::class, 'indexMenu'])
             ->name('admin.menus.page-sections.index');
         Route::get('menus/{menu}/page-sections/create', [MenuPageSectionController::class, 'createMenu'])
@@ -114,6 +125,54 @@ Route::prefix('admin')->group(function (): void {
         Route::resource('sub-menus', SubMenuController::class)
             ->except(['show'])
             ->names('admin.sub-menus');
+
+        Route::get('sub-menus/{sub_menu}/manage', [SubMenuController::class, 'manageCategory'])
+            ->name('admin.sub-menus.manage');
+
+        Route::get('who-we-are/sub-menus', [WhoWeAreSubMenuController::class, 'index'])
+            ->name('admin.who-we-are-sub-menus.index');
+        Route::get('who-we-are/sub-menus/create', [WhoWeAreSubMenuController::class, 'create'])
+            ->name('admin.who-we-are-sub-menus.create');
+        Route::post('who-we-are/sub-menus', [WhoWeAreSubMenuController::class, 'store'])
+            ->name('admin.who-we-are-sub-menus.store');
+        Route::get('who-we-are/sub-menus/{sub_menu}/edit', [WhoWeAreSubMenuController::class, 'edit'])
+            ->name('admin.who-we-are-sub-menus.edit');
+        Route::put('who-we-are/sub-menus/{sub_menu}', [WhoWeAreSubMenuController::class, 'update'])
+            ->name('admin.who-we-are-sub-menus.update');
+        Route::patch('who-we-are/sub-menus/{sub_menu}/toggle-active', [WhoWeAreSubMenuController::class, 'toggleActive'])
+            ->name('admin.who-we-are-sub-menus.toggle-active');
+        Route::delete('who-we-are/sub-menus/{sub_menu}', [WhoWeAreSubMenuController::class, 'destroy'])
+            ->name('admin.who-we-are-sub-menus.destroy');
+
+        Route::get('ship-supply/sub-menus', [ShipSupplySubMenuController::class, 'index'])
+            ->name('admin.ship-supply-sub-menus.index');
+        Route::get('ship-supply/sub-menus/create', [ShipSupplySubMenuController::class, 'create'])
+            ->name('admin.ship-supply-sub-menus.create');
+        Route::post('ship-supply/sub-menus', [ShipSupplySubMenuController::class, 'store'])
+            ->name('admin.ship-supply-sub-menus.store');
+        Route::get('ship-supply/sub-menus/{sub_menu}/edit', [ShipSupplySubMenuController::class, 'edit'])
+            ->name('admin.ship-supply-sub-menus.edit');
+        Route::put('ship-supply/sub-menus/{sub_menu}', [ShipSupplySubMenuController::class, 'update'])
+            ->name('admin.ship-supply-sub-menus.update');
+        Route::patch('ship-supply/sub-menus/{sub_menu}/toggle-active', [ShipSupplySubMenuController::class, 'toggleActive'])
+            ->name('admin.ship-supply-sub-menus.toggle-active');
+        Route::delete('ship-supply/sub-menus/{sub_menu}', [ShipSupplySubMenuController::class, 'destroy'])
+            ->name('admin.ship-supply-sub-menus.destroy');
+
+        Route::get('our-services/sub-menus', [OurServicesSubMenuController::class, 'index'])
+            ->name('admin.our-services-sub-menus.index');
+        Route::get('our-services/sub-menus/create', [OurServicesSubMenuController::class, 'create'])
+            ->name('admin.our-services-sub-menus.create');
+        Route::post('our-services/sub-menus', [OurServicesSubMenuController::class, 'store'])
+            ->name('admin.our-services-sub-menus.store');
+        Route::get('our-services/sub-menus/{sub_menu}/edit', [OurServicesSubMenuController::class, 'edit'])
+            ->name('admin.our-services-sub-menus.edit');
+        Route::put('our-services/sub-menus/{sub_menu}', [OurServicesSubMenuController::class, 'update'])
+            ->name('admin.our-services-sub-menus.update');
+        Route::patch('our-services/sub-menus/{sub_menu}/toggle-active', [OurServicesSubMenuController::class, 'toggleActive'])
+            ->name('admin.our-services-sub-menus.toggle-active');
+        Route::delete('our-services/sub-menus/{sub_menu}', [OurServicesSubMenuController::class, 'destroy'])
+            ->name('admin.our-services-sub-menus.destroy');
 
         Route::get('sub-menus/{sub_menu}/page-sections', [MenuPageSectionController::class, 'indexSubMenu'])
             ->name('admin.sub-menus.page-sections.index');

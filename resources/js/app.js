@@ -257,9 +257,61 @@ function initBackToTop() {
     });
 }
 
+function initHeaderTopbarScroll() {
+    const header = document.querySelector(".site-header");
+    if (!header) {
+        return;
+    }
+
+    const desktopMq = window.matchMedia("(min-width: 1024px)");
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    const topRevealOffset = 12;
+    const minScrollToHide = 4;
+
+    const syncTopbar = () => {
+        ticking = false;
+
+        if (!desktopMq.matches) {
+            header.classList.remove("site-header--topbar-hidden");
+            lastScrollY = window.scrollY;
+            return;
+        }
+
+        const currentY = window.scrollY;
+
+        if (currentY <= topRevealOffset) {
+            header.classList.remove("site-header--topbar-hidden");
+        } else if (currentY < lastScrollY) {
+            header.classList.remove("site-header--topbar-hidden");
+        } else if (currentY > lastScrollY && currentY > minScrollToHide) {
+            header.classList.add("site-header--topbar-hidden");
+        }
+
+        lastScrollY = currentY;
+    };
+
+    const onScroll = () => {
+        if (ticking) {
+            return;
+        }
+
+        ticking = true;
+        window.requestAnimationFrame(syncTopbar);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    desktopMq.addEventListener("change", () => {
+        header.classList.remove("site-header--topbar-hidden");
+        lastScrollY = window.scrollY;
+    });
+    syncTopbar();
+}
+
 function initSiteNav() {
     initDesktopNavDropdowns();
     initNavFlyout();
+    initHeaderTopbarScroll();
     initServiceDetailNav();
     initWhereLocationNav();
     initOurTeamNav();

@@ -9,6 +9,7 @@ use App\Models\Menu;
 use App\Models\SubMenu;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -151,5 +152,25 @@ class MenuController extends Controller
         AuditLogger::log('admin.menu.deleted', null, ['label' => $label], request());
 
         return redirect()->route('admin.menus.index')->with('status', 'Menu deleted successfully.');
+    }
+
+    public function toggleActive(Request $request, Menu $menu): RedirectResponse
+    {
+        $this->authorize('update', $menu);
+
+        $menu->update([
+            'is_active' => ! $menu->is_active,
+        ]);
+
+        AuditLogger::log('admin.menu.updated', $menu, [
+            'label' => $menu->label,
+            'is_active' => $menu->is_active,
+        ], $request);
+
+        $state = $menu->is_active ? 'activated' : 'deactivated';
+
+        return redirect()
+            ->route('admin.menus.index')
+            ->with('status', "\"{$menu->label}\" {$state} on the site menu.");
     }
 }

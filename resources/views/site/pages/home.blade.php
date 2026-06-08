@@ -7,14 +7,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
     .services-swiper,
-    .supplies-swiper,
-    .news-swiper {
+    .supplies-swiper {
         padding-bottom: 35px !important;
     }
 
     .supplies-swiper .swiper-slide,
-    .services-swiper .swiper-slide,
-    .news-swiper .swiper-slide {
+    .services-swiper .swiper-slide {
         height: auto !important;
     }
 
@@ -30,20 +28,6 @@
     .supplies-swiper .swiper-slide > div {
         flex: 1;
         min-height: 0;
-    }
-
-    /* Equal-height news cards */
-    .news-swiper .swiper-wrapper {
-        align-items: stretch;
-    }
-
-    .news-swiper .swiper-slide {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .news-swiper .swiper-slide>div {
-        flex: 1;
     }
 
 </style>
@@ -140,7 +124,7 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
 @elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'image_details')
 @include('site.home-sections.two-column-about', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'two_column' && $section->two_column_mode === 'split_cta')
-@include('site.home-sections.two-column-recruitment', ['section' => $section, 'sectionStrip' => $sectionStrip])
+@include('site.home-sections.two-column-mission-vision-split', ['section' => $section, 'sectionStrip' => $sectionStrip])
 @elseif ($section->block_type === 'logo_carousel')
     @if (! $serviceAreaRendered)
         @php $serviceAreaRendered = true; @endphp
@@ -172,15 +156,10 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
     ])
 @endif
 
-{{-- Latest News — fixed above footer (not in main section order) --}}
-@if ($newsHomeSection)
-    @php
-        $section = $newsHomeSection;
-        $items = $sectionItems[$section->id] ?? collect();
-        $sectionStrip = $mainHomeSections->count() % 2 === 0 ? 'primary' : 'secondary';
-    @endphp
-    @include('site.home-sections.carousel-news', ['section' => $section, 'items' => $items, 'sectionStrip' => $sectionStrip])
-@endif
+{{-- Latest news — above footer (dynamic from Blog → News posts) --}}
+<!-- @if ($latestNews ?? null)
+    @include('site.home-sections.home-latest-news', ['latestNews' => $latestNews])
+@endif -->
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -343,27 +322,6 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             });
         });
 
-        // Latest News Slider
-        new Swiper('.news-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 28,
-            loop: true,
-            autoplay: {
-                delay: 4500,
-                disableOnInteraction: false,
-            },
-            speed: 700,
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 24
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 28
-                },
-            }
-        });
     });
 </script>
 @endpush

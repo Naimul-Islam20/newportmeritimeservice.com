@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" id="top">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="site-app" id="top">
 
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     @stack('styles')
 </head>
 
-<body class="min-h-screen overflow-x-hidden bg-white font-sans text-foreground antialiased">
+<body class="site-app min-h-screen overflow-x-hidden bg-white font-sans text-foreground antialiased">
     @include('site.partials.header')
 
     <main>

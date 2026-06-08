@@ -1,8 +1,17 @@
-@extends('layouts.admin', ['title' => 'Create sub-menu'])
+@php
+    $parentCategory = isset($preselectedParentId)
+        ? \App\Models\SubMenu::query()->find($preselectedParentId)
+        : null;
+    $isCategoryPost = $parentCategory?->isNavDropdownCategory() ?? false;
+@endphp
+@extends('layouts.admin', ['title' => $isCategoryPost ? 'Create '.$parentCategory->label : 'Create sub-menu'])
 
 @section('content')
 <div class="header">
-    <h1>Create sub-menu</h1>
+    <h1>{{ $isCategoryPost ? 'Create '.$parentCategory->label : 'Create sub-menu' }}</h1>
+    @if ($isCategoryPost)
+        <a class="btn btn-muted" href="{{ route('admin.sub-menus.manage', $parentCategory) }}">Back to {{ $parentCategory->label }}</a>
+    @endif
 </div>
 
 <div class="card">
@@ -14,13 +23,13 @@
                 <select id="menu_id" name="menu_id" required>
                     <option value="">— Select menu —</option>
                     @foreach ($menus as $menu)
-                    <option value="{{ $menu->id }}" @selected(old('menu_id')==$menu->id)>{{ $menu->label }}</option>
+                    <option value="{{ $menu->id }}" @selected((string) old('menu_id', $preselectedMenuId ?? '') === (string) $menu->id)>{{ $menu->label }}</option>
                     @endforeach
                 </select>
                 @error('menu_id') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
-                <label for="label">Sub menu label</label>
+                <label for="label">{{ $isCategoryPost ? 'Title' : 'Sub menu label' }}</label>
                 <input id="label" name="label" value="{{ old('label') }}" required>
                 @error('label') <div class="error">{{ $message }}</div> @enderror
             </div>
@@ -29,18 +38,27 @@
                 <select id="parent_sub_menu_id" name="parent_sub_menu_id">
                     <option value="">— Top level —</option>
                     @foreach ($parentSubMenus as $parent)
-                        <option value="{{ $parent->id }}" data-menu-id="{{ $parent->menu_id }}" @selected((string) old('parent_sub_menu_id') === (string) $parent->id)>
+                        <option value="{{ $parent->id }}" data-menu-id="{{ $parent->menu_id }}" @selected((string) old('parent_sub_menu_id', $preselectedParentId ?? '') === (string) $parent->id)>
                             {{ $parent->menu?->label }} → {{ $parent->label }}
                         </option>
                     @endforeach
                 </select>
                 @error('parent_sub_menu_id') <div class="error">{{ $message }}</div> @enderror
-                <div style="color:#64748b;font-size:12px;margin-top:6px;">Use for city links under “Where We Are”, etc.</div>
+                <div id="parent-hint" style="color:#64748b;font-size:12px;margin-top:6px;">
+                    Use for city links under “Where We Are”. For News / Events / Gallery items, choose the matching parent (e.g. <strong>News</strong>).
+                </div>
             </div>
             <div>
-                <label for="url">Sub menu URL</label>
-                <input id="url" name="url" value="{{ old('url') }}" placeholder="Optional (auto if blank)">
+                <label for="url">{{ $isCategoryPost ? 'URL (optional)' : 'Sub menu URL' }}</label>
+                <input id="url" name="url" value="{{ old('url') }}" placeholder="{{ $isCategoryPost ? 'Auto: '.$parentCategory->suggestCategoryPostUrl('your-title') : '/blog/news/my-article-title' }}">
                 @error('url') <div class="error">{{ $message }}</div> @enderror
+                <div id="url-hint" style="color:#64748b;font-size:12px;margin-top:6px;">
+                    @if ($isCategoryPost)
+                        Leave blank to auto-create under <code>{{ $parentCategory->categoryBasePath() }}/…</code>. This is <strong>content</strong>, not a navbar submenu.
+                    @else
+                        Must start with the parent menu path (e.g. <code>/blog/news/…</code> for News).
+                    @endif
+                </div>
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description</label>
@@ -83,7 +101,7 @@
             </div>
         </div>
         <div style="margin-top: 14px;">
-            <button class="btn btn-primary" type="submit">Save sub-menu</button>
+            <button class="btn btn-primary" type="submit">{{ $isCategoryPost ? 'Publish' : 'Save sub-menu' }}</button>
         </div>
     </form>
 </div>

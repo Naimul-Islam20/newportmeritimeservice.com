@@ -37,7 +37,7 @@
                         </summary>
                         <div class="site-mobile-nav__sub">
                             @foreach ($menu->subMenus as $child)
-                                @if ($child->hasChildren())
+                                @if ($child->hasChildren() && $child->showsChildItemsInNav())
                                     <details class="site-mobile-nav__nested">
                                         <summary class="site-mobile-nav__sublink site-mobile-nav__sublink--parent">
                                             <span>{{ $child->label }}</span>

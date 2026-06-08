@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\PublicUploadUrl;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -147,6 +148,332 @@ class SubMenu extends Model
         return str_starts_with($raw, '/') ? $raw : '/'.$raw;
     }
 
+    public static function isBlogMenu(Menu $menu): bool
+    {
+        $path = $menu->normalizedPath();
+
+        return $path === '/blog';
+    }
+
+    /**
+     * Top-level submenu under BLOG (News, Events, Gallery, …) — each manages its own items.
+     */
+    public function isNavDropdownCategory(): bool
+    {
+        if ($this->parent_sub_menu_id !== null) {
+            return false;
+        }
+
+        $menu = $this->relationLoaded('menu') ? $this->menu : $this->menu()->first();
+
+        if (! $menu || ! self::isBlogMenu($menu)) {
+            return false;
+        }
+
+        $path = $this->normalizedPath();
+
+        return $path !== null
+            && $path !== '/blog'
+            && preg_match('#^/blog/[^/]+$#', $path) === 1;
+    }
+
+    public function isBlogCategory(): bool
+    {
+        return $this->isNavDropdownCategory();
+    }
+
+    public function categoryBasePath(): ?string
+    {
+        return $this->isNavDropdownCategory() ? $this->normalizedPath() : null;
+    }
+
+    public function categoryCreateButtonLabel(): string
+    {
+        return 'Create '.$this->label;
+    }
+
+    /**
+     * Frontend layout for BLOG categories (Gimaş-style).
+     *
+     * @return 'sidebar_article'|'sidebar_content'|'recipes'|'gallery'
+     */
+    public function blogLayoutType(): string
+    {
+        return match ($this->categoryBasePath()) {
+            '/blog/news', '/blog/newport-tv' => 'sidebar_article',
+            '/blog/events' => 'sidebar_content',
+            '/blog/recipes' => 'recipes',
+            '/blog/gallery' => 'gallery',
+            default => 'sidebar_content',
+        };
+    }
+
+    public function usesBlogSidebar(): bool
+    {
+        return in_array($this->blogLayoutType(), ['sidebar_article', 'sidebar_content'], true);
+    }
+
+    public function isBlogCategoryPost(): bool
+    {
+        if ($this->isNavDropdownCategory()) {
+            return false;
+        }
+
+        $menu = $this->relationLoaded('menu') ? $this->menu : $this->menu()->first();
+
+        if (! $menu || ! self::isBlogMenu($menu)) {
+            return false;
+        }
+
+        if ($this->parent_sub_menu_id) {
+            $parent = $this->relationLoaded('parent') ? $this->parent : $this->parent()->first();
+
+            return $parent?->isNavDropdownCategory() === true;
+        }
+
+        return self::resolveCategoryFromPostPath($menu, (string) $this->url) !== null;
+    }
+
+    public function blogCategoryForPost(): ?self
+    {
+        if ($this->isNavDropdownCategory()) {
+            return $this;
+        }
+
+        $parent = $this->relationLoaded('parent') ? $this->parent : $this->parent()->first();
+        if ($parent?->isNavDropdownCategory()) {
+            return $parent;
+        }
+
+        $menu = $this->relationLoaded('menu') ? $this->menu : $this->menu()->first();
+
+        return $menu ? self::resolveCategoryFromPostPath($menu, (string) $this->url) : null;
+    }
+
+    /**
+     * Fix legacy posts saved as /blog/slug instead of /blog/news/slug.
+     */
+    public function repairBlogPostUrlAndParent(): void
+    {
+        $category = $this->blogCategoryForPost();
+        if (! $category || $this->isNavDropdownCategory()) {
+            return;
+        }
+
+        $path = $this->normalizedPath();
+        $base = $category->categoryBasePath();
+        $slug = Str::slug($this->label) ?: 'item';
+
+        if ($base && $path !== null && ! preg_match('#^'.preg_quote($base, '#').'/[^/]+$#', $path)) {
+            $candidate = rtrim($base, '/').'/'.$slug;
+            $i = 2;
+            while (self::query()->where('url', $candidate)->where('id', '!=', $this->id)->exists()) {
+                $candidate = rtrim($base, '/').'/'.$slug.'-'.$i;
+                $i++;
+            }
+            $this->url = $candidate;
+        }
+
+        if ((int) $this->parent_sub_menu_id !== (int) $category->id) {
+            $this->parent_sub_menu_id = $category->id;
+        }
+
+        if ($this->isDirty()) {
+            $this->save();
+        }
+    }
+
+    public function suggestCategoryPostUrl(string $slug): string
+    {
+        $base = $this->categoryBasePath() ?? '/blog/item';
+        $slug = trim($slug, '/');
+
+        return $slug === '' ? $base : rtrim($base, '/').'/'.$slug;
+    }
+
+    public static function pathFromUrl(string $url): ?string
+    {
+        $raw = trim($url);
+
+        if ($raw === '' || $raw === '#') {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $raw)) {
+            $path = parse_url($raw, PHP_URL_PATH);
+
+            if ($path === null || $path === '') {
+                return '/';
+            }
+
+            $path = '/'.ltrim($path, '/');
+
+            return rtrim($path, '/') === '' ? '/' : rtrim($path, '/');
+        }
+
+        $path = str_starts_with($raw, '/') ? $raw : '/'.$raw;
+        $path = '/'.ltrim($path, '/');
+
+        return rtrim($path, '/') === '' ? '/' : rtrim($path, '/');
+    }
+
+    /**
+     * Items that belong only to this menu (News, Events, …) — not mixed with other categories.
+     *
+     * @return \Illuminate\Support\Collection<int, self>
+     */
+    public function categoryItems(bool $repairOrphans = false): \Illuminate\Support\Collection
+    {
+        $base = $this->categoryBasePath();
+
+        if ($base === null) {
+            return collect();
+        }
+
+        $pattern = '#^'.preg_quote($base, '#').'/[^/]+$#';
+
+        $orphans = self::query()
+            ->where('menu_id', $this->menu_id)
+            ->where('id', '!=', $this->id)
+            ->active()
+            ->ordered()
+            ->get()
+            ->filter(function (self $post) use ($pattern): bool {
+                $path = $post->normalizedPath();
+
+                return $path !== null
+                    && preg_match($pattern, $path) === 1
+                    && (int) $post->parent_sub_menu_id !== (int) $this->id;
+            });
+
+        if ($repairOrphans) {
+            foreach ($orphans as $post) {
+                $post->parent_sub_menu_id = $this->id;
+                $post->repairBlogPostUrlAndParent();
+            }
+
+            self::query()
+                ->where('parent_sub_menu_id', $this->id)
+                ->each(function (self $post): void {
+                    $post->repairBlogPostUrlAndParent();
+                });
+        }
+
+        return $this->children()->active()->ordered()->get();
+    }
+
+    public function blogCategoryPosts(bool $repairOrphans = false): \Illuminate\Support\Collection
+    {
+        return $this->categoryItems($repairOrphans);
+    }
+
+    public static function resolveCategoryFromPostPath(Menu $menu, string $url): ?self
+    {
+        if (! self::isBlogMenu($menu)) {
+            return null;
+        }
+
+        $path = self::pathFromUrl($url);
+
+        if ($path === null) {
+            return null;
+        }
+
+        $categories = self::query()
+            ->where('menu_id', $menu->id)
+            ->whereNull('parent_sub_menu_id')
+            ->active()
+            ->ordered()
+            ->get();
+
+        foreach ($categories as $category) {
+            $base = $category->categoryBasePath();
+
+            if ($base === null) {
+                continue;
+            }
+
+            if (preg_match('#^'.preg_quote($base, '#').'/[^/]+$#', $path) === 1) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
+    public static function resolveBlogCategoryFromPostPath(Menu $menu, string $url): ?self
+    {
+        return self::resolveCategoryFromPostPath($menu, $url);
+    }
+
+    public static function resolveCategoryParentSubMenuId(Menu $menu, string $url, ?int $explicitParentId = null): ?int
+    {
+        if (! self::isBlogMenu($menu)) {
+            return $explicitParentId;
+        }
+
+        $path = self::pathFromUrl($url);
+
+        if ($path === null || $path === '/blog') {
+            return null;
+        }
+
+        $categories = self::query()
+            ->where('menu_id', $menu->id)
+            ->whereNull('parent_sub_menu_id')
+            ->ordered()
+            ->get();
+
+        foreach ($categories as $category) {
+            $base = $category->categoryBasePath();
+
+            if ($base === null) {
+                continue;
+            }
+
+            if ($path === $base) {
+                return null;
+            }
+
+            if (preg_match('#^'.preg_quote($base, '#').'/[^/]+$#', $path) === 1) {
+                if ($explicitParentId !== null) {
+                    $parent = self::query()->find($explicitParentId);
+                    if ($parent && (int) $parent->menu_id === (int) $menu->id) {
+                        return $explicitParentId;
+                    }
+                }
+
+                return $category->id;
+            }
+        }
+
+        return $explicitParentId;
+    }
+
+    public static function resolveBlogParentSubMenuId(Menu $menu, string $url, ?int $explicitParentId = null): ?int
+    {
+        return self::resolveCategoryParentSubMenuId($menu, $url, $explicitParentId);
+    }
+
+    public function showsChildItemsInNav(): bool
+    {
+        return ! $this->isNavDropdownCategory();
+    }
+
+    /**
+     * BLOG dropdown: only category links (News, Events, …), never individual posts.
+     */
+    public function showInSiteHeaderNav(): bool
+    {
+        $menu = $this->relationLoaded('menu') ? $this->menu : $this->menu()->first();
+
+        if ($menu && self::isBlogMenu($menu)) {
+            return $this->isNavDropdownCategory();
+        }
+
+        return true;
+    }
+
     public function normalizedPath(): ?string
     {
         $raw = trim($this->url);
@@ -242,6 +569,14 @@ class SubMenu extends Model
             }
         }
 
+        if ($this->isNavDropdownCategory()) {
+            return route('admin.sub-menus.manage', $this);
+        }
+
+        if ($this->isBlogCategoryPost()) {
+            return route('admin.sub-menus.edit', $this);
+        }
+
         return route('admin.sub-menus.page-sections.index', $this);
     }
 
@@ -287,7 +622,12 @@ class SubMenu extends Model
 
         $routeSub = request()->route('sub_menu');
 
-        return (request()->routeIs('admin.sub-menus.edit') || request()->routeIs('admin.sub-menus.page-sections.*'))
+        return (request()->routeIs('admin.sub-menus.edit')
+            || request()->routeIs('admin.sub-menus.manage')
+            || request()->routeIs('admin.sub-menus.page-sections.*')
+            || request()->routeIs('admin.who-we-are-sub-menus.*')
+            || request()->routeIs('admin.ship-supply-sub-menus.*')
+            || request()->routeIs('admin.our-services-sub-menus.*'))
             && $routeSub instanceof self
             && (int) $routeSub->id === (int) $this->id;
     }

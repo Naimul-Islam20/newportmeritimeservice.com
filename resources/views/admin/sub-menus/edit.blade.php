@@ -37,10 +37,13 @@
                     @endforeach
                 </select>
                 @error('parent_sub_menu_id') <div class="error">{{ $message }}</div> @enderror
+                <div style="color:#64748b;font-size:12px;margin-top:6px;">
+                    Items must nest under their menu (News, Events, Gallery, …). URL must match that menu path.
+                </div>
             </div>
             <div>
                 <label for="url">Sub menu URL</label>
-                <input id="url" name="url" value="{{ old('url', $subMenu->url) }}" placeholder="Optional (auto if blank)">
+                <input id="url" name="url" value="{{ old('url', $subMenu->url) }}" placeholder="e.g. /blog/news/my-article-title">
                 @error('url') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div style="grid-column: 1 / -1;">

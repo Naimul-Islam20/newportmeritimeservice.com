@@ -8,6 +8,9 @@
         @if (! empty($detailsUrl ?? null))
             <a class="btn btn-muted" href="{{ $detailsUrl }}">Details</a>
         @endif
+        @if (! empty($manageUrl ?? null))
+            <a class="btn btn-muted" href="{{ $manageUrl }}">{{ $ownerLabel }} items</a>
+        @endif
         <a class="btn btn-muted" href="{{ $backUrl }}">Back</a>
     </div>
 </div>

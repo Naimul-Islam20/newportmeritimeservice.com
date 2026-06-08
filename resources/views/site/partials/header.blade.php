@@ -1,4 +1,4 @@
-<div class="site-header sticky top-0 z-50 w-full min-w-0">
+<div class="site-header sticky top-0 z-50 w-full min-w-0 overflow-visible">
     {{-- Top utility bar (desktop) — contact left, quick links right --}}
     @php
         $sd = $siteDetails ?? null;
@@ -23,13 +23,13 @@
             return ['label' => $item['label'], 'href' => $href];
         })->all();
     @endphp
-    <div class="site-header__topbar hidden bg-secondary lg:block">
-        <div class="site-container site-header__bar-wrap">
-            <div class="site-header__topbar-inner">
+    <div class="site-header__topbar hidden lg:block">
+        <div class="site-bar-strip">
+            <div class="site-bar-strip__row site-header__topbar-inner">
                 <div class="site-header__topbar-contact">
                     @if ($topPhone)
                         @php($topTel = preg_replace('/[^0-9+]/', '', $topPhone))
-                        <a href="tel:{{ $topTel }}" class="site-header__topbar-cell site-header__topbar-cell--start">
+                        <a href="tel:{{ $topTel }}" class="site-bar-strip__cell site-header__topbar-cell site-header__topbar-cell--start">
                             <span class="site-header__topbar-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -39,7 +39,7 @@
                         </a>
                     @endif
                     @if ($topEmail)
-                        <a href="mailto:{{ $topEmail }}" class="site-header__topbar-cell{{ $topPhone ? '' : ' site-header__topbar-cell--start' }}{{ count($topBarLinks) === 0 ? ' site-header__topbar-cell--end' : '' }}">
+                        <a href="mailto:{{ $topEmail }}" class="site-bar-strip__cell site-header__topbar-cell{{ $topPhone ? '' : ' site-header__topbar-cell--start' }}{{ count($topBarLinks) === 0 ? ' site-header__topbar-cell--end' : '' }}">
                             <span class="site-header__topbar-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -56,7 +56,7 @@
                         @foreach ($topBarLinks as $index => $link)
                             <a href="{{ $link['href'] }}"
                                 @class([
-                                    'site-header__topbar-cell',
+                                    'site-bar-strip__cell site-header__topbar-cell',
                                     'site-header__topbar-cell--start' => $index === 0,
                                     'site-header__topbar-cell--end' => $index === count($topBarLinks) - 1,
                                 ])>{{ $link['label'] }}</a>
@@ -69,7 +69,7 @@
 
     <!-- Main Header -->
     <header class="site-header__main w-full min-w-0 max-w-full overflow-visible bg-white shadow-sm">
-        <div class="site-container site-header__bar-wrap site-header__main-inner">
+        <div class="site-header__frame">
             <a href="{{ route('home') }}" class="site-header__logo-link shrink-0 no-underline">
                 <img src="{{ \App\Models\SiteDetail::headerLogoAssetUrl($siteDetails ?? null) }}" alt="{{ $siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName() }}" class="site-header__logo">
             </a>
@@ -77,7 +77,7 @@
             @include('site.partials.mobile-nav')
 
             {{-- Desktop only (lg+): hover dropdown + down caret. z-index on hover so panel is not covered by next menu items. --}}
-            <nav class="site-desktop-nav relative z-50 hidden items-stretch justify-end lg:flex" aria-label="Primary">
+            <nav class="site-desktop-nav relative z-50 hidden items-center justify-end lg:flex" aria-label="Primary">
                 @foreach ($headerMenus as $menu)
                 @if ($menu->subMenus->isNotEmpty())
                 <div class="site-desktop-nav__item">

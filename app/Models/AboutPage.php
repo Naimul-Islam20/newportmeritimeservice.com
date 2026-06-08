@@ -86,6 +86,116 @@ class AboutPage extends Model
         return (object) $out;
     }
 
+    /**
+     * Mission & vision copy for the public home section.
+     * Prefers about_pages fields; falls back to stored menu/about page sections.
+     *
+     * @return object{mission_title: string, mission_body: ?string, vision_title: string, vision_body: ?string}
+     */
+    public static function missionVisionForPublic(): object
+    {
+        $about = self::resolvedForPublic();
+
+        $missionTitle = filled($about->mission_title ?? null) ? trim($about->mission_title) : null;
+        $missionBody = filled($about->mission_body ?? null) ? trim($about->mission_body) : null;
+        $visionTitle = filled($about->vision_title ?? null) ? trim($about->vision_title) : null;
+        $visionBody = filled($about->vision_body ?? null) ? trim($about->vision_body) : null;
+
+        if ($missionBody === null || $visionBody === null) {
+            $sectionData = self::missionVisionSectionData();
+            if ($sectionData !== null) {
+                $parsed = self::parseMissionVisionFromSectionData($sectionData);
+                if ($missionTitle === null && filled($parsed['mission_title'])) {
+                    $missionTitle = trim((string) $parsed['mission_title']);
+                }
+                if ($visionTitle === null && filled($parsed['vision_title'])) {
+                    $visionTitle = trim((string) $parsed['vision_title']);
+                }
+                if ($missionBody === null && filled($parsed['mission_body'])) {
+                    $missionBody = trim((string) $parsed['mission_body']);
+                }
+                if ($visionBody === null && filled($parsed['vision_body'])) {
+                    $visionBody = trim((string) $parsed['vision_body']);
+                }
+            }
+        }
+
+        return (object) [
+            'mission_title' => $missionTitle ?? 'Our Mission',
+            'mission_body' => $missionBody,
+            'vision_title' => $visionTitle ?? 'Our Vision',
+            'vision_body' => $visionBody,
+        ];
+    }
+
+    /** @return array<string, mixed>|null */
+    private static function missionVisionSectionData(): ?array
+    {
+        $sub = SubMenu::query()
+            ->where(function ($q): void {
+                $q->where('url', '/our-values-mission-vision')
+                    ->orWhere('url', 'our-values-mission-vision');
+            })
+            ->first();
+
+        if ($sub) {
+            $section = $sub->pageSections()
+                ->where('type', 'two_column_two_side_details')
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->first();
+
+            if ($section && is_array($section->data)) {
+                return $section->data;
+            }
+        }
+
+        $aboutPage = self::query()->first();
+        if ($aboutPage) {
+            $section = $aboutPage->pageSections()
+                ->where('type', 'two_column_two_side_details')
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->first();
+
+            if ($section && is_array($section->data)) {
+                return $section->data;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{mission_title: mixed, mission_body: mixed, vision_title: mixed, vision_body: mixed}
+     */
+    private static function parseMissionVisionFromSectionData(array $data): array
+    {
+        $leftTitle = strtolower(trim((string) data_get($data, 'left_title', '')));
+        $rightTitle = strtolower(trim((string) data_get($data, 'right_title', '')));
+        $leftDesc = data_get($data, 'left_description');
+        $rightDesc = data_get($data, 'right_description');
+        $leftIsVision = str_contains($leftTitle, 'vision');
+        $rightIsVision = str_contains($rightTitle, 'vision');
+
+        if ($leftIsVision && ! $rightIsVision) {
+            return [
+                'mission_title' => data_get($data, 'right_title'),
+                'mission_body' => $rightDesc,
+                'vision_title' => data_get($data, 'left_title'),
+                'vision_body' => $leftDesc,
+            ];
+        }
+
+        return [
+            'mission_title' => data_get($data, 'left_title'),
+            'mission_body' => $leftDesc,
+            'vision_title' => data_get($data, 'right_title'),
+            'vision_body' => $rightDesc,
+        ];
+    }
+
     /** Use full URL, site path, or storage path as image src (empty if file missing). */
     public static function imageSrc(?string $value): string
     {

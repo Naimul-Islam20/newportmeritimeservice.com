@@ -13,9 +13,6 @@
     $hasStat2 = filled($about->stat2_value ?? null) || filled($about->stat2_label ?? null);
     $hasStat3 = filled($about->stat3_value ?? null) || filled($about->stat3_label ?? null);
     $hasStats = $hasStat1 || $hasStat2 || $hasStat3;
-    $hasMission = filled($about->mission_title ?? null) || filled($about->mission_body ?? null);
-    $hasVision = filled($about->vision_title ?? null) || filled($about->vision_body ?? null);
-    $hasMissionVision = $hasMission || $hasVision;
     $hasCtaBg = \App\Models\AboutPage::imageSrc($about->cta_background ?? null) !== '';
     $hasCtaText = filled($about->cta_eyebrow ?? null) || filled($about->cta_heading ?? null) || filled($about->cta_button_label ?? null);
     $hasCta = $hasCtaBg || $hasCtaText || $aboutVideo['type'] !== 'none';
@@ -73,35 +70,6 @@
                     @endif
                     @if (filled($about->stat3_label ?? null))
                         <span @class(['text-xs font-bold uppercase tracking-widest text-foreground/60', 'mt-4' => filled($about->stat3_value ?? null)])>{{ $about->stat3_label }}</span>
-                    @endif
-                </div>
-            @endif
-        </div>
-    </div>
-</section>
-@endif
-
-@if ($hasMissionVision)
-<section @if (! $hasStats) id="about-continue" @endif class="bg-white pb-16 lg:pb-24">
-    <div class="site-container">
-        <div class="grid gap-8 lg:grid-cols-2">
-            @if ($hasMission)
-                <div class="rounded-3xl bg-primary/10 p-10 lg:p-14">
-                    @if (filled($about->mission_title ?? null))
-                        <h3 class="text-3xl font-black text-secondary">{{ $about->mission_title }}</h3>
-                    @endif
-                    @if (filled($about->mission_body ?? null))
-                        <p @class(['text-base font-medium leading-relaxed text-foreground/70', 'mt-6' => filled($about->mission_title ?? null)])>{{ $about->mission_body }}</p>
-                    @endif
-                </div>
-            @endif
-            @if ($hasVision)
-                <div class="rounded-3xl bg-primary/10 p-10 lg:p-14">
-                    @if (filled($about->vision_title ?? null))
-                        <h3 class="text-3xl font-black text-secondary">{{ $about->vision_title }}</h3>
-                    @endif
-                    @if (filled($about->vision_body ?? null))
-                        <p @class(['text-base font-medium leading-relaxed text-foreground/70', 'mt-6' => filled($about->vision_title ?? null)])>{{ $about->vision_body }}</p>
                     @endif
                 </div>
             @endif

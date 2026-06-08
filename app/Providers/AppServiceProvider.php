@@ -98,12 +98,6 @@ class AppServiceProvider extends ServiceProvider
         View::composer('site.partials.header', function ($view): void {
             $view->with('headerMenus', Menu::query()
                 ->where('is_active', true)
-                // Hidden from navbar (remove a path to show again)
-                ->where(function ($q): void {
-                    $q->whereNotIn('url', ['/ship-supply', 'ship-supply', '/award', 'award'])
-                        ->whereRaw('LOWER(label) NOT LIKE ?', ['%ship supply%'])
-                        ->whereRaw('LOWER(label) NOT LIKE ?', ['%award%']);
-                })
                 ->orderBy('sort_order')
                 ->orderBy('id')
                 ->with([
@@ -119,7 +113,18 @@ class AppServiceProvider extends ServiceProvider
                                 ->orderBy('id'),
                         ]),
                 ])
-                ->get());
+                ->get()
+                ->map(function (Menu $menu): Menu {
+                    $menu->setRelation(
+                        'subMenus',
+                        $menu->subMenus
+                            ->each(fn (SubMenu $sub) => $sub->setRelation('menu', $menu))
+                            ->filter(fn (SubMenu $sub) => $sub->showInSiteHeaderNav())
+                            ->values(),
+                    );
+
+                    return $menu;
+                }));
             $view->with('siteDetails', SiteDetail::query()->first());
         });
 

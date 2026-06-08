@@ -128,6 +128,9 @@ class Menu extends Model
         if ($path === '/career') {
             return route('career');
         }
+        if ($path === '/award') {
+            return route('award');
+        }
 
         return $this->resolvedHref();
     }
@@ -210,6 +213,9 @@ class Menu extends Model
     {
         return match ($this->normalizedPath()) {
             '/career' => route('admin.career-page.edit'),
+            '/ship-supply' => route('admin.ship-supply-sub-menus.index'),
+            '/our-services' => route('admin.our-services-sub-menus.index'),
+            '/contact' => route('admin.contact-messages.index'),
             default => route('admin.menus.page-sections.index', $this),
         };
     }
@@ -218,6 +224,11 @@ class Menu extends Model
     {
         return match ($this->normalizedPath()) {
             '/career' => request()->routeIs('admin.career-page.*'),
+            '/ship-supply' => request()->routeIs('admin.ship-supply-sub-menus.*'),
+            '/our-services' => request()->routeIs('admin.our-services-sub-menus.*')
+                || request()->routeIs('admin.service-pages.*')
+                || request()->routeIs('admin.service-sidebar.*'),
+            '/contact' => request()->routeIs('admin.contact-messages.*'),
             default => (request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*'))
                 && request()->route('menu') instanceof self
                 && (int) request()->route('menu')->id === (int) $this->id,
@@ -241,11 +252,27 @@ class Menu extends Model
     }
 
     /**
+     * Our Services menu row for admin sub-menu management (includes inactive menu).
+     */
+    public static function ourServicesAdminMenu(): ?self
+    {
+        return self::query()
+            ->where(function (Builder $q): void {
+                $q->where('url', '/our-services')
+                    ->orWhere('url', 'our-services')
+                    ->orWhereRaw('LOWER(label) LIKE ?', ['%our services%']);
+            })
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first();
+    }
+
+    /**
      * Primary BLOG menu for blog category navigation (News / Events / Gallery / Recipes / TV).
      */
     public static function blogMenu(): ?self
     {
-        return self::query()
+        $menu = self::query()
             ->where('is_active', true)
             ->where(function (Builder $q): void {
                 $q->where('url', '/blog')
@@ -253,11 +280,73 @@ class Menu extends Model
                     ->orWhereRaw('LOWER(label) LIKE ?', ['%blog%']);
             })
             ->with([
-                'subMenus' => fn (Builder $q) => $q
+                'subMenus' => fn ($query) => $query
                     ->active()
                     ->whereNull('parent_sub_menu_id')
                     ->ordered(),
             ])
             ->first();
+
+        return self::withHeaderNavSubMenus($menu);
+    }
+
+    /**
+     * Primary WHO WE ARE menu for header dropdown management.
+     */
+    public static function whoWeAreMenu(): ?self
+    {
+        $whoWeAre = self::query()
+            ->whereRaw('LOWER(label) LIKE ?', ['%who we are%'])
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first();
+
+        if ($whoWeAre) {
+            return $whoWeAre;
+        }
+
+        return self::query()
+            ->where('url', '/')
+            ->whereHas('subMenus')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first()
+            ?? self::query()->where('url', '/')->orderBy('sort_order')->orderBy('id')->first();
+    }
+
+    /**
+     * Primary SHIP SUPPLY menu for header dropdown management.
+     */
+    public static function shipSupplyMenu(): ?self
+    {
+        return self::query()
+            ->where(function (Builder $q): void {
+                $q->where('url', '/ship-supply')
+                    ->orWhere('url', 'ship-supply')
+                    ->orWhereRaw('LOWER(label) LIKE ?', ['%ship supply%']);
+            })
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first();
+    }
+
+    /**
+     * Strip BLOG post links from submenu lists used in header / tabs.
+     */
+    public static function withHeaderNavSubMenus(?self $menu): ?self
+    {
+        if (! $menu) {
+            return null;
+        }
+
+        $menu->setRelation(
+            'subMenus',
+            $menu->subMenus
+                ->each(fn (SubMenu $sub) => $sub->setRelation('menu', $menu))
+                ->filter(fn (SubMenu $sub) => $sub->showInSiteHeaderNav())
+                ->values(),
+        );
+
+        return $menu;
     }
 }

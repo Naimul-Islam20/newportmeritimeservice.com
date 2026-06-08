@@ -15,6 +15,7 @@
             <tr>
                 <th>Menu</th>
                 <th>Label</th>
+                <th>Nest under</th>
                 <th>URL</th>
                 <th>Description</th>
                 <th>Sort</th>
@@ -27,6 +28,7 @@
             <tr>
                 <td>{{ $sub->menu?->label ?? '—' }}</td>
                 <td>{{ $sub->label }}</td>
+                <td>{{ $sub->parent?->label ?? '—' }}</td>
                 <td><code style="font-size:12px;">{{ \Illuminate\Support\Str::limit($sub->url, 48) }}</code></td>
                 <td style="white-space: normal; max-width: 320px;">
                     {{ \Illuminate\Support\Str::limit($sub->description ?? '—', 80) }}
@@ -53,7 +55,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="7">No sub-menus yet.</td>
+                <td colspan="8">No sub-menus yet.</td>
             </tr>
             @endforelse
         </tbody>
