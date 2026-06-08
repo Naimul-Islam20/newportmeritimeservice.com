@@ -331,6 +331,22 @@ class Menu extends Model
     }
 
     /**
+     * Primary AWARD menu for header dropdown management.
+     */
+    public static function awardMenu(): ?self
+    {
+        return self::query()
+            ->where(function (Builder $q): void {
+                $q->where('url', '/award')
+                    ->orWhere('url', 'award')
+                    ->orWhereRaw('LOWER(label) LIKE ?', ['%award%']);
+            })
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->first();
+    }
+
+    /**
      * Strip BLOG post links from submenu lists used in header / tabs.
      */
     public static function withHeaderNavSubMenus(?self $menu): ?self

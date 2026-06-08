@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\QuoteRequestController as AdminQuoteRequestContro
 use App\Http\Controllers\Admin\ServicePageController;
 use App\Http\Controllers\Admin\ServiceSidebarController;
 use App\Http\Controllers\Admin\SiteDetailController;
+use App\Http\Controllers\Admin\AwardSubMenuController;
 use App\Http\Controllers\Admin\ShipSupplySubMenuController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\WhereWeAreLocationController;
@@ -173,6 +174,21 @@ Route::prefix('admin')->group(function (): void {
             ->name('admin.our-services-sub-menus.toggle-active');
         Route::delete('our-services/sub-menus/{sub_menu}', [OurServicesSubMenuController::class, 'destroy'])
             ->name('admin.our-services-sub-menus.destroy');
+
+        Route::get('award/sub-menus', [AwardSubMenuController::class, 'index'])
+            ->name('admin.award-sub-menus.index');
+        Route::get('award/sub-menus/create', [AwardSubMenuController::class, 'create'])
+            ->name('admin.award-sub-menus.create');
+        Route::post('award/sub-menus', [AwardSubMenuController::class, 'store'])
+            ->name('admin.award-sub-menus.store');
+        Route::get('award/sub-menus/{sub_menu}/edit', [AwardSubMenuController::class, 'edit'])
+            ->name('admin.award-sub-menus.edit');
+        Route::put('award/sub-menus/{sub_menu}', [AwardSubMenuController::class, 'update'])
+            ->name('admin.award-sub-menus.update');
+        Route::patch('award/sub-menus/{sub_menu}/toggle-active', [AwardSubMenuController::class, 'toggleActive'])
+            ->name('admin.award-sub-menus.toggle-active');
+        Route::delete('award/sub-menus/{sub_menu}', [AwardSubMenuController::class, 'destroy'])
+            ->name('admin.award-sub-menus.destroy');
 
         Route::get('sub-menus/{sub_menu}/page-sections', [MenuPageSectionController::class, 'indexSubMenu'])
             ->name('admin.sub-menus.page-sections.index');

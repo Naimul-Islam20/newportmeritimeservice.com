@@ -610,6 +610,7 @@
                     <a class="{{ request()->routeIs('admin.who-we-are-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.who-we-are-sub-menus.index') }}">Who We Are — menu</a>
                     <a class="{{ request()->routeIs('admin.ship-supply-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.ship-supply-sub-menus.index') }}">Ship Supply — menu</a>
                     <a class="{{ request()->routeIs('admin.our-services-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.our-services-sub-menus.index') }}">Our Services — menu</a>
+                    <a class="{{ request()->routeIs('admin.award-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.award-sub-menus.index') }}">Award — menu</a>
                     <a class="{{ request()->routeIs('admin.quality-certificates.*') ? 'active' : '' }}" href="{{ route('admin.quality-certificates.index') }}">Quality Certificates</a>
                     <a class="{{ request()->routeIs('admin.service-pages.*') || request()->routeIs('admin.service-sidebar.*') ? 'active' : '' }}" href="{{ route('admin.service-pages.index') }}">Our Services pages (legacy)</a>
                     <a class="{{ request()->routeIs('admin.career-page.*') ? 'active' : '' }}" href="{{ route('admin.career-page.edit') }}">Career page</a>
@@ -629,6 +630,7 @@
                         @php($isHomeMenu = $sidebarMenu->normalizedPath() === '/')
                         @php($isShipSupplyMenu = $sidebarMenu->normalizedPath() === '/ship-supply' || str_contains(strtolower((string) $sidebarMenu->label), 'ship supply'))
                         @php($isOurServicesMenu = $sidebarMenu->normalizedPath() === '/our-services' || str_contains(strtolower((string) $sidebarMenu->label), 'our service'))
+                        @php($isAwardMenu = $sidebarMenu->normalizedPath() === '/award' || str_contains(strtolower((string) $sidebarMenu->label), 'award'))
                         @if ($sidebarMenu->subMenus->isEmpty())
                             <a class="{{ $isHomeMenu
                                 ? (request()->routeIs('admin.home-sections.*') ? 'active' : '')
@@ -638,6 +640,7 @@
                             @php($openSidebarGroup = ($isHomeMenu && request()->routeIs('admin.who-we-are-sub-menus.*'))
                                 || ($isShipSupplyMenu && request()->routeIs('admin.ship-supply-sub-menus.*'))
                                 || ($isOurServicesMenu && request()->routeIs('admin.our-services-sub-menus.*'))
+                                || ($isAwardMenu && request()->routeIs('admin.award-sub-menus.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.home-sections.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.about-page.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.our-story-page.*'))
@@ -661,19 +664,25 @@
                                             ? (request()->routeIs('admin.ship-supply-sub-menus.*') ? 'active' : '')
                                             : ($isOurServicesMenu
                                                 ? (request()->routeIs('admin.our-services-sub-menus.*') ? 'active' : '')
-                                                : ((request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : ''))) }}"
+                                                : ($isAwardMenu
+                                                    ? (request()->routeIs('admin.award-sub-menus.*') ? 'active' : '')
+                                                    : ((request()->routeIs('admin.menus.edit') || request()->routeIs('admin.menus.page-sections.*')) && $routeMenu && (int) $routeMenu->id === (int) $sidebarMenu->id ? 'active' : '')))) }}"
                                         href="{{ $isHomeMenu
                                             ? route('admin.who-we-are-sub-menus.index')
                                             : ($isShipSupplyMenu
                                                 ? route('admin.ship-supply-sub-menus.index')
                                                 : ($isOurServicesMenu
                                                     ? route('admin.our-services-sub-menus.index')
-                                                    : route('admin.menus.page-sections.index', $sidebarMenu))) }}"
+                                                    : ($isAwardMenu
+                                                        ? route('admin.award-sub-menus.index')
+                                                        : route('admin.menus.page-sections.index', $sidebarMenu)))) }}"
                                         title="{{ $isHomeMenu
                                             ? 'Manage Who We Are dropdown items'
                                             : ($isShipSupplyMenu
                                                 ? 'Manage Ship Supply dropdown items'
-                                                : ($isOurServicesMenu ? 'Manage Our Services dropdown items' : 'Page sections for this parent menu')) }}">{{ $sidebarMenu->label }}</a>
+                                                : ($isOurServicesMenu
+                                                    ? 'Manage Our Services dropdown items'
+                                                    : ($isAwardMenu ? 'Manage Award dropdown items' : 'Page sections for this parent menu'))) }}">{{ $sidebarMenu->label }}</a>
                                     @foreach ($sidebarMenu->subMenus as $sidebarSub)
                                         <a class="{{ $sidebarSub->adminSidebarIsActive() ? 'active' : '' }}"
                                             href="{{ $sidebarSub->adminSidebarHref() }}">{{ $sidebarSub->label }}</a>
