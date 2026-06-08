@@ -5,7 +5,11 @@
     <h1>Edit sub-menu</h1>
     <div style="display:inline-flex;gap:8px;flex-wrap:wrap;">
         <a class="btn btn-muted" href="{{ route('admin.award-sub-menus.index') }}">Back to list</a>
-        @if (! $subMenu->isFormPageLink())
+        @if ($subMenu->isCertificationsMembershipNavItem())
+        <a class="btn btn-primary" href="{{ route('admin.quality-certificates.index') }}">Certificates</a>
+        @elseif ($subMenu->isHonorableClientNavItem())
+        <a class="btn btn-primary" href="{{ route('admin.honorable-clients.index') }}">Clients</a>
+        @elseif (! $subMenu->isFormPageLink())
         <a class="btn btn-primary" href="{{ $subMenu->adminSidebarHref() }}">Page content</a>
         @endif
     </div>

@@ -50,7 +50,11 @@
                             </button>
                         </form>
                         <a class="btn btn-muted" href="{{ route('admin.award-sub-menus.edit', $sub) }}">Edit</a>
-                        @if (! $sub->isFormPageLink())
+                        @if ($sub->isCertificationsMembershipNavItem())
+                        <a class="btn btn-primary" href="{{ route('admin.quality-certificates.index') }}">Certificates</a>
+                        @elseif ($sub->isHonorableClientNavItem())
+                        <a class="btn btn-primary" href="{{ route('admin.honorable-clients.index') }}">Clients</a>
+                        @elseif (! $sub->isFormPageLink())
                         <a class="btn btn-primary" href="{{ $sub->adminSidebarHref() }}">Page content</a>
                         @endif
                         @endcan

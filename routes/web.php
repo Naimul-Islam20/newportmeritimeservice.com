@@ -28,6 +28,8 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MenuPageController;
 use App\Http\Controllers\Site\PageController;
+use App\Http\Controllers\Admin\HonorableClientController as AdminHonorableClientController;
+use App\Http\Controllers\Site\HonorableClientController;
 use App\Http\Controllers\Site\QualityCertificateController;
 use App\Http\Controllers\Site\QuoteRequestController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +65,7 @@ Route::get('/where-we-are/{slug}', [PageController::class, 'whereWeAreLocation']
 Route::get('/locations', [PageController::class, 'locations'])->name('locations');
 Route::get('/quality-certificates-memberships', [QualityCertificateController::class, 'index'])->name('quality-certificates');
 Route::get('/award', [PageController::class, 'award'])->name('award');
+Route::get('/award/honorable-client', [HonorableClientController::class, 'index'])->name('honorable-clients');
 Route::get('/get-a-quote', [QuoteRequestController::class, 'create'])->name('quote.request');
 Route::post('/get-a-quote', [QuoteRequestController::class, 'store'])
     ->middleware('throttle:10,1')
@@ -246,6 +249,13 @@ Route::prefix('admin')->group(function (): void {
         Route::post('quality-certificates/groups/{certificate_group}/certificates', [App\Http\Controllers\Admin\QualityCertificateController::class, 'storeCertificate'])->name('admin.quality-certificates.groups.certificates.store');
         Route::put('quality-certificates/groups/{certificate_group}/certificates/{quality_certificate}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'updateCertificate'])->name('admin.quality-certificates.groups.certificates.update');
         Route::delete('quality-certificates/groups/{certificate_group}/certificates/{quality_certificate}', [App\Http\Controllers\Admin\QualityCertificateController::class, 'destroyCertificate'])->name('admin.quality-certificates.groups.certificates.destroy');
+
+        Route::get('honorable-clients', [AdminHonorableClientController::class, 'index'])->name('admin.honorable-clients.index');
+        Route::put('honorable-clients/page', [AdminHonorableClientController::class, 'updatePage'])->name('admin.honorable-clients.page.update');
+        Route::post('honorable-clients', [AdminHonorableClientController::class, 'store'])->name('admin.honorable-clients.store');
+        Route::get('honorable-clients/{honorable_client}/edit', [AdminHonorableClientController::class, 'edit'])->name('admin.honorable-clients.edit');
+        Route::put('honorable-clients/{honorable_client}', [AdminHonorableClientController::class, 'update'])->name('admin.honorable-clients.update');
+        Route::delete('honorable-clients/{honorable_client}', [AdminHonorableClientController::class, 'destroy'])->name('admin.honorable-clients.destroy');
 
         Route::get('about-page/{about_page}/page-sections', [MenuPageSectionController::class, 'indexAbout'])
             ->name('admin.about-page.page-sections.index');

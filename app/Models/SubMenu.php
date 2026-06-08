@@ -114,6 +114,16 @@ class SubMenu extends Model
         return $this->normalizedPath() === '/get-a-quote';
     }
 
+    public function isCertificationsMembershipNavItem(): bool
+    {
+        return $this->normalizedPath() === '/quality-certificates-memberships';
+    }
+
+    public function isHonorableClientNavItem(): bool
+    {
+        return $this->normalizedPath() === '/award/honorable-client';
+    }
+
     public function siteNavHref(): string
     {
         $path = $this->normalizedPath();
@@ -556,6 +566,8 @@ class SubMenu extends Model
             '/our-team-management' => route('admin.our-team-page.edit'),
             '/career' => route('admin.career-page.edit'),
             '/contact' => route('admin.contact-messages.index'),
+            '/quality-certificates-memberships' => route('admin.quality-certificates.index'),
+            '/award/honorable-client' => route('admin.honorable-clients.index'),
             default => $this->adminSidebarHrefForPath($path),
         };
     }
@@ -611,6 +623,12 @@ class SubMenu extends Model
         if ($path === '/contact') {
             return request()->routeIs('admin.contact-messages.*');
         }
+        if ($path === '/quality-certificates-memberships') {
+            return request()->routeIs('admin.quality-certificates.*');
+        }
+        if ($path === '/award/honorable-client') {
+            return request()->routeIs('admin.honorable-clients.*');
+        }
 
         if ($path !== null && preg_match('#^/where-we-are/([^/]+)$#', $path, $m)) {
             $routeLocation = request()->route('where_we_are_location');
@@ -627,7 +645,8 @@ class SubMenu extends Model
             || request()->routeIs('admin.sub-menus.page-sections.*')
             || request()->routeIs('admin.who-we-are-sub-menus.*')
             || request()->routeIs('admin.ship-supply-sub-menus.*')
-            || request()->routeIs('admin.our-services-sub-menus.*'))
+            || request()->routeIs('admin.our-services-sub-menus.*')
+            || request()->routeIs('admin.award-sub-menus.*'))
             && $routeSub instanceof self
             && (int) $routeSub->id === (int) $this->id;
     }

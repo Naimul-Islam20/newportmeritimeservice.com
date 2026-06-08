@@ -82,6 +82,22 @@
                 @foreach ($headerMenus as $menu)
                 @if ($menu->subMenus->isNotEmpty())
                 <div class="site-desktop-nav__item">
+                    @if ($menu->isDropdownOnlyParentNav())
+                    <button type="button"
+                        aria-haspopup="true"
+                        @class([
+                            'site-desktop-nav__trigger',
+                            'site-desktop-nav__trigger--toggle',
+                            'site-desktop-nav__trigger--active' => $menu->isActiveBranch(),
+                        ])>
+                        <span class="min-w-0">{{ $menu->label }}</span>
+                        <span class="site-desktop-nav__caret" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.25" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </span>
+                    </button>
+                    @else
                     <a href="{{ $menu->siteNavHref() }}"
                         aria-haspopup="true"
                         @class([
@@ -98,6 +114,7 @@
                         </span>
                         @endunless
                     </a>
+                    @endif
                     @include('site.partials.desktop-nav-submenu', ['menu' => $menu])
                 </div>
                 @else

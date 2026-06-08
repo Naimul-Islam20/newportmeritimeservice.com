@@ -112,6 +112,14 @@ class Menu extends Model
         return $this->normalizedPath() === '/get-a-quote';
     }
 
+    /** Parent items that only open a submenu — no landing-page link on click. */
+    public function isDropdownOnlyParentNav(): bool
+    {
+        $path = $this->normalizedPath();
+
+        return in_array($path, ['/ship-supply', '/our-services', '/award'], true);
+    }
+
     /** Public navigation URL (uses named routes for contact / quote forms). */
     public function siteNavHref(): string
     {

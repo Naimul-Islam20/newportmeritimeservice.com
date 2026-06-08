@@ -611,7 +611,6 @@
                     <a class="{{ request()->routeIs('admin.ship-supply-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.ship-supply-sub-menus.index') }}">Ship Supply — menu</a>
                     <a class="{{ request()->routeIs('admin.our-services-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.our-services-sub-menus.index') }}">Our Services — menu</a>
                     <a class="{{ request()->routeIs('admin.award-sub-menus.*') ? 'active' : '' }}" href="{{ route('admin.award-sub-menus.index') }}">Award — menu</a>
-                    <a class="{{ request()->routeIs('admin.quality-certificates.*') ? 'active' : '' }}" href="{{ route('admin.quality-certificates.index') }}">Quality Certificates</a>
                     <a class="{{ request()->routeIs('admin.service-pages.*') || request()->routeIs('admin.service-sidebar.*') ? 'active' : '' }}" href="{{ route('admin.service-pages.index') }}">Our Services pages (legacy)</a>
                     <a class="{{ request()->routeIs('admin.career-page.*') ? 'active' : '' }}" href="{{ route('admin.career-page.edit') }}">Career page</a>
                     <a class="{{ request()->routeIs('admin.where-we-are-locations.*') ? 'active' : '' }}" href="{{ route('admin.where-we-are-locations.index') }}">Where We Are — locations</a>
@@ -641,6 +640,8 @@
                                 || ($isShipSupplyMenu && request()->routeIs('admin.ship-supply-sub-menus.*'))
                                 || ($isOurServicesMenu && request()->routeIs('admin.our-services-sub-menus.*'))
                                 || ($isAwardMenu && request()->routeIs('admin.award-sub-menus.*'))
+                                || ($isAwardMenu && request()->routeIs('admin.quality-certificates.*'))
+                                || ($isAwardMenu && request()->routeIs('admin.honorable-clients.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.home-sections.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.about-page.*'))
                                 || ($isHomeMenu && request()->routeIs('admin.our-story-page.*'))
