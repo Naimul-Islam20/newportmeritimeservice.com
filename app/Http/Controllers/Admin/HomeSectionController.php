@@ -80,7 +80,6 @@ class HomeSectionController extends Controller
             'branches_title' => isset($data['branches_title']) && is_string($data['branches_title']) ? trim($data['branches_title']) : null,
             'branches_view_all_label' => isset($data['branches_view_all_label']) && is_string($data['branches_view_all_label']) ? trim($data['branches_view_all_label']) : null,
             'branches_view_all_url' => isset($data['branches_view_all_url']) && is_string($data['branches_view_all_url']) ? trim($data['branches_view_all_url']) : null,
-            'branches_items' => $this->mergeServiceAreaBranchItems($request, $setting),
         ]);
 
         return redirect()
@@ -1256,34 +1255,30 @@ class HomeSectionController extends Controller
     }
 
     /**
-     * @return list<array{path: string, url: string|null, label: string|null}>
+     * @return list<array{path: string, url: string|null, label: string|null, subtitle: string|null}>
      */
     private function mergeServiceAreaBranchItems(Request $request, HomeServiceAreaSetting $setting): array
     {
+        $defaults = HomeServiceAreaSetting::defaultBranchItemsStored();
         $existing = is_array($setting->branches_items) ? $setting->branches_items : [];
-        $inputs = $request->input('branch_items', []);
         $uploads = $request->file('branch_items');
-        $max = max(count($existing), is_array($inputs) ? count($inputs) : 0, is_array($uploads) ? count($uploads) : 0);
         $out = [];
 
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < HomeServiceAreaSetting::BRANCH_PORT_SLOT_COUNT; $i++) {
             $prev = is_array($existing[$i] ?? null) ? $existing[$i] : [];
-            $path = is_string($prev['path'] ?? null) ? trim($prev['path']) : '';
-            $existingPath = trim((string) $request->input('branch_items.'.$i.'.existing_path', $path));
-            if ($existingPath !== '') {
-                $path = $existingPath;
-            }
+            $default = $defaults[$i] ?? [];
+            $path = trim((string) $request->input('branch_items.'.$i.'.existing_path', $prev['path'] ?? ''));
 
             $file = is_array($uploads) ? ($uploads[$i]['file'] ?? null) : null;
             if ($file instanceof UploadedFile) {
-                if ($path !== '') {
+                if ($path !== '' && ! preg_match('#^https?://#i', $path)) {
                     $this->deleteStoredPath($path);
                 }
                 $path = $file->store('home-service-area/branches', 'public_site');
             }
 
             if ($path === '') {
-                continue;
+                $path = (string) ($default['path'] ?? '');
             }
 
             $label = trim((string) $request->input('branch_items.'.$i.'.label', ''));
@@ -1292,9 +1287,9 @@ class HomeSectionController extends Controller
 
             $out[] = [
                 'path' => $path,
-                'label' => $label !== '' ? $label : null,
-                'subtitle' => $subtitle !== '' ? $subtitle : null,
-                'url' => $url !== '' ? $url : null,
+                'label' => $label !== '' ? $label : ($default['label'] ?? null),
+                'subtitle' => $subtitle !== '' ? $subtitle : ($default['subtitle'] ?? null),
+                'url' => $url !== '' ? $url : ($default['url'] ?? null),
             ];
         }
 

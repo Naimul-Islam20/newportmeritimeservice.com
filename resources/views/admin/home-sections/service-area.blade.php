@@ -20,14 +20,6 @@
     }
     $stepsList = array_values(array_map(fn ($s) => is_string($s) ? $s : '', $stepsList));
     $stepsList = array_pad($stepsList, max(4, count($stepsList)), '');
-
-    $branchItems = old('branch_items');
-    if (! is_array($branchItems)) {
-        $stored = ($setting->exists && is_array($setting->branches_items)) ? $setting->branches_items : [];
-        $branchItems = $stored;
-    }
-    $branchItems = array_values($branchItems);
-    $branchItems = array_pad($branchItems, max(4, count($branchItems)), []);
 @endphp
 
 <div class="card">
@@ -63,32 +55,11 @@
             </div>
         </div>
 
-        <p style="margin: 0 0 10px; color:#64748b; font-size: 13px;">Landscape photos (shown 3 per row). Hover overlay uses subtitle, title, and link below.</p>
-        @foreach ($branchItems as $i => $item)
-            @php
-                $item = is_array($item) ? $item : [];
-                $path = is_string($item['path'] ?? null) ? $item['path'] : (is_string($item['existing_path'] ?? null) ? $item['existing_path'] : '');
-            @endphp
-            <div style="margin-bottom: 14px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                <strong style="font-size: 13px;">Slide {{ $i + 1 }}</strong>
-                @if ($path !== '')
-                    <input type="hidden" name="branch_items[{{ $i }}][existing_path]" value="{{ $path }}">
-                    <div style="margin: 8px 0;">
-                        <img src="{{ str_starts_with($path, 'http') ? $path : asset($path) }}" alt="" style="max-height: 120px; width: auto; border-radius: 6px;">
-                    </div>
-                @endif
-                <label style="display:block; margin-top:8px;">Image</label>
-                <input name="branch_items[{{ $i }}][file]" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-                <label style="display:block; margin-top:8px;">Hover — subtitle (small caps line)</label>
-                <input name="branch_items[{{ $i }}][subtitle]" type="text" value="{{ old('branch_items.'.$i.'.subtitle', $item['subtitle'] ?? '') }}" placeholder="Newport Head Office & Warehouse" style="width:100%; max-width:420px;">
-                <label style="display:block; margin-top:8px;">Hover — title (e.g. Istanbul)</label>
-                <input name="branch_items[{{ $i }}][label]" type="text" value="{{ old('branch_items.'.$i.'.label', $item['label'] ?? '') }}" style="width:100%; max-width:420px;">
-                <label style="display:block; margin-top:8px;">View details — link URL</label>
-                <input name="branch_items[{{ $i }}][url]" type="text" value="{{ old('branch_items.'.$i.'.url', $item['url'] ?? '') }}" placeholder="https://…" style="width:100%; max-width:420px;">
-            </div>
-        @endforeach
-        @error('branch_items') <div class="error">{{ $message }}</div> @enderror
-        @error('branch_items.*.file') <div class="error">{{ $message }}</div> @enderror
+        <p style="margin: 0 0 10px; color:#64748b; font-size: 13px;">
+            Port slides are managed in
+            <a href="{{ route('admin.where-we-are-locations.index') }}"><strong>Where We Are — locations</strong></a>
+            (image, title, office line, contact link, sort order, and active/hidden).
+        </p>
 
         <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
 

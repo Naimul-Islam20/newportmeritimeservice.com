@@ -85,7 +85,41 @@ class PageController extends Controller
 
     public function shipSupply(Request $request): View
     {
+        if (! ServicePage::isPubliclyActive('provision')) {
+            $landing = $this->shipSupplyMenuLanding();
+
+            if ($landing !== null) {
+                return $landing;
+            }
+        }
+
         return $this->serviceDetailPage($request, 'provision');
+    }
+
+    private function shipSupplyMenuLanding(): ?View
+    {
+        $menu = Menu::query()
+            ->where('is_active', true)
+            ->where(function ($q): void {
+                $q->where('url', '/ship-supply')
+                    ->orWhere('url', 'ship-supply');
+            })
+            ->first();
+
+        if (! $menu) {
+            return null;
+        }
+
+        return view('site.pages.menu-page', [
+            'title' => SiteDetail::pageTitle($menu->label),
+            'metaDescription' => $menu->description ?: null,
+            'heading' => $menu->label,
+            'lead' => $menu->description ?: null,
+            'heroImageUrl' => null,
+            'pageContent' => $menu->page_content,
+            'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
+            'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
+        ]);
     }
 
     public function technicalStores(Request $request): View
@@ -317,6 +351,12 @@ class PageController extends Controller
 
     public function whereWeAreLocation(string $slug): View
     {
+        if ($this->isWhereWeAreContactPort($slug)) {
+            return view('site.pages.contact', [
+                'siteDetails' => SiteDetail::query()->first(),
+            ]);
+        }
+
         $location = WhereWeAreLocation::resolvedForPublic($slug);
 
         if (! $location) {
@@ -326,6 +366,16 @@ class PageController extends Controller
         return view('site.pages.where-we-are-location', [
             'location' => $location,
         ]);
+    }
+
+    private function isWhereWeAreContactPort(string $slug): bool
+    {
+        return in_array($slug, [
+            'chattogram-port',
+            'mongla-port',
+            'payra-port',
+            'coxs-bazar-port',
+        ], true);
     }
 
     public function whereWeArePort(string $location, string $port): View

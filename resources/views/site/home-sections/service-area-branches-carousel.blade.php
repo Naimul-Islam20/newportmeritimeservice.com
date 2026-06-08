@@ -4,7 +4,8 @@
     $mini = $branches['mini_title'] ?? 'Where We Are';
     $heading = $branches['title'] ?? 'Branch Offices & Warehouses';
     $viewAllLabel = $branches['view_all_label'] ?? 'View all';
-    $viewAllUrl = $branches['view_all_url'] ?? route('where-we-are');
+    $viewAllUrl = $branches['view_all_url'] ?? route('contact.create');
+    $contactUrl = route('contact.create');
     $items = is_array($branches['items'] ?? null) ? $branches['items'] : [];
     $hasViewAll = filled($viewAllLabel) && filled($viewAllUrl) && $viewAllUrl !== '#';
     $slideCount = count($items);
@@ -36,63 +37,47 @@
                         @foreach ($items as $item)
                             @php
                                 $imgUrl = $item['image_url'] ?? '';
-                                $href = $item['url'] ?? null;
                                 $title = $item['label'] ?? '';
                                 $subtitle = $item['subtitle'] ?? '';
-                                $hasLink = filled($href) && $href !== '#';
-                                $showOverlay = filled($title) || filled($subtitle) || $hasLink;
+                                $rawUrl = $item['url'] ?? null;
+                                $slideHref = $contactUrl;
+                                if (filled($rawUrl) && $rawUrl !== '#') {
+                                    $slideHref = preg_match('#^https?://#i', (string) $rawUrl)
+                                        ? $rawUrl
+                                        : url(str_starts_with((string) $rawUrl, '/') ? $rawUrl : '/'.ltrim((string) $rawUrl, '/'));
+                                }
+                                $showOverlay = filled($title) || filled($subtitle);
                             @endphp
                             @if ($imgUrl === '')
                                 @continue
                             @endif
                             <div class="swiper-slide">
-                                @if ($hasLink)
-                                    <a
-                                        href="{{ $href }}"
-                                        class="service-area-branches__slide service-area-branches__slide-link"
-                                        style="background-image: url('{{ e($imgUrl) }}');"
-                                        aria-label="{{ $title !== '' ? $title : 'Branch office' }}"
-                                    >
-                                        @if ($showOverlay)
-                                            <span class="service-area-branches__slide-overlay">
-                                                @if (filled($subtitle))
-                                                    <span class="service-area-branches__slide-eyebrow">{{ $subtitle }}</span>
-                                                    <span class="service-area-branches__slide-rule" aria-hidden="true"></span>
-                                                @endif
-                                                @if (filled($title))
-                                                    <span class="service-area-branches__slide-name">{{ $title }}</span>
-                                                @endif
-                                                <span class="service-area-branches__slide-cta">
-                                                    <span>View details</span>
-                                                    <span class="service-area-branches__slide-cta-icon" aria-hidden="true">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M5 12h14M13 6l6 6-6 6" />
-                                                        </svg>
-                                                    </span>
+                                <a
+                                    href="{{ $slideHref }}"
+                                    class="service-area-branches__slide service-area-branches__slide-link"
+                                    style="background-image: url('{{ e($imgUrl) }}');"
+                                    aria-label="{{ $title !== '' ? $title : 'Branch office' }}"
+                                >
+                                    @if ($showOverlay)
+                                        <span class="service-area-branches__slide-overlay">
+                                            @if (filled($subtitle))
+                                                <span class="service-area-branches__slide-eyebrow">{{ $subtitle }}</span>
+                                                <span class="service-area-branches__slide-rule" aria-hidden="true"></span>
+                                            @endif
+                                            @if (filled($title))
+                                                <span class="service-area-branches__slide-name">{{ $title }}</span>
+                                            @endif
+                                            <span class="service-area-branches__slide-cta">
+                                                <span>View details</span>
+                                                <span class="service-area-branches__slide-cta-icon" aria-hidden="true">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M5 12h14M13 6l6 6-6 6" />
+                                                    </svg>
                                                 </span>
                                             </span>
-                                        @endif
-                                    </a>
-                                @else
-                                    <div
-                                        class="service-area-branches__slide"
-                                        style="background-image: url('{{ e($imgUrl) }}');"
-                                        role="img"
-                                        aria-label="{{ $title !== '' ? $title : 'Branch office' }}"
-                                    >
-                                        @if ($showOverlay)
-                                            <span class="service-area-branches__slide-overlay">
-                                                @if (filled($subtitle))
-                                                    <span class="service-area-branches__slide-eyebrow">{{ $subtitle }}</span>
-                                                    <span class="service-area-branches__slide-rule" aria-hidden="true"></span>
-                                                @endif
-                                                @if (filled($title))
-                                                    <span class="service-area-branches__slide-name">{{ $title }}</span>
-                                                @endif
-                                            </span>
-                                        @endif
-                                    </div>
-                                @endif
+                                        </span>
+                                    @endif
+                                </a>
                             </div>
                         @endforeach
                     </div>

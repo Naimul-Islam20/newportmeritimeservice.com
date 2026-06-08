@@ -93,6 +93,41 @@ class WhereWeAreLocationController extends Controller
             ->with('status', 'Location updated.');
     }
 
+    public function destroy(WhereWeAreLocation $where_we_are_location): RedirectResponse
+    {
+        $this->authorize('delete', $where_we_are_location);
+
+        $title = $where_we_are_location->hero_title;
+        $subMenu = $where_we_are_location->subMenu;
+
+        $this->purgeUploads($where_we_are_location);
+        $where_we_are_location->delete();
+
+        if ($subMenu) {
+            $subMenu->delete();
+        }
+
+        return redirect()
+            ->route('admin.where-we-are-locations.index')
+            ->with('status', "Location “{$title}” deleted.");
+    }
+
+    private function purgeUploads(WhereWeAreLocation $location): void
+    {
+        WhereWeAreLocation::deleteManagedUpload($location->hero_background);
+        WhereWeAreLocation::deleteManagedUpload($location->brochure_file);
+
+        if (! is_array($location->gallery_images)) {
+            return;
+        }
+
+        foreach ($location->gallery_images as $image) {
+            if (is_string($image)) {
+                WhereWeAreLocation::deleteManagedUpload($image);
+            }
+        }
+    }
+
     private function syncNav(WhereWeAreLocation $location): void
     {
         [$menu, $parent] = $this->resolveWhereWeAreSubMenu();

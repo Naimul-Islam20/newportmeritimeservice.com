@@ -42,15 +42,24 @@
         ['label' => 'Contact', 'url' => route('contact.create')],
         ['label' => 'Get a Quote', 'url' => route('quote.request')],
     ];
-    $footerOffices = [];
-    if ($loc !== '' || count($phones) > 0 || count($emails) > 0) {
-        $footerOffices[] = [
-            'name' => 'CHITTAGONG (Head Office)',
-            'address' => $loc,
-            'phones' => $phones,
-            'emails' => $emails,
-        ];
-    }
+    $footerPorts = [
+        [
+            'name' => 'Mongla Port',
+            'address' => 'Mongla Port Authority, Mongla, Bagerhat District, Khulna Division, Bangladesh.',
+        ],
+        [
+            'name' => 'Payra Port',
+            'address' => 'Payra Port Authority, Itbaria, Kalapara Upazila, Patuakhali District, Bangladesh.',
+        ],
+        [
+            'name' => 'Chattogram Port',
+            'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
+        ],
+        [
+            'name' => "Cox's Bazar Port (Fishing Harbour)",
+            'address' => "Cox's Bazar Fishing Harbour, Kasturi Ghat Road, Cox's Bazar 4700, Bangladesh.",
+        ],
+    ];
 @endphp
 
 <footer class="site-footer relative mt-auto min-w-0 overflow-hidden text-white">
@@ -66,9 +75,7 @@
                 @if ($footerSiteName !== '')
                     <p class="site-footer__company-name">{{ $footerSiteName }}</p>
                 @endif
-                @if (count($footerOffices) > 0)
-                    <p class="site-footer__office-label">{{ $footerOffices[0]['name'] }}</p>
-                @endif
+                <p class="site-footer__office-label">CHITTAGONG (Head Office)</p>
                 @if ($loc !== '')
                     <div class="site-footer__contact-row">
                         <span class="site-footer__contact-icon" aria-hidden="true">
@@ -138,40 +145,19 @@
             </div>
         </div>
 
-        @if (count($footerOffices) > 1)
-            <div class="site-footer__offices">
-                @foreach ($footerOffices as $office)
-                    <div class="site-footer__office">
-                        <h4 class="site-footer__office-name">{{ $office['name'] }}</h4>
-                        @if (filled($office['address'] ?? null))
-                            <div class="site-footer__contact-row site-footer__contact-row--compact">
-                                <span class="site-footer__contact-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                                </span>
-                                <div class="site-footer__contact-text">{!! nl2br(e($office['address'])) !!}</div>
-                            </div>
-                        @endif
-                        @foreach ($office['phones'] ?? [] as $phone)
-                            @php($tel = preg_replace('/[^0-9+]/', '', $phone))
-                            <div class="site-footer__contact-row site-footer__contact-row--compact">
-                                <span class="site-footer__contact-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A15 15 0 015 6a2 2 0 012-2z"/></svg>
-                                </span>
-                                <a href="tel:{{ $tel }}" class="site-footer__contact-text site-footer__contact-link">{{ $phone }}</a>
-                            </div>
-                        @endforeach
-                        @foreach ($office['emails'] ?? [] as $email)
-                            <div class="site-footer__contact-row site-footer__contact-row--compact">
-                                <span class="site-footer__contact-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-                                </span>
-                                <a href="mailto:{{ $email }}" class="site-footer__contact-text site-footer__contact-link">{{ $email }}</a>
-                            </div>
-                        @endforeach
+        <div class="site-footer__ports">
+            @foreach ($footerPorts as $port)
+                <div class="site-footer__port">
+                    <h4 class="site-footer__port-name">{{ $port['name'] }}</h4>
+                    <div class="site-footer__contact-row site-footer__contact-row--compact">
+                        <span class="site-footer__contact-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-4.5 7-11a7 7 0 10-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                        </span>
+                        <div class="site-footer__contact-text">{{ $port['address'] }}</div>
                     </div>
-                @endforeach
-            </div>
-        @endif
+                </div>
+            @endforeach
+        </div>
     </div>
 
     <div class="site-footer__copy">

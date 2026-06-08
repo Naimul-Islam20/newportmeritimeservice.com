@@ -316,6 +316,55 @@ class WhereWeAreLocation extends Model
             ->all();
     }
 
+    /**
+     * Home page branch carousel slides (active locations only).
+     *
+     * @return list<array{image_url: string, url: string, label: string, subtitle: string|null}>
+     */
+    public static function homeBranchCarouselItems(): array
+    {
+        $slides = [];
+
+        foreach (self::activeOrdered() as $location) {
+            $imageUrl = self::carouselImageFor($location);
+            $label = trim((string) $location->hero_title);
+            if ($label === '') {
+                continue;
+            }
+
+            $contactUrl = filled($location->contact_cta_url)
+                ? trim((string) $location->contact_cta_url)
+                : '/contact';
+
+            $slides[] = [
+                'image_url' => $imageUrl,
+                'url' => $contactUrl,
+                'label' => $label,
+                'subtitle' => filled($location->office_title)
+                    ? trim((string) $location->office_title)
+                    : (filled($location->region_label) ? trim((string) $location->region_label) : null),
+            ];
+        }
+
+        return $slides;
+    }
+
+    private static function carouselImageFor(self $location): string
+    {
+        if (filled($location->hero_background)) {
+            $url = self::imageSrc($location->hero_background);
+            if ($url !== '') {
+                return $url;
+            }
+        }
+
+        foreach (self::galleryUrls($location->gallery_images) as $url) {
+            return $url;
+        }
+
+        return 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?auto=format&fit=crop&w=900&h=520&q=80';
+    }
+
     public function syncSubMenu(Menu $whoWeAreMenu, SubMenu $parentWhereWeAre): SubMenu
     {
         $url = '/where-we-are/'.$this->slug;

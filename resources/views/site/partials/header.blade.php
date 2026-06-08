@@ -8,7 +8,7 @@
         $topPhone = $topPhones[0] ?? null;
         $topBarLinkDefs = [
             ['label' => 'Contact Us', 'path' => '/contact'],
-            // ['label' => 'Products', 'path' => '/ship-supply'],
+            ['label' => 'Products', 'path' => '/ship-supply'],
             ['label' => 'Your Spare Parts', 'path' => '/get-a-quote'],
         ];
         $topBarLinks = collect($topBarLinkDefs)->map(function (array $item) use ($headerMenus) {
@@ -16,6 +16,7 @@
             $menu = ($headerMenus ?? collect())->first(fn ($m) => $m->normalizedPath() === $path);
             $href = match ($path) {
                 '/contact' => route('contact.create'),
+                '/ship-supply' => route('ship-supply'),
                 '/get-a-quote' => route('quote.request'),
                 default => $menu?->siteNavHref() ?? $path,
             };
@@ -77,7 +78,7 @@
             @include('site.partials.mobile-nav')
 
             {{-- Desktop only (lg+): hover dropdown + down caret. z-index on hover so panel is not covered by next menu items. --}}
-            <nav class="site-desktop-nav relative z-50 hidden items-center justify-end lg:flex" aria-label="Primary">
+            <nav class="site-desktop-nav relative z-50 hidden max-lg:!hidden items-center justify-end lg:flex" aria-label="Primary">
                 @foreach ($headerMenus as $menu)
                 @if ($menu->subMenus->isNotEmpty())
                 <div class="site-desktop-nav__item">

@@ -125,6 +125,14 @@ class ServicePage extends Model
             ->first();
     }
 
+    public static function isPubliclyActive(string $slug): bool
+    {
+        return self::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->exists();
+    }
+
     public static function resolvedForPublic(string $slug): \stdClass
     {
         $row = self::query()->where('slug', $slug)->where('is_active', true)->first();

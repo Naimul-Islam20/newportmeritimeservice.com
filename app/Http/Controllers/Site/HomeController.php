@@ -9,7 +9,6 @@ use App\Models\HomeServiceAreaSetting;
 use App\Models\Menu;
 use App\Models\QualityCertificate;
 use App\Models\SubMenu;
-use App\Models\WhereWeAreLocation;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -55,10 +54,6 @@ class HomeController extends Controller
         );
 
         $serviceArea = HomeServiceAreaSetting::displayPayload();
-        $locationSlides = $this->buildWhereWeAreLocationSlides();
-        if ($locationSlides !== []) {
-            $serviceArea['branches']['items'] = $locationSlides;
-        }
 
         return view('site.pages.home', [
             'heroSlides' => HeroSlide::query()->ordered()->get(),
@@ -154,50 +149,4 @@ class HomeController extends Controller
             ->first();
     }
 
-    /**
-     * @return list<array{image_url: string, url: string, label: string, subtitle: string|null}>
-     */
-    private function buildWhereWeAreLocationSlides(): array
-    {
-        $locations = WhereWeAreLocation::query()
-            ->where('is_active', true)
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get();
-
-        $slides = [];
-        foreach ($locations as $location) {
-            $imageUrl = '';
-
-            if (is_string($location->hero_background) && trim($location->hero_background) !== '') {
-                $imageUrl = WhereWeAreLocation::imageSrc($location->hero_background);
-            }
-
-            if ($imageUrl === '') {
-                $gallery = is_array($location->gallery_images) ? $location->gallery_images : [];
-                foreach ($gallery as $imgPath) {
-                    if (! is_string($imgPath) || trim($imgPath) === '') {
-                        continue;
-                    }
-                    $imageUrl = WhereWeAreLocation::imageSrc($imgPath);
-                    if ($imageUrl !== '') {
-                        break;
-                    }
-                }
-            }
-
-            if ($imageUrl === '') {
-                continue;
-            }
-
-            $slides[] = [
-                'image_url' => $imageUrl,
-                'url' => route('where-we-are.location', $location->slug),
-                'label' => trim((string) ($location->hero_title ?: $location->sidebar_label)),
-                'subtitle' => filled($location->office_title) ? $location->office_title : $location->region_label,
-            ];
-        }
-
-        return $slides;
-    }
 }

@@ -221,7 +221,7 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             const branchesCount = branchesSlides.length;
             const branchesNext = branchesRow?.querySelector('[data-branches-next]') ?? null;
             const branchesCanAdvance = branchesCount > 1;
-            const branchesUseLoop = branchesCount > 3;
+            const branchesUseLoop = branchesCount > 4;
 
             const branchesSwiper = new Swiper(branchesEl, {
                 slidesPerView: 1.15,
@@ -246,6 +246,10 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
                     },
                     1024: {
                         slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    1280: {
+                        slidesPerView: 4,
                         spaceBetween: 20,
                     },
                 },

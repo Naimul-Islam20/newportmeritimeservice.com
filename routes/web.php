@@ -211,6 +211,7 @@ Route::prefix('admin')->group(function (): void {
         Route::post('where-we-are-locations', [WhereWeAreLocationController::class, 'store'])->name('admin.where-we-are-locations.store');
         Route::get('where-we-are-locations/{where_we_are_location}/edit', [WhereWeAreLocationController::class, 'edit'])->name('admin.where-we-are-locations.edit');
         Route::put('where-we-are-locations/{where_we_are_location}', [WhereWeAreLocationController::class, 'update'])->name('admin.where-we-are-locations.update');
+        Route::delete('where-we-are-locations/{where_we_are_location}', [WhereWeAreLocationController::class, 'destroy'])->name('admin.where-we-are-locations.destroy');
         Route::get('where-we-are-locations/{where_we_are_location}/ports/{port}/edit', [\App\Http\Controllers\Admin\WhereWeArePortController::class, 'edit'])->name('admin.where-we-are-ports.edit');
         Route::put('where-we-are-locations/{where_we_are_location}/ports/{port}', [\App\Http\Controllers\Admin\WhereWeArePortController::class, 'update'])->name('admin.where-we-are-ports.update');
 

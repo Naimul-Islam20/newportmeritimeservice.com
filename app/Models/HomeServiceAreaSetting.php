@@ -63,31 +63,68 @@ class HomeServiceAreaSetting extends Model
             'branches_mini_title' => 'Where We Are',
             'branches_title' => 'Branch Offices & Warehouses',
             'branches_view_all_label' => 'View all',
-            'branches_view_all_url' => '/where-we-are',
+            'branches_view_all_url' => '/contact',
             'branches_items' => [],
         ];
     }
 
-    /**
-     * @return list<array{image_url: string, url: string|null, label: string, subtitle: string|null}>
-     */
-    public static function defaultBranchCarouselSlides(): array
-    {
-        $slide = static fn (string $id, string $title, ?string $subtitle = null, ?string $url = null): array => [
-            'image_url' => 'https://images.unsplash.com/'.$id.'?auto=format&fit=crop&w=900&h=520&q=80',
-            'url' => $url,
-            'label' => $title,
-            'subtitle' => $subtitle ?? 'Newport Head Office & Warehouse',
-        ];
+    public const BRANCH_PORT_SLOT_COUNT = 4;
 
+    /**
+     * @return list<array{path: string, label: string, subtitle: string, url: string}>
+     */
+    public static function defaultBranchItemsStored(): array
+    {
         return [
-            $slide('photo-1565008576549-57569a49371d', 'Istanbul', 'Newport Head Office & Warehouse', '/where-we-are'),
-            $slide('photo-1578575437136-9c13f6c966fc', 'Rotterdam', 'Branch Office & Warehouse'),
-            $slide('photo-1505142468610-359e7d316be0', 'Singapore', 'Regional Office'),
-            $slide('photo-1586528116311-ad8ed7c80bc2', 'Chittagong', 'Port Office & Warehouse', '/where-we-are'),
-            $slide('photo-1494412574743-01927c452424', 'Hamburg', 'Branch Office'),
-            $slide('photo-1518837695005-2083093ee35b', 'Dubai', 'Regional Warehouse'),
+            [
+                'path' => 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?auto=format&fit=crop&w=900&h=520&q=80',
+                'label' => 'Chattogram Port',
+                'subtitle' => 'Chattogram Port Authority',
+                'url' => '/contact',
+            ],
+            [
+                'path' => 'https://images.unsplash.com/photo-1578575437136-9c13f6c966fc?auto=format&fit=crop&w=900&h=520&q=80',
+                'label' => 'Mongla Port',
+                'subtitle' => 'Mongla Port Authority',
+                'url' => '/contact',
+            ],
+            [
+                'path' => 'https://images.unsplash.com/photo-1494412574743-01927c452424?auto=format&fit=crop&w=900&h=520&q=80',
+                'label' => 'Payra Port',
+                'subtitle' => 'Payra Port Authority',
+                'url' => '/contact',
+            ],
+            [
+                'path' => 'https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=900&h=520&q=80',
+                'label' => "Cox's Bazar Port",
+                'subtitle' => 'Fishing Harbour',
+                'url' => '/contact',
+            ],
         ];
+    }
+
+    /**
+     * @param  list<array{path?: string|null, url?: string|null, label?: string|null, subtitle?: string|null}>|null  $stored
+     * @return list<array{path: string, label: string, subtitle: string, url: string}>
+     */
+    public static function branchItemsForAdmin(?array $stored): array
+    {
+        $defaults = self::defaultBranchItemsStored();
+        $stored = is_array($stored) ? array_values($stored) : [];
+        $out = [];
+
+        for ($i = 0; $i < self::BRANCH_PORT_SLOT_COUNT; $i++) {
+            $def = $defaults[$i];
+            $item = is_array($stored[$i] ?? null) ? $stored[$i] : [];
+            $out[] = [
+                'path' => filled($item['path'] ?? null) ? trim((string) $item['path']) : $def['path'],
+                'label' => filled($item['label'] ?? null) ? trim((string) $item['label']) : $def['label'],
+                'subtitle' => filled($item['subtitle'] ?? null) ? trim((string) $item['subtitle']) : $def['subtitle'],
+                'url' => filled($item['url'] ?? null) ? trim((string) $item['url']) : $def['url'],
+            ];
+        }
+
+        return $out;
     }
 
     /**
@@ -96,53 +133,37 @@ class HomeServiceAreaSetting extends Model
      */
     public static function normalizeBranchCarouselItems(?array $raw): array
     {
-        if (! is_array($raw) || $raw === []) {
-            return self::defaultBranchCarouselSlides();
-        }
-
+        $defaults = self::defaultBranchItemsStored();
+        $stored = is_array($raw) ? array_values($raw) : [];
         $out = [];
-        foreach ($raw as $item) {
-            if (! is_array($item)) {
-                continue;
-            }
+
+        for ($i = 0; $i < self::BRANCH_PORT_SLOT_COUNT; $i++) {
+            $def = $defaults[$i];
+            $item = is_array($stored[$i] ?? null) ? $stored[$i] : [];
+
             $path = is_string($item['path'] ?? null) ? trim($item['path']) : '';
-            $imageUrl = '';
-            if ($path !== '') {
-                $imageUrl = str_starts_with($path, 'http://') || str_starts_with($path, 'https://')
-                    ? $path
-                    : PublicUploadUrl::fromPath($path);
+            if ($path === '') {
+                $path = $def['path'];
             }
+
+            $imageUrl = str_starts_with($path, 'http://') || str_starts_with($path, 'https://')
+                ? $path
+                : PublicUploadUrl::fromPath($path);
+
             if ($imageUrl === '') {
-                continue;
+                $imageUrl = $def['path'];
             }
-            $url = is_string($item['url'] ?? null) ? trim($item['url']) : '';
+
             $label = is_string($item['label'] ?? null) ? trim($item['label']) : '';
             $subtitle = is_string($item['subtitle'] ?? null) ? trim($item['subtitle']) : '';
+            $url = is_string($item['url'] ?? null) ? trim($item['url']) : '';
+
             $out[] = [
                 'image_url' => $imageUrl,
-                'url' => $url !== '' ? $url : null,
-                'label' => $label,
-                'subtitle' => $subtitle !== '' ? $subtitle : null,
+                'url' => $url !== '' ? $url : $def['url'],
+                'label' => $label !== '' ? $label : $def['label'],
+                'subtitle' => $subtitle !== '' ? $subtitle : $def['subtitle'],
             ];
-        }
-
-        // Fewer than two valid uploads — use full default set.
-        if (count($out) < 2) {
-            return self::defaultBranchCarouselSlides();
-        }
-
-        // Pad up to three visible slides with defaults (keeps row full when admin slots are empty).
-        if (count($out) < 3) {
-            $usedUrls = array_column($out, 'image_url');
-            foreach (self::defaultBranchCarouselSlides() as $fallback) {
-                if (count($out) >= 3) {
-                    break;
-                }
-                if (! in_array($fallback['image_url'], $usedUrls, true)) {
-                    $out[] = $fallback;
-                    $usedUrls[] = $fallback['image_url'];
-                }
-            }
         }
 
         return $out;
@@ -236,8 +257,23 @@ class HomeServiceAreaSetting extends Model
             'mini_title' => $branchesMini !== '' ? $branchesMini : 'Where We Are',
             'title' => $branchesTitle !== '' ? $branchesTitle : 'Branch Offices & Warehouses',
             'view_all_label' => $viewAllLabel !== '' ? $viewAllLabel : 'View all',
-            'view_all_url' => $viewAllUrl !== '' ? $viewAllUrl : '/where-we-are',
-            'items' => self::normalizeBranchCarouselItems($storedItems),
+            'view_all_url' => $viewAllUrl !== '' ? $viewAllUrl : '/contact',
+            'items' => self::resolveBranchCarouselItems($storedItems),
         ];
+    }
+
+    /**
+     * @param  list<array{path?: string|null, url?: string|null, label?: string|null, subtitle?: string|null}>|null  $storedItems
+     * @return list<array{image_url: string, url: string|null, label: string, subtitle: string|null}>
+     */
+    private static function resolveBranchCarouselItems(?array $storedItems): array
+    {
+        $fromLocations = WhereWeAreLocation::homeBranchCarouselItems();
+
+        if ($fromLocations !== []) {
+            return $fromLocations;
+        }
+
+        return self::normalizeBranchCarouselItems($storedItems);
     }
 }

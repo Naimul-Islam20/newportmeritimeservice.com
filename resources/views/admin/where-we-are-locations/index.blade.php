@@ -29,9 +29,14 @@
                         <td><code>/where-we-are/{{ $location->slug }}</code></td>
                         <td>{{ $location->sort_order }}</td>
                         <td>{{ $location->is_active ? 'Active' : 'Hidden' }}</td>
-                        <td style="text-align:right;">
+                        <td style="text-align:right;white-space:nowrap;">
                             <a class="btn btn-muted" href="{{ url('/where-we-are/'.$location->slug) }}" target="_blank" rel="noopener">View</a>
                             <a class="btn btn-primary" href="{{ route('admin.where-we-are-locations.edit', $location) }}">Edit</a>
+                            <form method="POST" action="{{ route('admin.where-we-are-locations.destroy', $location) }}" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit" onclick="return confirm('Delete “{{ $location->hero_title }}”? This removes its public page, flyout link, and any ports under it.')">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @empty

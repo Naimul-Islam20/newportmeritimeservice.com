@@ -265,9 +265,34 @@ function initHeaderTopbarScroll() {
 
     const desktopMq = window.matchMedia("(min-width: 1024px)");
     let lastScrollY = window.scrollY;
+    let scrollAccumulator = 0;
+    let lockUntil = 0;
     let ticking = false;
     const topRevealOffset = 12;
     const minScrollToHide = 4;
+    const scrollThreshold = 14;
+    const layoutLockMs = 220;
+
+    const syncScrollAnchor = () => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                lastScrollY = window.scrollY;
+                scrollAccumulator = 0;
+            });
+        });
+    };
+
+    const setTopbarHidden = (hidden) => {
+        const isHidden = header.classList.contains("site-header--topbar-hidden");
+        if (isHidden === hidden) {
+            return;
+        }
+
+        header.classList.toggle("site-header--topbar-hidden", hidden);
+        lockUntil = performance.now() + layoutLockMs;
+        scrollAccumulator = 0;
+        syncScrollAnchor();
+    };
 
     const syncTopbar = () => {
         ticking = false;
@@ -275,20 +300,36 @@ function initHeaderTopbarScroll() {
         if (!desktopMq.matches) {
             header.classList.remove("site-header--topbar-hidden");
             lastScrollY = window.scrollY;
+            scrollAccumulator = 0;
+            lockUntil = 0;
             return;
         }
 
         const currentY = window.scrollY;
+        const delta = currentY - lastScrollY;
+        lastScrollY = currentY;
 
-        if (currentY <= topRevealOffset) {
-            header.classList.remove("site-header--topbar-hidden");
-        } else if (currentY < lastScrollY) {
-            header.classList.remove("site-header--topbar-hidden");
-        } else if (currentY > lastScrollY && currentY > minScrollToHide) {
-            header.classList.add("site-header--topbar-hidden");
+        if (performance.now() < lockUntil) {
+            return;
         }
 
-        lastScrollY = currentY;
+        if (currentY <= topRevealOffset) {
+            scrollAccumulator = 0;
+            setTopbarHidden(false);
+            return;
+        }
+
+        scrollAccumulator += delta;
+        scrollAccumulator = Math.max(
+            -scrollThreshold * 2,
+            Math.min(scrollThreshold * 2, scrollAccumulator),
+        );
+
+        if (scrollAccumulator <= -scrollThreshold) {
+            setTopbarHidden(false);
+        } else if (scrollAccumulator >= scrollThreshold && currentY > minScrollToHide) {
+            setTopbarHidden(true);
+        }
     };
 
     const onScroll = () => {
@@ -304,6 +345,8 @@ function initHeaderTopbarScroll() {
     desktopMq.addEventListener("change", () => {
         header.classList.remove("site-header--topbar-hidden");
         lastScrollY = window.scrollY;
+        scrollAccumulator = 0;
+        lockUntil = 0;
     });
     syncTopbar();
 }
