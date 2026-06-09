@@ -6517,6 +6517,43 @@ button.service-detail__nav-parent:hover {
     margin-top: 1.75rem;
 }
 
+/* Contact page hero */
+.contact-page-hero__title {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: #fff;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.contact-page-hero__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.contact-page-hero__crumbs a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-page-hero__crumbs a:hover {
+    color: #38bdf8;
+}
+
+.contact-page-hero__crumbs span:last-child {
+    color: #38bdf8;
+}
+
 /* Contact page (Gimaş-style tabs + info + form) */
 .contact-page {
     --cp-accent: #46b5e5;
@@ -6676,6 +6713,18 @@ button.service-detail__nav-parent:hover {
     text-decoration: underline;
 }
 
+.contact-page__form-wrap {
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--cp-border);
+}
+
+@media (min-width: 1024px) {
+    .contact-page__form-wrap {
+        padding-top: 0;
+        border-top: 0;
+    }
+}
+
 .contact-page__form-title {
     margin: 0 0 1.15rem;
     font-size: 1rem;
@@ -6791,12 +6840,23 @@ button.service-detail__nav-parent:hover {
 .contact-page__map-section {
     margin-top: 0;
     padding-top: 2.25rem;
-    padding-bottom: 0;
+    padding-bottom: 2.5rem;
     background: var(--cp-surface);
 }
 
+@media (min-width: 640px) {
+    .contact-page__map-section {
+        padding-bottom: 3rem;
+    }
+}
+
+.contact-page__map-inner {
+    display: grid;
+    gap: 0.85rem;
+}
+
 .contact-page__map-heading {
-    margin: 0 0 0.85rem;
+    margin: 0;
     font-size: 1rem;
     font-weight: 800;
     color: var(--cp-heading);
@@ -6804,7 +6864,10 @@ button.service-detail__nav-parent:hover {
 
 .contact-page__map-embed {
     line-height: 0;
+    overflow: hidden;
+    border-radius: 0.25rem;
     background: #e8ecf1;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
 .contact-page__map-panel {

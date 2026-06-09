@@ -7,6 +7,7 @@ use App\Http\Requests\StoreContactMessageRequest;
 use App\Models\ContactMessage;
 use App\Models\SiteDetail;
 use App\Support\AuditLogger;
+use App\Support\ContactOffices;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -14,8 +15,11 @@ class ContactController extends Controller
 {
     public function create(): View
     {
+        $siteDetails = SiteDetail::query()->first();
+
         return view('site.pages.contact', [
-            'siteDetails' => SiteDetail::query()->first(),
+            'siteDetails' => $siteDetails,
+            'offices' => ContactOffices::forContactPage($siteDetails),
         ]);
     }
 

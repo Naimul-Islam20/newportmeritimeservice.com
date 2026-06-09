@@ -3,69 +3,8 @@
     'metaDescription' => 'Contact Newport Maritime Service — phone, email and message form for enquiries worldwide.',
 ])
 
-@php
-    $sd = $siteDetails ?? null;
-    $defaultEmails = $sd && is_array($sd->emails ?? null) ? array_values(array_filter($sd->emails, fn ($v) => is_string($v) && trim($v) !== '')) : [];
-    $defaultPhones = $sd && is_array($sd->phones ?? null) ? array_values(array_filter($sd->phones, fn ($v) => is_string($v) && trim($v) !== '')) : [];
-    $defaultLocation = $sd ? trim((string) ($sd->location ?? '')) : '';
-    $defaultMap = $sd ? trim((string) ($sd->map ?? '')) : '';
-
-    $offices = [
-        [
-            'id' => 'istanbul',
-            'label' => 'Istanbul',
-            'active' => true,
-            'phone' => $defaultPhones[0] ?? '+90 212 671 24 80',
-            'email' => $defaultEmails[0] ?? 'gimas@gimas.com',
-            'address' => $defaultLocation !== '' ? $defaultLocation : 'Ikitelli OSB Aykosan San.Sit. 4 lu A-Blok No:232 Istanbul-Turkey',
-            'map' => $defaultMap,
-        ],
-        [
-            'id' => 'rotterdam',
-            'label' => 'Rotterdam',
-            'phone' => '+31 10 3027820',
-            'email' => 'rotterdam@gimas.com',
-            'address' => 'Jan Van Galenstraat 9, 3115 JG Schiedam, The Netherlands',
-            'map' => '',
-        ],
-        [
-            'id' => 'hamburg',
-            'label' => 'Hamburg',
-            'phone' => '',
-            'email' => 'hamburg@gimas.com',
-            'address' => 'Schlengendeich 13, 21107 Hamburg-Wilhelmsburg, Germany',
-            'map' => '',
-        ],
-        [
-            'id' => 'athens',
-            'label' => 'Athens',
-            'phone' => '+30 210 9403522',
-            'email' => 'athens@gimas.com',
-            'address' => 'Imittou 6, 3rd Floor, Palaio Faliro 175 64, Attica, Greece',
-            'map' => '',
-        ],
-        [
-            'id' => 'mersin',
-            'label' => 'Mersin',
-            'phone' => '+90 324 221 50 60',
-            'email' => 'mersin@gimas.com',
-            'address' => 'Karaduvar, Cumhuriyet Blv. No:133, Bakliyatcilar Sitesi E-Blok No:4 161-D, 33020 Mersin, Turkey',
-            'map' => '',
-        ],
-        [
-            'id' => 'tuzla',
-            'label' => 'Tuzla',
-            'phone' => '+90 216 513 12 92',
-            'email' => 'tuzla@gimas.com',
-            'address' => 'Aydıntepe, Sahil Blv. No:126/19, Denizciler Ticaret Merkezi 34947 Tuzla/Istanbul, Turkey',
-            'map' => '',
-        ],
-    ];
-
-@endphp
-
 @section('content')
-    <section class="relative flex h-[300px] w-full items-center overflow-hidden bg-secondary sm:h-[400px]">
+    <section class="contact-page-hero relative flex min-h-[300px] w-full items-center overflow-hidden bg-secondary sm:min-h-[400px]">
         <div class="absolute inset-0">
             <img
                 src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop"
@@ -75,11 +14,11 @@
             <div class="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
         </div>
         <div class="relative z-10 site-container">
-            <h1 class="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">Contact Us</h1>
-            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary" aria-hidden="true">/</span>
-                <span class="text-primary">Contact Us</span>
+            <h1 class="contact-page-hero__title">Contact Us</h1>
+            <nav class="contact-page-hero__crumbs" aria-label="Breadcrumb">
+                <a href="{{ route('home') }}">Home</a>
+                <span aria-hidden="true">/</span>
+                <span>Contact Us</span>
             </nav>
         </div>
     </section>
@@ -89,24 +28,24 @@
             <h2 class="contact-page__title">Contact Us</h2>
 
             <div class="contact-page__tabs-wrap">
-            <div class="contact-page__tabs" role="tablist" aria-label="Office locations">
-                @foreach ($offices as $office)
-                    <button
-                        type="button"
-                        role="tab"
-                        id="contact-tab-{{ $office['id'] }}"
-                        @class([
-                            'contact-page__tab',
-                            'contact-page__tab--active' => $office['active'] ?? false,
-                        ])
-                        data-contact-tab="{{ $office['id'] }}"
-                        aria-selected="{{ ($office['active'] ?? false) ? 'true' : 'false' }}"
-                        aria-controls="contact-panel-{{ $office['id'] }}"
-                    >
-                        {{ $office['label'] }}
-                    </button>
-                @endforeach
-            </div>
+                <div class="contact-page__tabs" role="tablist" aria-label="Office locations">
+                    @foreach ($offices as $office)
+                        <button
+                            type="button"
+                            role="tab"
+                            id="contact-tab-{{ $office['id'] }}"
+                            @class([
+                                'contact-page__tab',
+                                'contact-page__tab--active' => $office['active'] ?? false,
+                            ])
+                            data-contact-tab="{{ $office['id'] }}"
+                            aria-selected="{{ ($office['active'] ?? false) ? 'true' : 'false' }}"
+                            aria-controls="contact-panel-{{ $office['id'] }}"
+                        >
+                            {{ $office['label'] }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
 
             <div class="contact-page__layout">
@@ -223,69 +162,32 @@
     </section>
 
     <section id="contact-map" class="contact-page__map-section" aria-label="Map">
-        <div class="site-container">
+        <div class="site-container contact-page__map-inner">
             <h3 class="contact-page__map-heading">View map:</h3>
-        </div>
-        <div class="contact-page__map-embed">
-            @foreach ($offices as $office)
-                @php
-                    $officeMap = trim((string) ($office['map'] ?? ''));
-                    $officeMapIframe = $officeMap !== '' && stripos($officeMap, '<iframe') !== false;
-                    $officeMapUrl = $officeMap !== '' && ! $officeMapIframe && filter_var($officeMap, FILTER_VALIDATE_URL);
-                    $officeEmbed = $officeMap === '' && filled($office['address'] ?? '')
-                        ? 'https://maps.google.com/maps?q=' . rawurlencode(preg_replace('/\s+/u', ' ', $office['address'])) . '&output=embed'
-                        : null;
-                    $officeShowMap = $officeMapIframe || $officeMapUrl || filled($officeEmbed);
-                @endphp
-                @if ($officeShowMap)
-                    <div
-                        class="contact-page__map-panel"
-                        data-contact-map-panel="{{ $office['id'] }}"
-                        {{ ($office['active'] ?? false) ? '' : 'hidden' }}
-                    >
-                        @if ($officeMapIframe)
-                            <div class="contact-page__map-iframe-wrap">{!! $officeMap !!}</div>
-                        @else
-                            <iframe
-                                title="Map — {{ $office['label'] }}"
-                                src="{{ $officeMapUrl ? $officeMap : $officeEmbed }}"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                allowfullscreen
-                            ></iframe>
-                        @endif
-                    </div>
-                @endif
-            @endforeach
+            <div class="contact-page__map-embed">
+                @foreach ($offices as $office)
+                    @php($map = $office['map'])
+                    @if (\App\Support\MapEmbed::hasDisplay($map))
+                        <div
+                            class="contact-page__map-panel"
+                            data-contact-map-panel="{{ $office['id'] }}"
+                            {{ ($office['active'] ?? false) ? '' : 'hidden' }}
+                        >
+                            @if ($map->type === 'iframe')
+                                <div class="contact-page__map-iframe-wrap">{!! $map->html !!}</div>
+                            @else
+                                <iframe
+                                    title="{{ $map->title ?? 'Map' }} — {{ $office['label'] }}"
+                                    src="{{ $map->src }}"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    allowfullscreen
+                                ></iframe>
+                            @endif
+                        </div>
+                    @endif
+                @endforeach
+            </div>
         </div>
     </section>
 @endsection
-
-@push('scripts')
-<script>
-(() => {
-    const tabs = document.querySelectorAll('[data-contact-tab]');
-    const panels = document.querySelectorAll('[data-contact-panel]');
-    const mapPanels = document.querySelectorAll('[data-contact-map-panel]');
-    if (tabs.length === 0) return;
-
-    tabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-            const id = tab.getAttribute('data-contact-tab');
-            tabs.forEach((t) => {
-                const active = t === tab;
-                t.setAttribute('aria-selected', active ? 'true' : 'false');
-                t.classList.toggle('contact-page__tab--active', active);
-            });
-            panels.forEach((panel) => {
-                panel.hidden = panel.getAttribute('data-contact-panel') !== id;
-            });
-            mapPanels.forEach((map) => {
-                map.hidden = map.getAttribute('data-contact-map-panel') !== id;
-            });
-        });
-    });
-
-})();
-</script>
-@endpush

@@ -248,6 +248,36 @@ function initNavFlyout() {
     });
 }
 
+function initContactPageTabs() {
+    const tabs = document.querySelectorAll("[data-contact-tab]");
+    const panels = document.querySelectorAll("[data-contact-panel]");
+    const mapPanels = document.querySelectorAll("[data-contact-map-panel]");
+
+    if (tabs.length === 0) {
+        return;
+    }
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const id = tab.getAttribute("data-contact-tab");
+
+            tabs.forEach((item) => {
+                const active = item === tab;
+                item.setAttribute("aria-selected", active ? "true" : "false");
+                item.classList.toggle("contact-page__tab--active", active);
+            });
+
+            panels.forEach((panel) => {
+                panel.hidden = panel.getAttribute("data-contact-panel") !== id;
+            });
+
+            mapPanels.forEach((map) => {
+                map.hidden = map.getAttribute("data-contact-map-panel") !== id;
+            });
+        });
+    });
+}
+
 function initBackToTop() {
     document.querySelectorAll("[data-back-to-top]").forEach((link) => {
         link.addEventListener("click", (event) => {
@@ -359,6 +389,7 @@ function initSiteNav() {
     initWhereLocationNav();
     initOurTeamNav();
     initBackToTop();
+    initContactPageTabs();
 }
 
 if (document.readyState === "loading") {
