@@ -793,6 +793,7 @@
         font-weight: 800;
         line-height: 1.1;
         color: #fff;
+        text-align: left;
         text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
         overflow-wrap: anywhere;
         word-break: break-word;
@@ -801,6 +802,7 @@
     .menu-page-hero__lead {
         margin: 1rem 0 0;
         max-width: 42rem;
+        text-align: left;
         font-size: 1rem;
         font-weight: 400;
         line-height: 1.6;
@@ -4773,6 +4775,7 @@ body.site-mobile-nav-open {
     font-weight: 800;
     line-height: 1.1;
     color: #fff;
+    text-align: left;
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
@@ -7363,4 +7366,17 @@ html.site-app body {
 .site-app main .home-recruitment-split__body p {
     text-align: justify;
     text-justify: inter-word;
+}
+
+/* Page hero titles — left aligned (local + live) */
+section.menu-page-hero .site-container,
+section.service-detail-hero .site-container {
+    text-align: left;
+}
+
+section.menu-page-hero .menu-page-hero__title,
+section.menu-page-hero .menu-page-hero__lead,
+section.service-detail-hero .service-detail-hero__title {
+    text-align: left;
+    text-justify: auto;
 }
