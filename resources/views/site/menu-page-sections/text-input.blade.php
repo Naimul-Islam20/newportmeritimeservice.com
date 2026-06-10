@@ -10,7 +10,7 @@
     $hasImage = $imageUrl !== '';
     $hasContent = filled($mini) || filled($title) || filled($desc) || $hasImage || count($points) > 0 || filled($bottom);
     $hasTitleBlock = filled($mini) || filled($title);
-    $bodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
+    $bodyClass = 'image-details-body text-justify text-base leading-relaxed sm:text-lg';
     $descMargin = $hasTitleBlock ? 'mt-8' : 'mt-0';
     $afterDesc = filled($desc) || $hasTitleBlock;
     $imageMargin = $afterDesc ? 'mt-8' : 'mt-0';
@@ -36,7 +36,7 @@
         @endif
 
         @if (filled($desc))
-            <p class="{{ $descMargin }} text-start {{ $bodyClass }}">
+            <p class="{{ $descMargin }} {{ $bodyClass }}">
                 {!! nl2br(e($desc)) !!}
             </p>
         @endif
@@ -50,7 +50,7 @@
         @endif
 
         @if (count($points) > 0)
-            <ul class="{{ $pointsMargin }} list-disc space-y-3 pl-5 text-start {{ $bodyClass }}">
+            <ul class="{{ $pointsMargin }} list-disc space-y-3 pl-5 {{ $bodyClass }}">
                 @foreach ($points as $p)
                     <li>{{ $p }}</li>
                 @endforeach
@@ -58,7 +58,7 @@
         @endif
 
         @if (filled($bottom))
-            <p class="{{ $bottomMargin }} text-start {{ $bodyClass }}">
+            <p class="{{ $bottomMargin }} {{ $bodyClass }}">
                 {!! nl2br(e($bottom)) !!}
             </p>
         @endif

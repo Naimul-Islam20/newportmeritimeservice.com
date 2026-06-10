@@ -20,7 +20,7 @@ class HonorableClientController extends Controller
             'title' => SiteDetail::pageTitle($page->hero_title),
             'metaDescription' => $page->meta_description,
             'page' => $page,
-            'clients' => HonorableClient::forPublicPage(),
+            'clients' => HonorableClient::paginateForPublicPage(),
         ]);
     }
 }

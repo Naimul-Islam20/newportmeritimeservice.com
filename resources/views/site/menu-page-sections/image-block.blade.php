@@ -33,7 +33,7 @@
     $hasHeader = filled($mini) || filled($title) || filled($desc);
     $hasTitles = filled($mini) || filled($title);
     $descMargin = $hasTitles ? 'mt-5' : 'mt-0';
-    $bodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
+    $bodyClass = 'image-details-body text-justify text-base leading-relaxed sm:text-lg';
 @endphp
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
 

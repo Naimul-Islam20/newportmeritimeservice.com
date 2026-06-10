@@ -9,14 +9,9 @@
     @endphp
 
     <section class="honorable-clients-hero relative min-h-[300px] w-full overflow-hidden bg-secondary sm:min-h-[400px]">
-        <div class="pointer-events-none absolute inset-0 z-0">
-            <img
-                src="{{ $page->resolvedHeroBackgroundUrl() }}"
-                alt=""
-                class="h-full w-full object-cover opacity-70"
-            >
-            <div class="absolute inset-0 bg-secondary/65"></div>
-        </div>
+        @include('site.partials.page-hero-media', [
+            'imageUrl' => $page->resolvedHeroBackgroundUrl(),
+        ])
         <div class="honorable-clients-hero__content site-container relative z-10">
             <p class="honorable-clients-hero__eyebrow">Award</p>
             <h1 class="honorable-clients-hero__title">{{ $heroTitle }}</h1>
@@ -38,10 +33,10 @@
                 </header>
             @endif
 
-            @if ($clients->isNotEmpty())
+            @if ($clients->total() > 0)
                 <div class="honorable-clients__stats" aria-hidden="true">
                     <div class="honorable-clients__stat">
-                        <span class="honorable-clients__stat-value">{{ $clients->count() }}</span>
+                        <span class="honorable-clients__stat-value">{{ $clients->total() }}</span>
                         <span class="honorable-clients__stat-label">Trusted partners</span>
                     </div>
                 </div>
@@ -72,6 +67,12 @@
                         </li>
                     @endforeach
                 </ul>
+
+                @if ($clients->hasPages())
+                    <div class="honorable-clients__pagination">
+                        {{ $clients->links('vendor.pagination.site') }}
+                    </div>
+                @endif
             @else
                 <p class="honorable-clients__empty">Our honorable clients will be published here soon.</p>
             @endif

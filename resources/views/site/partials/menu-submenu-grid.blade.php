@@ -31,7 +31,7 @@
 
         @if ($submenuPaginator->hasPages())
             <div class="site-section-after-title flex justify-center">
-                {{ $submenuPaginator->links() }}
+                {{ $submenuPaginator->links('vendor.pagination.site') }}
             </div>
         @endif
     </div>

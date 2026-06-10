@@ -23,7 +23,7 @@
 @if (filled($pageContent ?? null))
     <section class="bg-white py-14 sm:py-20">
         <div class="site-container max-w-3xl">
-            <div class="text-base leading-relaxed text-foreground/80">
+            <div class="site-copy text-justify text-base leading-relaxed text-foreground/80">
                 {!! nl2br(e($pageContent)) !!}
             </div>
         </div>

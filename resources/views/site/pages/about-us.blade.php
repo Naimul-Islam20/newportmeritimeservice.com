@@ -21,10 +21,9 @@
 @if ($hasHero)
 <section class="relative flex h-[300px] w-full items-center overflow-hidden bg-secondary sm:h-[400px]">
     @if ($hasHeroBg)
-        <div class="absolute inset-0">
-            <img src="{{ \App\Models\AboutPage::imageSrc($about->hero_background) }}" class="h-full w-full object-cover opacity-60 mix-blend-overlay" alt="">
-            <div class="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
-        </div>
+        @include('site.partials.page-hero-media', [
+            'imageUrl' => \App\Models\AboutPage::imageSrc($about->hero_background),
+        ])
     @endif
 
     @if ($hasHeroTitle)

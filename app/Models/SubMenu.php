@@ -41,6 +41,26 @@ class SubMenu extends Model
         return PublicUploadUrl::fromPath($this->cover_image_path);
     }
 
+    private const DEFAULT_PAGE_HERO = 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop';
+
+    /**
+     * Default menu/submenu page hero background (uploaded site cover, else port stock image).
+     */
+    public static function defaultPageHeroBackgroundUrl(): string
+    {
+        $uploaded = PublicUploadUrl::fromPath('menu-page-cover.jpg');
+
+        if ($uploaded !== '') {
+            return $uploaded;
+        }
+
+        if (is_file(public_path('menu-page-cover.jpg'))) {
+            return asset('menu-page-cover.jpg');
+        }
+
+        return self::DEFAULT_PAGE_HERO;
+    }
+
     /**
      * Same background URL as the submenu page hero (cover upload, else default cover asset).
      */
@@ -52,7 +72,7 @@ class SubMenu extends Model
             return $cover;
         }
 
-        return PublicUploadUrl::fromPathOr('menu-page-cover.jpg', '/menu-page-cover.jpg');
+        return self::defaultPageHeroBackgroundUrl();
     }
 
     public function menu(): BelongsTo
@@ -122,6 +142,12 @@ class SubMenu extends Model
     public function isHonorableClientNavItem(): bool
     {
         return $this->normalizedPath() === '/award/honorable-client';
+    }
+
+    /** Submenu parents that only open a flyout — no landing-page link on click. */
+    public function isDropdownOnlyParentNav(): bool
+    {
+        return $this->normalizedPath() === '/where-we-are';
     }
 
     public function siteNavHref(): string

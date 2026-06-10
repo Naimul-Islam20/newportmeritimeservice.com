@@ -14,7 +14,7 @@
     $descRaw = data_get($d, 'description');
     $desc = is_string($descRaw) && trim($descRaw) !== '' ? trim($descRaw) : null;
     $points = is_array(data_get($d, 'points')) ? array_values(array_filter(data_get($d, 'points'), fn ($v) => is_string($v) && trim($v) !== '')) : [];
-    $detailsBodyClass = 'image-details-body text-base leading-relaxed sm:text-lg';
+    $detailsBodyClass = 'image-details-body text-justify text-base leading-relaxed sm:text-lg';
     $hasHeadings = filled($mini) || filled($title);
     $descMargin = $hasHeadings ? 'mt-3' : 'mt-0';
     $pointsMargin = ($hasHeadings || filled($desc)) ? 'mt-3' : 'mt-0';

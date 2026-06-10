@@ -46,7 +46,9 @@
                                             </svg>
                                         </summary>
                                         <div class="site-mobile-nav__nested-sub">
-                                            <a href="{{ $child->siteNavHref() }}" class="site-mobile-nav__sublink site-mobile-nav__sublink--muted">{{ $child->label }} overview</a>
+                                            @unless ($child->isDropdownOnlyParentNav())
+                                                <a href="{{ $child->siteNavHref() }}" class="site-mobile-nav__sublink site-mobile-nav__sublink--muted">{{ $child->label }} overview</a>
+                                            @endunless
                                             @foreach ($child->children as $grandchild)
                                                 <a href="{{ $grandchild->siteNavHref() }}"
                                                     @class([

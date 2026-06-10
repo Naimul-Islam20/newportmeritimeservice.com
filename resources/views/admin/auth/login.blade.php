@@ -71,7 +71,7 @@
         }
 
         input[type="email"],
-        input[type="password"] {
+        .login-password__input {
             width: 100%;
             padding: 11px 12px;
             border: 1px solid var(--admin-login-border);
@@ -82,8 +82,55 @@
             color: #0f172a;
         }
 
+        .login-password__input {
+            padding-right: 2.75rem;
+        }
+
+        .login-password {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .login-password .login-password__input {
+            margin-bottom: 0;
+        }
+
+        .login-password__toggle {
+            position: absolute;
+            top: 50%;
+            right: 0.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            padding: 0;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .login-password__toggle:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+            transform: translateY(-50%);
+        }
+
+        .login-password__toggle svg {
+            width: 1.15rem;
+            height: 1.15rem;
+        }
+
+        .login-password__icon--hidden {
+            display: none;
+        }
+
         input[type="email"]:focus,
-        input[type="password"]:focus {
+        .login-password__input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 28%, transparent);
         }
@@ -138,7 +185,7 @@
         <div class="brand">
             <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ $siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName() }}">
         </div>
-        <form class="card" method="POST" action="{{ route('admin.login.store') }}">
+        <form class="card" method="POST" action="{{ route('login.store') }}">
             @csrf
             <h2>Welcome back</h2>
             <p class="subtext">Sign in to continue to your dashboard.</p>
@@ -147,17 +194,31 @@
             <div class="error">{{ $errors->first() }}</div>
             @endif
 
-            @if (app()->environment('local'))
-            <p class="subtext" style="margin-bottom: 14px; padding: 10px 12px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; color: #0c4a6e;">
-                Local dev: <strong>{{ config('admin.email') }}</strong> / password from <code>ADMIN_PASSWORD</code> in .env
-            </p>
-            @endif
-
             <label for="email">Email</label>
             <input id="email" name="email" type="email" value="{{ old('email') }}" required>
 
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" required>
+            <div class="login-password">
+                <input id="password" class="login-password__input" name="password" type="password" required autocomplete="current-password">
+                <button
+                    type="button"
+                    class="login-password__toggle"
+                    data-login-password-toggle
+                    aria-label="Show password"
+                    aria-pressed="false"
+                >
+                    <svg class="login-password__icon--show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <svg class="login-password__icon--hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                        <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                        <line x1="2" y1="2" x2="22" y2="22" />
+                    </svg>
+                </button>
+            </div>
 
             <label class="remember" for="remember">
                 <input id="remember" type="checkbox" name="remember" value="1">
@@ -167,6 +228,27 @@
             <button type="submit">Sign in</button>
         </form>
     </div>
+    <script>
+        document.querySelectorAll("[data-login-password-toggle]").forEach((button) => {
+            const field = button.closest(".login-password")?.querySelector(".login-password__input");
+            const showIcon = button.querySelector(".login-password__icon--show");
+            const hideIcon = button.querySelector(".login-password__icon--hidden");
+
+            if (!field || !showIcon || !hideIcon) {
+                return;
+            }
+
+            button.addEventListener("click", () => {
+                const isHidden = field.type === "password";
+
+                field.type = isHidden ? "text" : "password";
+                showIcon.classList.toggle("login-password__icon--hidden", isHidden);
+                hideIcon.classList.toggle("login-password__icon--hidden", !isHidden);
+                button.setAttribute("aria-pressed", isHidden ? "true" : "false");
+                button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+            });
+        });
+    </script>
 </body>
 
 </html>

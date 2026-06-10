@@ -7,7 +7,7 @@
 @php($leftPoints = is_array($left['points'] ?? null) ? array_values(array_filter($left['points'], fn ($v) => is_string($v) && trim($v) !== '')) : [])
 @php($rightPoints = is_array($right['points'] ?? null) ? array_values(array_filter($right['points'], fn ($v) => is_string($v) && trim($v) !== '')) : [])
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-@php($bodyClass = 'image-details-body text-base leading-relaxed')
+@php($bodyClass = 'image-details-body text-justify text-base leading-relaxed')
 
 <section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">

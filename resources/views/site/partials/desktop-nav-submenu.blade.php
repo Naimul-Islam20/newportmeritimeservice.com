@@ -20,6 +20,22 @@
         <div class="site-desktop-nav__flyout" role="presentation">
             <div class="site-desktop-nav__flyout-col site-desktop-nav__flyout-col--primary" role="group" aria-label="{{ $menu->label }}">
                 @foreach ($menu->subMenus as $child)
+                    @if ($child->isDropdownOnlyParentNav() && $child->hasChildren())
+                    <button
+                        type="button"
+                        role="menuitem"
+                        @class([
+                            'site-desktop-nav__flyout-parent',
+                            'site-desktop-nav__flyout-parent--toggle',
+                            'site-desktop-nav__flyout-parent--current' => $child->isCurrent() || $child->isActiveBranch(),
+                        ])
+                        data-nav-flyout-parent="{{ $child->id }}"
+                        aria-haspopup="true"
+                    >
+                        <span>{{ $child->label }}</span>
+                        <span class="site-desktop-nav__flyout-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    @else
                     <a
                         href="{{ $child->siteNavHref() }}"
                         role="menuitem"
@@ -37,6 +53,7 @@
                             <span class="site-desktop-nav__flyout-chevron" aria-hidden="true">&rsaquo;</span>
                         @endif
                     </a>
+                    @endif
                 @endforeach
             </div>
 

@@ -10,7 +10,7 @@ final class ContactOffices
     /**
      * @return list<array{id: string, label: string, active: bool, phone: string, email: string, address: string, map: object}>
      */
-    public static function forContactPage(?SiteDetail $siteDetails = null): array
+    public static function forContactPage(?SiteDetail $siteDetails = null, ?string $activeLocationSlug = null): array
     {
         $siteDetails ??= SiteDetail::query()->first();
 
@@ -24,11 +24,15 @@ final class ContactOffices
         $branches = self::branchDefinitions();
         $locations = WhereWeAreLocation::activeOrdered();
         $locationBySlug = collect($locations)->keyBy('slug');
+        $activeLocationSlug = $activeLocationSlug !== null ? trim($activeLocationSlug) : null;
 
         $offices = [];
 
         foreach ($branches as $index => $branch) {
             $location = $locationBySlug->get($branch['location_slug']);
+            $isActive = $activeLocationSlug !== null
+                ? $branch['location_slug'] === $activeLocationSlug
+                : $index === 0;
 
             $address = $headAddress;
             if ($index > 0 || $headAddress === '') {
@@ -49,12 +53,16 @@ final class ContactOffices
             $offices[] = [
                 'id' => $branch['id'],
                 'label' => $branch['label'],
-                'active' => $index === 0,
+                'active' => $isActive,
                 'phone' => $phone,
                 'email' => $email,
                 'address' => $address,
                 'map' => $map,
             ];
+        }
+
+        if ($activeLocationSlug !== null && ! collect($offices)->contains(fn (array $office): bool => $office['active'])) {
+            $offices[0]['active'] = true;
         }
 
         return $offices;

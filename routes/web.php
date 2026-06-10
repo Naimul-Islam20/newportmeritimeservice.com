@@ -36,10 +36,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Redirect default /login to admin login (no separate user login route exists).
-Route::get('/login', function () {
-    return redirect()->route('admin.login');
-})->name('login');
+Route::middleware('guest')->group(function (): void {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
+});
 
 // Common typo fallback: redirect /adimn/* -> /admin/*
 Route::any('/adimn/{any?}', function (?string $any = null) {
@@ -82,7 +82,7 @@ Route::post('/blog/comments/{sub_menu}', [BlogCommentController::class, 'store']
 
 // Dynamic menu/sub-menu pages (must stay after all explicit site routes above).
 Route::get('/{any}', [MenuPageController::class, 'show'])
-    ->where('any', '^(?!admin($|/)).+');
+    ->where('any', '^(?!admin($|/))(?!login$).+');
 
 Route::prefix('admin')->group(function (): void {
     Route::middleware('guest')->group(function (): void {

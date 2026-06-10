@@ -15,6 +15,7 @@ use App\Models\SiteDetail;
 use App\Models\WhereWeAreLocation;
 use App\Models\WhereWeArePort;
 use App\Models\SubMenu;
+use App\Support\ContactOffices;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -352,8 +353,11 @@ class PageController extends Controller
     public function whereWeAreLocation(string $slug): View
     {
         if ($this->isWhereWeAreContactPort($slug)) {
+            $siteDetails = SiteDetail::query()->first();
+
             return view('site.pages.contact', [
-                'siteDetails' => SiteDetail::query()->first(),
+                'siteDetails' => $siteDetails,
+                'offices' => ContactOffices::forContactPage($siteDetails, $slug),
             ]);
         }
 

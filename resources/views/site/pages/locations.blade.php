@@ -47,14 +47,9 @@
 
 @section('content')
     <section class="relative flex h-[300px] w-full items-center overflow-hidden bg-secondary sm:h-[400px]">
-        <div class="absolute inset-0">
-            <img
-                src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop"
-                alt=""
-                class="h-full w-full object-cover opacity-60 mix-blend-overlay"
-            >
-            <div class="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
-        </div>
+        @include('site.partials.page-hero-media', [
+            'imageUrl' => 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop',
+        ])
         <div class="relative z-10 site-container">
             <h1 class="max-w-4xl font-sans text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 We serve all ports and strait of Turkey and the ARA Area

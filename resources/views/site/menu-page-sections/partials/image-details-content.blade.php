@@ -1,5 +1,5 @@
 @php
-    $detailsBodyClass = $detailsBodyClass ?? 'image-details-body text-base leading-relaxed sm:text-lg';
+    $detailsBodyClass = $detailsBodyClass ?? 'image-details-body text-justify text-base leading-relaxed sm:text-lg';
     $descMargin = $descMargin ?? 'mt-0';
     $pointsMargin = $pointsMargin ?? 'mt-0';
     $buttonMargin = $buttonMargin ?? 'mt-8';

@@ -5,14 +5,7 @@
 
 @section('content')
     <section class="relative flex h-[300px] w-full items-center overflow-hidden bg-secondary sm:h-[400px]">
-        <div class="absolute inset-0">
-            <img
-                src="{{ $location->hero_background_url }}"
-                alt=""
-                class="h-full w-full object-cover opacity-60 mix-blend-overlay"
-            >
-            <div class="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/60 to-transparent"></div>
-        </div>
+        @include('site.partials.page-hero-media', ['imageUrl' => $location->hero_background_url])
         <div class="relative z-10 site-container">
             <h1 class="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ $location->hero_title }}</h1>
             <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">

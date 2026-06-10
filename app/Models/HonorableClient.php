@@ -6,10 +6,13 @@ use App\Support\PublicUploadUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
 class HonorableClient extends Model
 {
+    public const PUBLIC_PER_PAGE = 12;
+
     protected $fillable = [
         'name',
         'logo_path',
@@ -54,11 +57,15 @@ class HonorableClient extends Model
     }
 
     /**
-     * @return Collection<int, static>
+     * @return LengthAwarePaginator<int, static>
      */
-    public static function forPublicPage(): Collection
+    public static function paginateForPublicPage(): LengthAwarePaginator
     {
-        return self::query()->active()->ordered()->get();
+        return self::query()
+            ->active()
+            ->ordered()
+            ->paginate(self::PUBLIC_PER_PAGE)
+            ->withQueryString();
     }
 
     public static function isManagedUploadPath(?string $path): bool

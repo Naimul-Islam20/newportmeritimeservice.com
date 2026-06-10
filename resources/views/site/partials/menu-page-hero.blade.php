@@ -6,18 +6,17 @@
     if (filled($heroLead) && mb_strlen($heroLead) > 275) {
         $heroLead = \Illuminate\Support\Str::limit($heroLead, 275, '...');
     }
-    $heroImage = $heroImageUrl ?? asset('menu-page-cover.jpg');
+    $heroImage = filled($heroImageUrl ?? null)
+        ? $heroImageUrl
+        : \App\Models\SubMenu::defaultPageHeroBackgroundUrl();
 @endphp
 
-<section class="menu-page-hero relative min-h-[300px] w-full overflow-hidden bg-secondary">
-    <div class="pointer-events-none absolute inset-0 z-0">
-        <img src="{{ $heroImage }}" alt="" class="h-full w-full object-cover opacity-70">
-        <div class="absolute inset-0 bg-secondary/65"></div>
-    </div>
+<section class="menu-page-hero service-detail-hero relative flex min-h-[300px] w-full items-center overflow-hidden bg-secondary sm:min-h-[400px]">
+    @include('site.partials.page-hero-media', ['imageUrl' => $heroImage])
 
-    <div class="menu-page-hero__content site-container relative z-10">
+    <div class="relative z-10 site-container">
         @if (filled($heroHeading))
-            <h1 class="menu-page-hero__title" title="{{ $heroHeading }}">{{ $heroHeading }}</h1>
+            <h1 class="menu-page-hero__title">{{ $heroHeading }}</h1>
         @endif
         @if (filled($heroLead))
             <p class="menu-page-hero__lead" title="{{ $heroLeadTitle }}">{{ $heroLead }}</p>

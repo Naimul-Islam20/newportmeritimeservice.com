@@ -5,7 +5,7 @@
 @php($rightDesc = filled(data_get($d, 'right_description')) ? trim(data_get($d, 'right_description')) : null)
 @php($sectionTitle = is_string($section->title ?? null) && trim($section->title) !== '' ? trim($section->title) : null)
 @php(extract(section_strip_view_data($sectionStrip ?? 'primary')))
-@php($bodyClass = 'image-details-body text-base leading-relaxed')
+@php($bodyClass = 'image-details-body text-justify text-base leading-relaxed')
 
 <section class="{{ $stripSectionClass }} site-section">
     <div class="site-container">
