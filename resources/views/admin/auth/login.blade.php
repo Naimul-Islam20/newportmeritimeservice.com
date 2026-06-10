@@ -185,7 +185,7 @@
         <div class="brand">
             <img src="{{ $adminHeaderLogoUrl ?? \App\Models\SiteDetail::headerLogoAssetUrl() }}" alt="{{ $siteMetaName ?? \App\Models\SiteDetail::resolvedSiteName() }}">
         </div>
-        <form class="card" method="POST" action="{{ route('login.store') }}">
+        <form class="card" method="POST" action="{{ route('admin.login.store') }}">
             @csrf
             <h2>Welcome back</h2>
             <p class="subtext">Sign in to continue to your dashboard.</p>
