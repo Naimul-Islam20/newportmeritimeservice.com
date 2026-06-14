@@ -56,8 +56,8 @@
             'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
         ],
         [
-            'name' => "Cox's Bazar Port (Fishing Harbour)",
-            'address' => "Cox's Bazar Fishing Harbour, Kasturi Ghat Road, Cox's Bazar 4700, Bangladesh.",
+            'name' => "Matarbari Port",
+            'address' => " Matarbari, Maheshkhali Upazila, Cox's Bazar District, Bangladesh.",
         ],
     ];
 @endphp
