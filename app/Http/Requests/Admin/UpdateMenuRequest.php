@@ -32,6 +32,7 @@ class UpdateMenuRequest extends FormRequest
             'url' => ['nullable', 'string', 'max:2048'],
             'description' => ['nullable', 'string', 'max:5000'],
             'page_content' => ['nullable', 'string', 'max:65535'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif,svg', 'max:5120'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
             'show_submenus_on_page' => ['sometimes', 'boolean'],

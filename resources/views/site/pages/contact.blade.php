@@ -6,7 +6,7 @@
 @section('content')
     <section class="contact-page-hero relative flex min-h-[300px] w-full items-center overflow-hidden bg-secondary sm:min-h-[400px]">
         @include('site.partials.page-hero-media', [
-            'imageUrl' => 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop',
+            'imageUrl' => $heroImageUrl ?? 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop',
         ])
         <div class="relative z-10 site-container">
             <h1 class="contact-page-hero__title">Contact Us</h1>

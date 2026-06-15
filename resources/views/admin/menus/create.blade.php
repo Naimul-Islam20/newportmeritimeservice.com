@@ -6,7 +6,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.menus.store') }}">
+    <form method="POST" action="{{ route('admin.menus.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-2">
             @include('admin.menus.partials.show-submenu-pages-toggle', ['defaultShow' => false])
@@ -29,6 +29,12 @@
                 <label for="page_content">Page content</label>
                 <textarea id="page_content" name="page_content" rows="10" placeholder="Main text for this page (shown below the hero on the website)">{{ old('page_content') }}</textarea>
                 @error('page_content') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="cover_image">Cover Image (Banner)</label>
+                <input id="cover_image" name="cover_image" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <div style="color:#64748b;font-size:12px;margin-top:4px;">Recommended: High resolution landscape image. Max 5MB.</div>
+                @error('cover_image') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

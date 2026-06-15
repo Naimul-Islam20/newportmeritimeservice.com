@@ -16,10 +16,16 @@ class ContactController extends Controller
     public function create(): View
     {
         $siteDetails = SiteDetail::query()->first();
+        
+        $menu = \App\Models\Menu::where('url', '/contact')->orWhere('url', 'contact')->first();
+        $heroImageUrl = $menu && $menu->cover_image_path 
+            ? $menu->coverImageUrl() 
+            : 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop';
 
         return view('site.pages.contact', [
             'siteDetails' => $siteDetails,
             'offices' => ContactOffices::forContactPage($siteDetails),
+            'heroImageUrl' => $heroImageUrl,
         ]);
     }
 

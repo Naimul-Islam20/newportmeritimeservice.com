@@ -7,7 +7,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.menus.update', $menu) }}">
+    <form method="POST" action="{{ route('admin.menus.update', $menu) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="grid grid-2">
@@ -31,6 +31,18 @@
                 <label for="page_content">Page content</label>
                 <textarea id="page_content" name="page_content" rows="10" placeholder="Main text for this page (below the hero)">{{ old('page_content', $menu->page_content) }}</textarea>
                 @error('page_content') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="cover_image">Cover Image (Banner)</label>
+                @if ($menu->cover_image_path)
+                    <div style="margin-bottom:8px;">
+                        <img src="{{ $menu->coverImageUrl() }}" alt="Current cover" style="max-height:120px;max-width:300px;object-fit:cover;border:1px solid #e2e8f0;border-radius:6px;">
+                        <div style="color:#64748b;font-size:12px;margin-top:2px;">Current cover — upload a new file to replace it.</div>
+                    </div>
+                @endif
+                <input id="cover_image" name="cover_image" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <div style="color:#64748b;font-size:12px;margin-top:4px;">Recommended: High resolution landscape image. Max 5MB.</div>
+                @error('cover_image') <div class="error">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label for="sort_order">Sort order</label>

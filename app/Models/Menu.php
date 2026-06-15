@@ -15,6 +15,7 @@ class Menu extends Model
         'url',
         'description',
         'page_content',
+        'cover_image_path',
         'sort_order',
         'is_active',
         'show_submenus_on_page',
@@ -27,6 +28,11 @@ class Menu extends Model
             'show_submenus_on_page' => 'boolean',
             'sort_order' => 'integer',
         ];
+    }
+
+    public function coverImageUrl(): string
+    {
+        return \App\Support\PublicUploadUrl::fromPath($this->cover_image_path);
     }
 
     public function subMenus(): HasMany

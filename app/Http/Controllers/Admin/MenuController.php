@@ -90,6 +90,13 @@ class MenuController extends Controller
             $data['url'] = $url;
         }
 
+        $coverPath = null;
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('menus', 'public_site');
+        }
+        unset($data['cover_image']);
+        $data['cover_image_path'] = $coverPath;
+
         $menu = Menu::create($data);
 
         AuditLogger::log('admin.menu.created', $menu, [
@@ -125,6 +132,20 @@ class MenuController extends Controller
             $data['url'] = $url;
         }
 
+        if ($request->hasFile('cover_image')) {
+            $path = $request->file('cover_image')->store('menus', 'public_site');
+
+            if ($menu->cover_image_path && \Illuminate\Support\Facades\Storage::disk('public_site')->exists($menu->cover_image_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public_site')->delete($menu->cover_image_path);
+            }
+            if ($menu->cover_image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($menu->cover_image_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($menu->cover_image_path);
+            }
+
+            $data['cover_image_path'] = $path;
+        }
+        unset($data['cover_image']);
+
         $menu->fill($data);
 
         if (! $menu->isDirty()) {
@@ -147,6 +168,14 @@ class MenuController extends Controller
         $this->authorize('delete', $menu);
 
         $label = $menu->label;
+
+        if ($menu->cover_image_path && \Illuminate\Support\Facades\Storage::disk('public_site')->exists($menu->cover_image_path)) {
+            \Illuminate\Support\Facades\Storage::disk('public_site')->delete($menu->cover_image_path);
+        }
+        if ($menu->cover_image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($menu->cover_image_path)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($menu->cover_image_path);
+        }
+
         $menu->delete();
 
         AuditLogger::log('admin.menu.deleted', null, ['label' => $label], request());
