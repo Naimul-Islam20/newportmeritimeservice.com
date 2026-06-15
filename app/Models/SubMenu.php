@@ -22,6 +22,7 @@ class SubMenu extends Model
         'description',
         'page_content',
         'cover_image_path',
+        'icon_image_path',
         'published_at',
         'sort_order',
         'is_active',
@@ -39,6 +40,11 @@ class SubMenu extends Model
     public function coverImageUrl(): string
     {
         return PublicUploadUrl::fromPath($this->cover_image_path);
+    }
+
+    public function iconImageUrl(): string
+    {
+        return PublicUploadUrl::fromPath($this->icon_image_path);
     }
 
     private const DEFAULT_PAGE_HERO = 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop';

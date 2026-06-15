@@ -36,12 +36,30 @@
     $menuHalf = (int) max(1, ceil($menus->count() / 2));
     $quickLinkMenus = $menus->take($menuHalf);
     $companyLinkMenus = $menus->skip($menuHalf);
-    $staticCompanyLinks = [
-        ['label' => 'About Us', 'url' => route('about-us')],
-        ['label' => 'Where We Are', 'url' => route('where-we-are')],
-        ['label' => 'Contact', 'url' => route('contact.create')],
-        ['label' => 'Get a Quote', 'url' => route('quote.request')],
+    $targetUrls = [
+        '/about-us', 'about-us',
+        '/where-we-are', 'where-we-are',
+        '/contact', 'contact',
+        '/get-a-quote', 'get-a-quote'
     ];
+    $menuLabels = \App\Models\Menu::whereIn('url', $targetUrls)->pluck('label', 'url')->toArray();
+    $subMenuLabels = \App\Models\SubMenu::whereIn('url', $targetUrls)->pluck('label', 'url')->toArray();
+    $labels = array_merge($subMenuLabels, $menuLabels);
+    $getLabel = function($url, $default) use ($labels) {
+        $path = parse_url($url, PHP_URL_PATH);
+        return $labels[$path] ?? $labels[ltrim($path, '/')] ?? $default;
+    };
+
+    $allDynamicUrls = $menus->map(fn($m) => parse_url($m->siteNavHref(), PHP_URL_PATH))->toArray();
+
+    $staticCompanyLinks = collect([
+        ['label' => $getLabel(route('about-us'), 'About Us'), 'url' => route('about-us')],
+        ['label' => $getLabel(route('where-we-are'), 'Where We Are'), 'url' => route('where-we-are')],
+        ['label' => $getLabel(route('contact.create'), 'Contact'), 'url' => route('contact.create')],
+        ['label' => $getLabel(route('quote.request'), 'Get a Quote'), 'url' => route('quote.request')],
+    ])->filter(function($link) use ($allDynamicUrls) {
+        return !in_array(parse_url($link['url'], PHP_URL_PATH), $allDynamicUrls);
+    })->values()->all();
     $footerPorts = [
         [
             'name' => 'Mongla Port',

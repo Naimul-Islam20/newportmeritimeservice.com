@@ -22,26 +22,7 @@
         <div class="site-container">
             <h2 class="contact-page__title">Contact Us</h2>
 
-            <div class="contact-page__tabs-wrap">
-                <div class="contact-page__tabs" role="tablist" aria-label="Office locations">
-                    @foreach ($offices as $office)
-                        <button
-                            type="button"
-                            role="tab"
-                            id="contact-tab-{{ $office['id'] }}"
-                            @class([
-                                'contact-page__tab',
-                                'contact-page__tab--active' => $office['active'] ?? false,
-                            ])
-                            data-contact-tab="{{ $office['id'] }}"
-                            aria-selected="{{ ($office['active'] ?? false) ? 'true' : 'false' }}"
-                            aria-controls="contact-panel-{{ $office['id'] }}"
-                        >
-                            {{ $office['label'] }}
-                        </button>
-                    @endforeach
-                </div>
-            </div>
+
 
             <div class="contact-page__layout">
                 <div class="contact-page__info-col">

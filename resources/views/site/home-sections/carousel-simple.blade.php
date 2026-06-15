@@ -31,13 +31,13 @@
                         $cardDesc = $cardDescRaw !== ''
                             ? \Illuminate\Support\Str::limit(preg_replace('/\s+/u', ' ', $cardDescRaw), 280)
                             : '';
-                        $iconUrl = $item->coverImageUrl();
+                        $iconUrl = $item->iconImageUrl() !== '' ? $item->iconImageUrl() : $item->coverImageUrl();
                     @endphp
                     <div class="swiper-slide">
                         <article class="services-card">
-                            <div class="services-card__icon-wrap">
+                            <div class="services-card__icon-wrap" style="min-height:120px;display:flex;align-items:center;">
                                 @if ($iconUrl !== '')
-                                    <img src="{{ $iconUrl }}" alt="" class="services-card__icon-img">
+                                    <img src="{{ $iconUrl }}" alt="" class="services-card__icon-img" style="width:120px;height:120px;object-fit:contain;">
                                 @else
                                     @include('site.partials.services-card-icon')
                                 @endif

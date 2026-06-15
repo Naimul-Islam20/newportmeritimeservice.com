@@ -194,8 +194,14 @@ class SubMenuController extends Controller
             $coverPath = $request->file('cover_image')->store('sub-menus', 'public_site');
         }
 
-        unset($data['cover_image']);
+        $iconPath = null;
+        if ($request->hasFile('icon_image')) {
+            $iconPath = $request->file('icon_image')->store('sub-menus/icons', 'public_site');
+        }
+
+        unset($data['cover_image'], $data['icon_image']);
         $data['cover_image_path'] = $coverPath;
+        $data['icon_image_path'] = $iconPath;
 
         $data['parent_sub_menu_id'] = SubMenu::resolveCategoryParentSubMenuId(
             $menu,
@@ -256,7 +262,20 @@ class SubMenuController extends Controller
             $data['cover_image_path'] = $path;
         }
 
-        unset($data['cover_image']);
+        if ($request->hasFile('icon_image')) {
+            $iconPath = $request->file('icon_image')->store('sub-menus/icons', 'public_site');
+
+            if ($sub_menu->icon_image_path && Storage::disk('public_site')->exists($sub_menu->icon_image_path)) {
+                Storage::disk('public_site')->delete($sub_menu->icon_image_path);
+            }
+            if ($sub_menu->icon_image_path && Storage::disk('public')->exists($sub_menu->icon_image_path)) {
+                Storage::disk('public')->delete($sub_menu->icon_image_path);
+            }
+
+            $data['icon_image_path'] = $iconPath;
+        }
+
+        unset($data['cover_image'], $data['icon_image']);
 
         $data['parent_sub_menu_id'] = SubMenu::resolveCategoryParentSubMenuId(
             $menu,
@@ -291,6 +310,13 @@ class SubMenuController extends Controller
         }
         if ($sub_menu->cover_image_path && Storage::disk('public')->exists($sub_menu->cover_image_path)) {
             Storage::disk('public')->delete($sub_menu->cover_image_path);
+        }
+
+        if ($sub_menu->icon_image_path && Storage::disk('public_site')->exists($sub_menu->icon_image_path)) {
+            Storage::disk('public_site')->delete($sub_menu->icon_image_path);
+        }
+        if ($sub_menu->icon_image_path && Storage::disk('public')->exists($sub_menu->icon_image_path)) {
+            Storage::disk('public')->delete($sub_menu->icon_image_path);
         }
 
         $sub_menu->delete();

@@ -126,6 +126,25 @@ class AppServiceProvider extends ServiceProvider
                         $menu->subMenus
                             ->each(fn (SubMenu $sub) => $sub->setRelation('menu', $menu))
                             ->filter(fn (SubMenu $sub) => $sub->showInSiteHeaderNav())
+                            ->map(function (SubMenu $sub) {
+                                if ($sub->normalizedPath() === '/where-we-are') {
+                                    $locations = \App\Models\WhereWeAreLocation::activeOrdered();
+                                    $children = collect($locations)->map(function ($loc, $idx) use ($sub) {
+                                        $child = new SubMenu([
+                                            'menu_id' => $sub->menu_id,
+                                            'parent_sub_menu_id' => $sub->id,
+                                            'label' => $loc->hero_title,
+                                            'url' => '/where-we-are/' . $loc->slug,
+                                            'sort_order' => $loc->sort_order ?? $idx,
+                                            'is_active' => true,
+                                        ]);
+                                        $child->id = 90000 + $loc->id;
+                                        return $child;
+                                    });
+                                    $sub->setRelation('children', $children);
+                                }
+                                return $sub;
+                            })
                             ->values(),
                     );
 
