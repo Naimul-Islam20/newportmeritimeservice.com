@@ -93,10 +93,10 @@ final class ContactOffices
                 'address' => 'Payra Port Authority, Itbaria, Kalapara Upazila, Patuakhali District, Bangladesh.',
             ],
             [
-                'id' => 'coxs-bazar',
-                'label' => "Cox's Bazar",
-                'location_slug' => 'coxs-bazar-port',
-                'address' => "Cox's Bazar Fishing Harbour, Kasturi Ghat Road, Cox's Bazar 4700, Bangladesh.",
+                'id' => 'matarbari',
+                'label' => 'Matarbari',
+                'location_slug' => 'matarbari-port',
+                'address' => 'Matarbari Port, Maheshkhali, Cox\'s Bazar, Bangladesh.',
             ],
         ];
     }

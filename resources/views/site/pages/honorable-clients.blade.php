@@ -36,7 +36,6 @@
             @if ($clients->total() > 0)
                 <div class="honorable-clients__stats" aria-hidden="true">
                     <div class="honorable-clients__stat">
-                        <span class="honorable-clients__stat-value">{{ $clients->total() }}</span>
                         <span class="honorable-clients__stat-label">Trusted partners</span>
                     </div>
                 </div>
