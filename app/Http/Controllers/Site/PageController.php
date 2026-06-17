@@ -378,7 +378,7 @@ class PageController extends Controller
             'chattogram-port',
             'mongla-port',
             'payra-port',
-            'coxs-bazar-port',
+            'matarbari-port',
         ], true);
     }
 
