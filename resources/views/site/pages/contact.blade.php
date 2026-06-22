@@ -10,11 +10,7 @@
         ])
         <div class="relative z-10 site-container">
             <h1 class="contact-page-hero__title">Contact Us</h1>
-            <nav class="contact-page-hero__crumbs" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
-                <span aria-hidden="true">/</span>
-                <span>Contact Us</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', ['path' => '/contact', 'current' => 'Contact Us'])
         </div>
     </section>
 

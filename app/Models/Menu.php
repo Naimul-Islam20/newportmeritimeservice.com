@@ -223,6 +223,38 @@ class Menu extends Model
         return false;
     }
 
+    /**
+     * Parent menu for a nested path (e.g. /our-services/foo → Our Services menu).
+     */
+    public static function findParentMenuForPath(string $path): ?self
+    {
+        $normalized = rtrim('/'.ltrim(trim($path), '/'), '/') ?: '/';
+
+        return self::query()
+            ->active()
+            ->get()
+            ->filter(fn (self $menu) => filled($menu->normalizedPath()) && $menu->normalizedPath() !== '/')
+            ->sortByDesc(fn (self $menu) => strlen((string) $menu->normalizedPath()))
+            ->first(function (self $menu) use ($normalized): bool {
+                $menuPath = $menu->normalizedPath();
+
+                return $menuPath !== null && str_starts_with($normalized, $menuPath.'/');
+            });
+    }
+
+    /**
+     * Breadcrumb trail for a top-level menu landing page.
+     *
+     * @return list<array{label: string, url?: string}>
+     */
+    public function heroBreadcrumbs(): array
+    {
+        return [
+            ['label' => 'Home', 'url' => route('home')],
+            ['label' => $this->label],
+        ];
+    }
+
     public function adminSidebarHref(): string
     {
         return match ($this->normalizedPath()) {

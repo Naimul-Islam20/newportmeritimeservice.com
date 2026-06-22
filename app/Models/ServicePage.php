@@ -133,6 +133,46 @@ class ServicePage extends Model
             ->exists();
     }
 
+    /**
+     * @return list<array{label: string, url?: string}>
+     */
+    public static function heroBreadcrumbsForSlug(string $slug): array
+    {
+        $page = self::resolvedForPublic($slug);
+        $path = is_string($page->path ?? null) ? trim($page->path) : '';
+        $label = is_string($page->breadcrumb_label ?? null) && $page->breadcrumb_label !== ''
+            ? $page->breadcrumb_label
+            : (is_string($page->hero_title ?? null) ? $page->hero_title : 'Page');
+
+        if ($path !== '') {
+            $subCrumbs = SubMenu::heroBreadcrumbsForPath($path);
+            if ($subCrumbs !== null) {
+                return $subCrumbs;
+            }
+        }
+
+        $items = [
+            ['label' => 'Home', 'url' => route('home')],
+        ];
+
+        if ($path !== '') {
+            $normalizedPath = rtrim('/'.ltrim($path, '/'), '/') ?: '/';
+            $menu = Menu::findParentMenuForPath($path);
+
+            if ($menu && $menu->normalizedPath() !== $normalizedPath) {
+                $item = ['label' => $menu->label];
+                if (! $menu->isDropdownOnlyParentNav()) {
+                    $item['url'] = $menu->siteNavHref();
+                }
+                $items[] = $item;
+            }
+        }
+
+        $items[] = ['label' => $label];
+
+        return $items;
+    }
+
     public static function resolvedForPublic(string $slug): \stdClass
     {
         $row = self::query()->where('slug', $slug)->where('is_active', true)->first();

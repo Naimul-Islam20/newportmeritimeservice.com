@@ -62,16 +62,16 @@
     })->values()->all();
     $footerPorts = [
         [
+            'name' => 'Chattogram Port',
+            'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
+        ],
+        [
             'name' => 'Mongla Port',
             'address' => 'Mongla Port Authority, Mongla, Bagerhat District, Khulna Division, Bangladesh.',
         ],
         [
             'name' => 'Payra Port',
             'address' => 'Payra Port Authority, Itbaria, Kalapara Upazila, Patuakhali District, Bangladesh.',
-        ],
-        [
-            'name' => 'Chattogram Port',
-            'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
         ],
         [
             'name' => "Matarbari Port",

@@ -8,6 +8,7 @@
         'heading' => $heading ?? '',
         'lead' => $lead ?? null,
         'heroImageUrl' => $heroImageUrl ?? null,
+        'breadcrumbs' => $breadcrumbs ?? null,
     ])
 
     @if (isset($blogNavMenu) && $blogNavMenu)

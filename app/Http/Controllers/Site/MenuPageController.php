@@ -89,6 +89,7 @@ class MenuPageController extends Controller
             'pageContent' => $categorySub->page_content,
             'pageSections' => $categorySub->pageSections()->ordered()->where('is_active', true)->get(),
             'blogNavMenu' => $blogNavMenu,
+            'breadcrumbs' => $categorySub->heroBreadcrumbs(),
             'categorySub' => $categorySub,
             'layoutType' => $categorySub->blogLayoutType(),
             'articles' => $articles,
@@ -113,6 +114,7 @@ class MenuPageController extends Controller
             'lead' => $categorySub->description ?: null,
             'heroImageUrl' => $categoryCover !== '' ? $categoryCover : null,
             'blogNavMenu' => $blogNavMenu,
+            'breadcrumbs' => $article->heroBreadcrumbs(),
             'categorySub' => $categorySub,
             'layoutType' => $categorySub->blogLayoutType(),
             'currentArticle' => $article,
@@ -176,6 +178,7 @@ class MenuPageController extends Controller
                 'pageContent' => $sub->page_content,
                 'pageSections' => $sub->pageSections()->ordered()->where('is_active', true)->get(),
                 'blogNavMenu' => $blogNavMenu,
+                'breadcrumbs' => $sub->heroBreadcrumbs(),
             ]);
         }
 
@@ -203,6 +206,7 @@ class MenuPageController extends Controller
             'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
             'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
             'blogNavMenu' => $blogNavMenu,
+            'breadcrumbs' => $menu->heroBreadcrumbs(),
         ]);
     }
 }

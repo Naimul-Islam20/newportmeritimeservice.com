@@ -12,11 +12,7 @@
         ])
         <div class="relative z-10 site-container">
             <h1 class="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ $heroTitle }}</h1>
-            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary" aria-hidden="true">/</span>
-                <span class="text-primary">{{ $heroTitle }}</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', ['path' => '/quality-certificates-memberships', 'current' => $heroTitle])
         </div>
     </section>
 

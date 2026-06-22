@@ -35,9 +35,9 @@
                     @endphp
                     <div class="swiper-slide">
                         <article class="services-card">
-                            <div class="services-card__icon-wrap" style="min-height:120px;display:flex;align-items:center;">
+                            <div class="services-card__icon-wrap">
                                 @if ($iconUrl !== '')
-                                    <img src="{{ $iconUrl }}" alt="" class="services-card__icon-img" style="width:120px;height:120px;object-fit:contain;">
+                                    <img src="{{ $iconUrl }}" alt="" class="services-card__icon-img">
                                 @else
                                     @include('site.partials.services-card-icon')
                                 @endif

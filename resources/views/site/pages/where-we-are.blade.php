@@ -14,10 +14,7 @@
 
         <div class="relative z-10 site-container">
             <h1 class="font-sans text-4xl font-bold text-white sm:text-5xl lg:text-6xl tracking-tight">Where We Are</h1>
-            <div class="mt-4 flex items-center gap-3 text-sm sm:text-base font-medium">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary">Where We Are</span>
-            </div>
+            @include('site.partials.page-hero-crumbs', ['path' => '/where-we-are', 'current' => 'Where We Are'])
         </div>
     </section>
 

@@ -54,11 +54,7 @@
             <h1 class="max-w-4xl font-sans text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
                 We serve all ports and strait of Turkey and the ARA Area
             </h1>
-            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary" aria-hidden="true">/</span>
-                <span class="text-primary">Locations</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', ['path' => '/locations', 'current' => 'Locations'])
         </div>
     </section>
 

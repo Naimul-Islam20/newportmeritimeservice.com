@@ -15,13 +15,7 @@
         <div class="honorable-clients-hero__content site-container relative z-10">
             <p class="honorable-clients-hero__eyebrow">Award</p>
             <h1 class="honorable-clients-hero__title">{{ $heroTitle }}</h1>
-            <nav class="honorable-clients-hero__crumbs" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
-                <span aria-hidden="true">/</span>
-                <a href="{{ route('award') }}">Award</a>
-                <span aria-hidden="true">/</span>
-                <span>{{ $heroTitle }}</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', ['path' => '/award/honorable-client', 'current' => $heroTitle])
         </div>
     </section>
 

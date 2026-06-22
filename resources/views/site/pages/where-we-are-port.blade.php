@@ -10,13 +10,13 @@
             <h1 class="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
                 We are in {{ $port->hero_title }}!
             </h1>
-            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm font-medium sm:text-base" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary" aria-hidden="true">/</span>
-                <a href="{{ route('locations') }}" class="text-white transition hover:text-primary">Locations</a>
-                <span class="text-primary" aria-hidden="true">/</span>
-                <span class="text-primary">{{ strtoupper($port->title) }}</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', [
+                'items' => [
+                    ['label' => 'Home', 'url' => route('home')],
+                    ['label' => 'Locations', 'url' => route('locations')],
+                    ['label' => strtoupper($port->title)],
+                ],
+            ])
         </div>
     </section>
 

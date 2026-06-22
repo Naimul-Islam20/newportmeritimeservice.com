@@ -29,10 +29,7 @@
     @if ($hasHeroTitle)
         <div class="relative z-10 site-container">
             <h1 class="font-sans text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">{{ $about->hero_title }}</h1>
-            <div class="mt-4 flex items-center gap-3 text-sm font-medium sm:text-base">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary">{{ $about->hero_title }}</span>
-            </div>
+            @include('site.partials.page-hero-crumbs', ['path' => '/about-us', 'current' => $about->hero_title])
         </div>
     @endif
 </section>

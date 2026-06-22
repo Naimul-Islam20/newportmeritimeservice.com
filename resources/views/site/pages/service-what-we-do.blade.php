@@ -8,11 +8,9 @@
         @include('site.partials.page-hero-media', ['imageUrl' => $page->hero_background_url])
         <div class="relative z-10 site-container">
             <h1 class="service-detail-hero__title">{{ $page->hero_title }}</h1>
-            <nav class="service-detail-hero__crumbs" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
-                <span aria-hidden="true">/</span>
-                <span>{{ $page->breadcrumb_label }}</span>
-            </nav>
+            @include('site.partials.page-hero-crumbs', [
+                'items' => $breadcrumbs ?? ServicePage::heroBreadcrumbsForSlug('what-we-do'),
+            ])
         </div>
     </section>
 

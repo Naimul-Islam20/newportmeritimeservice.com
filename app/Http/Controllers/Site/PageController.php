@@ -46,6 +46,7 @@ class PageController extends Controller
                 $q->where('url', $path)->orWhere('url', $pathAlt);
             })
             ->where('is_active', true)
+            ->with(['menu', 'parent'])
             ->first();
 
         if ($sub) {
@@ -59,6 +60,7 @@ class PageController extends Controller
                 'heroImageUrl' => $cover !== '' ? $cover : null,
                 'pageContent' => $sub->page_content,
                 'pageSections' => $sub->pageSections()->ordered()->where('is_active', true)->get(),
+                'breadcrumbs' => $sub->heroBreadcrumbs(),
             ]);
         }
 
@@ -81,6 +83,7 @@ class PageController extends Controller
             'pageContent' => $menu->page_content,
             'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
             'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
+            'breadcrumbs' => $menu->heroBreadcrumbs(),
         ]);
     }
 
@@ -120,6 +123,7 @@ class PageController extends Controller
             'pageContent' => $menu->page_content,
             'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
             'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
+            'breadcrumbs' => $menu->heroBreadcrumbs(),
         ]);
     }
 
@@ -162,6 +166,7 @@ class PageController extends Controller
             return view('site.pages.service-what-we-do', [
                 'page' => $page,
                 'serviceCards' => $serviceCards,
+                'breadcrumbs' => ServicePage::heroBreadcrumbsForSlug($slug),
                 'overviewParagraphs' => collect($page->body_paragraphs ?? [])
                     ->map(fn ($p) => is_string($p) ? trim($p) : '')
                     ->filter(fn ($p) => $p !== '')
@@ -174,6 +179,7 @@ class PageController extends Controller
         return view('site.pages.service-detail', [
             'page' => $page,
             'sidebar' => $sidebar,
+            'breadcrumbs' => ServicePage::heroBreadcrumbsForSlug($slug),
         ]);
     }
 

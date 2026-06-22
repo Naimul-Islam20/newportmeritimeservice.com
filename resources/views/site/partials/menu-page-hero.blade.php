@@ -18,6 +18,12 @@
         @if (filled($heroHeading))
             <h1 class="menu-page-hero__title">{{ $heroHeading }}</h1>
         @endif
+        @include('site.partials.page-hero-crumbs', [
+            'items' => $breadcrumbs ?? (filled($heroHeading) ? [
+                ['label' => 'Home', 'url' => route('home')],
+                ['label' => $heroHeading],
+            ] : []),
+        ])
         @if (filled($heroLead))
             <p class="menu-page-hero__lead" title="{{ $heroLeadTitle }}">{{ $heroLead }}</p>
         @endif

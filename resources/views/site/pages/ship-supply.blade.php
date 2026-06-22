@@ -14,10 +14,18 @@
 
         <div class="relative z-10 site-container">
             <h1 class="font-sans text-4xl font-bold text-white sm:text-5xl lg:text-6xl tracking-tight">Supplies</h1>
-            <div class="mt-4 flex items-center gap-3 text-sm sm:text-base font-medium">
-                <a href="{{ route('home') }}" class="text-white transition hover:text-primary">Home</a>
-                <span class="text-primary">Supplies</span>
-            </div>
+            @include('site.partials.page-hero-crumbs', [
+                'items' => \App\Models\Menu::query()
+                    ->where('is_active', true)
+                    ->where(function ($q): void {
+                        $q->where('url', '/ship-supply')->orWhere('url', 'ship-supply');
+                    })
+                    ->first()
+                    ?->heroBreadcrumbs() ?? [
+                        ['label' => 'Home', 'url' => route('home')],
+                        ['label' => 'Ship Supply'],
+                    ],
+            ])
         </div>
     </section>
 

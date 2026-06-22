@@ -1134,8 +1134,9 @@
 
     .services-card__icon-wrap {
         display: flex;
-        width: 7rem;
-        height: 7rem;
+        width: 308px;
+        max-width: 100%;
+        height: 74px;
         flex-shrink: 0;
         align-items: center;
         justify-content: flex-start;
@@ -1145,40 +1146,24 @@
 
     @media (min-width: 640px) {
         .services-card__icon-wrap {
-            width: 8rem;
-            height: 8rem;
             margin-bottom: 1.5rem;
         }
     }
 
     .services-card__icon-img {
         display: block;
-        width: 100%;
-        height: 100%;
-        max-width: 7rem;
-        max-height: 7rem;
+        width: 308px;
+        max-width: 100%;
+        height: 74px;
         object-fit: contain;
         object-position: left center;
     }
 
-    @media (min-width: 640px) {
-        .services-card__icon-img {
-            max-width: 8rem;
-            max-height: 8rem;
-        }
-    }
-
     .services-card__icon-svg {
         display: block;
-        width: 6.5rem;
-        height: 6.5rem;
-    }
-
-    @media (min-width: 640px) {
-        .services-card__icon-svg {
-            width: 7.5rem;
-            height: 7.5rem;
-        }
+        width: 308px;
+        max-width: 100%;
+        height: 74px;
     }
 
     .services-card__title {
@@ -4779,6 +4764,7 @@ body.site-mobile-nav-open {
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
+.page-hero__crumbs,
 .service-detail-hero__crumbs {
     display: flex;
     flex-wrap: wrap;
@@ -4791,20 +4777,24 @@ body.site-mobile-nav-open {
     text-transform: uppercase;
 }
 
+.page-hero__crumbs a,
 .service-detail-hero__crumbs a {
     color: #fff;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
+.page-hero__crumbs a:hover,
 .service-detail-hero__crumbs a:hover {
     color: var(--sd-accent, #37b3e8);
 }
 
+.page-hero__crumbs span:last-child,
 .service-detail-hero__crumbs span:last-child {
     color: var(--sd-accent, #37b3e8);
 }
 
+.page-hero__crumbs span[aria-hidden="true"],
 .service-detail-hero__crumbs span[aria-hidden="true"] {
     color: var(--sd-accent, #37b3e8);
 }
@@ -6616,6 +6606,7 @@ button.service-detail__nav-parent:hover {
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
+.page-hero__crumbs,
 .contact-page-hero__crumbs {
     display: flex;
     flex-wrap: wrap;
@@ -6628,17 +6619,25 @@ button.service-detail__nav-parent:hover {
     text-transform: uppercase;
 }
 
+.page-hero__crumbs a,
 .contact-page-hero__crumbs a {
     color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
+.page-hero__crumbs a:hover,
 .contact-page-hero__crumbs a:hover {
     color: #38bdf8;
 }
 
+.page-hero__crumbs span:last-child,
 .contact-page-hero__crumbs span:last-child {
+    color: #38bdf8;
+}
+
+.page-hero__crumbs span[aria-hidden="true"],
+.contact-page-hero__crumbs span[aria-hidden="true"] {
     color: #38bdf8;
 }
 
@@ -7054,6 +7053,7 @@ html.site-app body {
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
+.page-hero__crumbs,
 .honorable-clients-hero__crumbs {
     display: flex;
     flex-wrap: wrap;
@@ -7066,17 +7066,25 @@ html.site-app body {
     text-transform: uppercase;
 }
 
+.page-hero__crumbs a,
 .honorable-clients-hero__crumbs a {
     color: rgba(255, 255, 255, 0.88);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
+.page-hero__crumbs a:hover,
 .honorable-clients-hero__crumbs a:hover {
     color: #38bdf8;
 }
 
+.page-hero__crumbs span:last-child,
 .honorable-clients-hero__crumbs span:last-child {
+    color: #38bdf8;
+}
+
+.page-hero__crumbs span[aria-hidden="true"],
+.honorable-clients-hero__crumbs span[aria-hidden="true"] {
     color: #38bdf8;
 }
 
@@ -7379,4 +7387,12 @@ section.menu-page-hero .menu-page-hero__lead,
 section.service-detail-hero .service-detail-hero__title {
     text-align: left;
     text-justify: auto;
+}
+
+/* Breadcrumb parent labels without links (e.g. SHIP SUPPLY) */
+.page-hero__crumbs > span:not([aria-hidden="true"]):not(:last-child),
+.service-detail-hero__crumbs > span:not([aria-hidden="true"]):not(:last-child),
+.contact-page-hero__crumbs > span:not([aria-hidden="true"]):not(:last-child),
+.honorable-clients-hero__crumbs > span:not([aria-hidden="true"]):not(:last-child) {
+    color: rgba(255, 255, 255, 0.88);
 }

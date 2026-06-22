@@ -581,6 +581,142 @@ class SubMenu extends Model
         return false;
     }
 
+    /**
+     * Breadcrumb trail for page hero (Home → menu → parent submenus → current).
+     *
+     * @return list<array{label: string, url?: string}>
+     */
+    public function heroBreadcrumbs(): array
+    {
+        $items = [
+            ['label' => 'Home', 'url' => route('home')],
+        ];
+
+        $menu = $this->relationLoaded('menu') ? $this->menu : $this->menu()->first();
+
+        if ($menu && self::isBlogMenu($menu)) {
+            return $this->blogHeroBreadcrumbs($menu, $items);
+        }
+
+        if ($menu) {
+            $this->appendMenuBreadcrumb($items, $menu);
+        }
+
+        foreach ($this->ancestorSubMenus() as $ancestor) {
+            $this->appendSubMenuBreadcrumb($items, $ancestor);
+        }
+
+        $items[] = ['label' => $this->label];
+
+        return $items;
+    }
+
+    /**
+     * @return list<array{label: string, url?: string}>
+     */
+    public static function heroBreadcrumbsForPath(string $path): ?array
+    {
+        $normalized = self::pathFromUrl($path);
+
+        if ($normalized === null) {
+            return null;
+        }
+
+        $pathAlt = ltrim($normalized, '/');
+
+        $sub = self::query()
+            ->where(function ($q) use ($normalized, $pathAlt): void {
+                $q->where('url', $normalized)->orWhere('url', $pathAlt);
+            })
+            ->active()
+            ->with(['menu', 'parent'])
+            ->first();
+
+        return $sub?->heroBreadcrumbs();
+    }
+
+    /**
+     * @param  list<array{label: string, url?: string}>  $items
+     */
+    private function blogHeroBreadcrumbs(Menu $menu, array $items): array
+    {
+        $items[] = ['label' => $menu->label, 'url' => $menu->siteNavHref()];
+
+        if ($this->isNavDropdownCategory()) {
+            $items[] = ['label' => $this->label];
+
+            return $items;
+        }
+
+        $category = $this->blogCategoryForPost();
+        if ($category && $category->normalizedPath() !== $this->normalizedPath()) {
+            $items[] = ['label' => $category->label, 'url' => $category->siteNavHref()];
+        }
+
+        $items[] = ['label' => $this->label];
+
+        return $items;
+    }
+
+    /**
+     * @param  list<array{label: string, url?: string}>  $items
+     */
+    private function appendMenuBreadcrumb(array &$items, Menu $menu): void
+    {
+        $menuPath = $menu->normalizedPath();
+        $currentPath = $this->normalizedPath();
+
+        if ($currentPath === null) {
+            return;
+        }
+
+        if ($menuPath !== null && $menuPath === $currentPath && $menuPath !== '/') {
+            return;
+        }
+
+        $item = ['label' => $menu->label];
+
+        if ($menuPath !== null && $menuPath !== '/' && ! $menu->isDropdownOnlyParentNav()) {
+            $item['url'] = $menu->siteNavHref();
+        }
+
+        $items[] = $item;
+    }
+
+    /**
+     * @param  list<array{label: string, url?: string}>  $items
+     */
+    private function appendSubMenuBreadcrumb(array &$items, self $subMenu): void
+    {
+        $item = ['label' => $subMenu->label];
+
+        if (! $subMenu->isDropdownOnlyParentNav()) {
+            $item['url'] = $subMenu->siteNavHref();
+        }
+
+        $items[] = $item;
+    }
+
+    /**
+     * @return list<self>
+     */
+    private function ancestorSubMenus(): array
+    {
+        $ancestors = [];
+        $parent = $this->relationLoaded('parent') ? $this->parent : null;
+
+        if ($parent === null && $this->parent_sub_menu_id) {
+            $parent = $this->parent()->first();
+        }
+
+        while ($parent) {
+            array_unshift($ancestors, $parent);
+            $parent = $parent->relationLoaded('parent') ? $parent->parent : $parent->parent()->first();
+        }
+
+        return $ancestors;
+    }
+
     public function adminSidebarHref(): string
     {
         $path = $this->normalizedPath();

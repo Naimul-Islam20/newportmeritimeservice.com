@@ -8,6 +8,7 @@
         'heading' => $heading ?? $categorySub->label ?? '',
         'lead' => $lead ?? $categorySub->description ?? null,
         'heroImageUrl' => $heroImageUrl ?? null,
+        'breadcrumbs' => $breadcrumbs ?? null,
     ])
 
     @if (isset($blogNavMenu) && $blogNavMenu)
