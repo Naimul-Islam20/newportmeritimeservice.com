@@ -18,8 +18,6 @@ final class ContactOffices
         $phones = self::stringList($siteDetails?->phones);
         $defaultEmail = $emails[0] ?? '';
         $defaultPhone = $phones[0] ?? '';
-        $headAddress = trim((string) ($siteDetails?->location ?? ''));
-        $headMapRaw = trim((string) ($siteDetails?->map ?? ''));
 
         $branches = self::branchDefinitions();
         $locations = WhereWeAreLocation::activeOrdered();
@@ -34,21 +32,15 @@ final class ContactOffices
                 ? $branch['location_slug'] === $activeLocationSlug
                 : $index === 0;
 
-            $address = $headAddress;
-            if ($index > 0 || $headAddress === '') {
-                $address = $branch['address'];
-            }
+            $fallbackAddress = $branch['address'] ?? '';
+            $address = $location?->contactAddressForPublic($fallbackAddress) ?? $fallbackAddress;
 
             $phone = $defaultPhone;
             $email = $defaultEmail;
 
-            $map = $index === 0 && $headMapRaw !== ''
-                ? MapEmbed::resolve($headMapRaw, null, $branch['label'])
-                : MapEmbed::resolve(
-                    $location?->map_embed,
-                    $location?->map_query ?? $address,
-                    $branch['label'],
-                );
+            $map = $location
+                ? $location->contactMapEmbed($branch['label'], $address !== '' ? $address : null)
+                : MapEmbed::resolve(null, $address !== '' ? $address : null, $branch['label']);
 
             $offices[] = [
                 'id' => $branch['id'],
@@ -69,16 +61,18 @@ final class ContactOffices
     }
 
     /**
+     * Contact page tabs and their linked Where We Are location slugs.
+     *
      * @return list<array{id: string, label: string, location_slug: string, address: string}>
      */
-    private static function branchDefinitions(): array
+    public static function branchDefinitions(): array
     {
         return [
             [
                 'id' => 'chattogram',
                 'label' => 'Chattogram',
                 'location_slug' => 'chattogram-port',
-                'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
+                'address' => '1110/B, Hasna Tower (6th Floor), Agrabad C/A, Chittagong.',
             ],
             [
                 'id' => 'mongla',

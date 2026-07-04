@@ -41,6 +41,12 @@ class WhereWeAreLocation extends Model
         'gallery_images',
         'map_embed',
         'map_query',
+        'contact_address',
+        'contact_map_query',
+        'contact_map_embed',
+        'contact_map_lat',
+        'contact_map_lng',
+        'contact_map_zoom',
         'body_link_label',
         'body_link_url',
         'brochure_label',
@@ -67,7 +73,47 @@ class WhereWeAreLocation extends Model
             'show_quality_block' => 'boolean',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'contact_map_lat' => 'float',
+            'contact_map_lng' => 'float',
+            'contact_map_zoom' => 'integer',
         ];
+    }
+
+    /** Office address shown on the public Contact page tab for this location. */
+    public function contactAddressForPublic(?string $fallback = null): ?string
+    {
+        $address = trim((string) ($this->contact_address ?? ''));
+
+        return $address !== '' ? $address : (filled($fallback) ? trim($fallback) : null);
+    }
+
+    /**
+     * Map embed for the Contact page tab (uses contact_* fields, else location map).
+     *
+     * @return object{type: 'none'|'iframe'|'src', html?: string, src?: string, title?: string}
+     */
+    public function contactMapEmbed(string $title, ?string $fallbackQuery = null): object
+    {
+        $hasContactMap = filled($this->contact_map_embed)
+            || filled($this->contact_map_query)
+            || (filled($this->contact_map_lat) && filled($this->contact_map_lng));
+
+        if ($hasContactMap) {
+            return MapEmbed::resolve(
+                $this->contact_map_embed,
+                $this->contact_map_query ?? $this->contact_address ?? $fallbackQuery,
+                $title,
+                filled($this->contact_map_lat) ? (float) $this->contact_map_lat : null,
+                filled($this->contact_map_lng) ? (float) $this->contact_map_lng : null,
+                (int) ($this->contact_map_zoom ?? 18),
+            );
+        }
+
+        return MapEmbed::resolve(
+            $this->map_embed,
+            $this->map_query ?? $fallbackQuery,
+            $title,
+        );
     }
 
     public function subMenu(): BelongsTo

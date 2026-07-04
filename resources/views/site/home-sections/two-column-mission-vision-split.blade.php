@@ -1,11 +1,16 @@
 {{-- Home: Mission & Vision (left) | image (right) --}}
 @php
     $mv = \App\Models\AboutPage::missionVisionForPublic();
+    $aboutMvImage = \App\Models\AboutPage::missionVisionImageForPublic();
     $sectionImageUrl = $section->imagePublicUrl();
-    $hasImage = $sectionImageUrl !== '';
-    $imgUrl = $hasImage
-        ? $sectionImageUrl
-        : 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop';
+    $hasAboutImage = $aboutMvImage !== '';
+    $hasSectionImage = $sectionImageUrl !== '';
+    $hasImage = $hasAboutImage || $hasSectionImage;
+    $imgUrl = $hasAboutImage
+        ? $aboutMvImage
+        : ($hasSectionImage
+            ? $sectionImageUrl
+            : 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop');
     $hasMission = filled($mv->mission_body);
     $hasVision = filled($mv->vision_body);
     $hasContent = $hasMission || $hasVision;

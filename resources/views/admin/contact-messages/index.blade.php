@@ -6,6 +6,7 @@
         <h1>Contact form</h1>
         <p style="margin:6px 0 0;color:#64748b;font-size:14px;">Submissions from the public contact page.</p>
     </div>
+    <a class="btn btn-muted" href="{{ route('admin.where-we-are-locations.index') }}">Contact office addresses &amp; maps</a>
 </div>
 
 <div class="card">

@@ -10,6 +10,8 @@
     <p style="margin:0 0 16px;font-size:14px;color:#5a6578;">
         Each location gets a public page at <code>/where-we-are/{slug}</code> and appears in the
         <strong>WHO WE ARE</strong> flyout under <strong>Where We Are</strong> when saved.
+        Use the <strong>Contact page</strong> section when editing to set office address and map for
+        <a href="{{ route('contact.create') }}" target="_blank" rel="noopener">Contact Us</a> tabs (Chattogram, Mongla, Payra, Matarbari).
     </p>
     <div class="table-wrap">
         <table>

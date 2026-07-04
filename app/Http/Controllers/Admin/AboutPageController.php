@@ -27,6 +27,7 @@ class AboutPageController extends Controller
         $prev = [
             'hero_background' => $about_page->hero_background,
             'trust_image' => $about_page->trust_image,
+            'mission_vision_image' => $about_page->mission_vision_image,
             'cta_background' => $about_page->cta_background,
             'cta_video_url' => $about_page->cta_video_url,
         ];
@@ -35,9 +36,11 @@ class AboutPageController extends Controller
         unset(
             $data['hero_background_file'],
             $data['trust_image_file'],
+            $data['mission_vision_image_file'],
             $data['cta_background_file'],
             $data['remove_hero_background'],
             $data['remove_trust_image'],
+            $data['remove_mission_vision_image'],
             $data['remove_cta_background'],
         );
 
@@ -53,6 +56,12 @@ class AboutPageController extends Controller
             $data['trust_image'] = null;
         }
 
+        if ($request->hasFile('mission_vision_image_file')) {
+            $data['mission_vision_image'] = $request->file('mission_vision_image_file')->store('about-page/mission-vision', 'public_site');
+        } elseif ($request->boolean('remove_mission_vision_image')) {
+            $data['mission_vision_image'] = null;
+        }
+
         if ($request->hasFile('cta_background_file')) {
             $data['cta_background'] = $request->file('cta_background_file')->store('about-page/cta', 'public_site');
         } elseif ($request->boolean('remove_cta_background')) {
@@ -61,7 +70,7 @@ class AboutPageController extends Controller
 
         $about_page->fill($data);
 
-        foreach (['hero_background', 'trust_image', 'cta_background', 'cta_video_url'] as $field) {
+        foreach (['hero_background', 'trust_image', 'mission_vision_image', 'cta_background', 'cta_video_url'] as $field) {
             $new = $about_page->{$field};
             $old = $prev[$field];
             if ($new !== $old && AboutPage::isManagedUploadPath($old)) {

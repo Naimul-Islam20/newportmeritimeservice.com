@@ -1006,6 +1006,39 @@
         background-color: #fff;
     }
 
+    /* Tighter gap when two menu carousels stack (Our Services → Ship Supply) */
+    .services-carousel + .services-carousel {
+        padding-top: 1rem;
+    }
+
+    .services-carousel:has(+ .services-carousel) {
+        padding-bottom: 1rem;
+    }
+
+    .services-carousel:has(+ .services-carousel) .services-swiper {
+        padding-bottom: 0 !important;
+    }
+
+    @media (min-width: 640px) {
+        .services-carousel + .services-carousel {
+            padding-top: 1.25rem;
+        }
+
+        .services-carousel:has(+ .services-carousel) {
+            padding-bottom: 1.25rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .services-carousel + .services-carousel {
+            padding-top: 1.5rem;
+        }
+
+        .services-carousel:has(+ .services-carousel) {
+            padding-bottom: 1.5rem;
+        }
+    }
+
     .services-carousel > .site-container {
         padding-left: calc(var(--site-padding-x) + 1rem);
         padding-right: calc(var(--site-padding-x) + 1rem);
@@ -6741,8 +6774,8 @@ button.service-detail__nav-parent:hover {
 }
 
 .contact-page__phone-number {
-    font-size: clamp(1.35rem, 2.8vw, 1.75rem);
-    font-weight: 800;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--cp-accent);
     text-decoration: none;
 }

@@ -182,12 +182,15 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
             },
         });
 
-        // Our Services / What We Do carousel
-        const servicesEl = document.querySelector('.services-swiper');
-        if (servicesEl) {
+        // Home menu carousels (Our Services, Ship Supply, …)
+        document.querySelectorAll('.services-swiper').forEach(function(servicesEl) {
+            const carouselUid = servicesEl.dataset.carousel;
+            const carouselRoot = servicesEl.closest('.services-carousel');
+            const prevBtn = carouselRoot?.querySelector('[data-carousel-prev="' + carouselUid + '"]') ?? null;
+            const nextBtn = carouselRoot?.querySelector('[data-carousel-next="' + carouselUid + '"]') ?? null;
             const servicesSlides = servicesEl.querySelectorAll('.swiper-slide');
             const servicesLoop = servicesSlides.length > 1;
-            new Swiper('.services-swiper', {
+            new Swiper(servicesEl, {
                 slidesPerView: 1,
                 spaceBetween: 24,
                 loop: servicesLoop,
@@ -197,8 +200,8 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
                     disableOnInteraction: false,
                 } : false,
                 navigation: {
-                    prevEl: '#services-prev',
-                    nextEl: '#services-next',
+                    prevEl: prevBtn,
+                    nextEl: nextBtn,
                 },
                 breakpoints: {
                     640: {
@@ -211,7 +214,7 @@ $sectionStrip = $loop->index % 2 === 0 ? 'primary' : 'secondary';
                     },
                 },
             });
-        }
+        });
 
         // Branch offices carousel — 3-up row, next arrow beside track
         const branchesEl = document.querySelector('[data-branches-swiper]');

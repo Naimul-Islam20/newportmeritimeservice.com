@@ -1,6 +1,9 @@
 @php
     use App\Models\WhereWeAreLocation;
+    use App\Support\ContactOffices;
     $isEdit = $location->exists;
+    $contactTab = collect(ContactOffices::branchDefinitions())
+        ->first(fn (array $branch) => ($branch['location_slug'] ?? '') === ($location->slug ?? ''));
 @endphp
 
 <h2 style="margin:0 0 12px;font-size:15px;">Hero</h2>
@@ -100,6 +103,46 @@
     <div style="grid-column:1/-1;">
         <label for="map_embed">Google Maps embed iframe (optional)</label>
         <textarea id="map_embed" name="map_embed" rows="3">{{ old('map_embed', $location->map_embed) }}</textarea>
+    </div>
+</div>
+
+<h2 style="margin:24px 0 12px;font-size:15px;">Contact page — {{ data_get($contactTab, 'label', 'office tab') }}</h2>
+<p style="margin:0 0 12px;color:#64748b;font-size:13px;line-height:1.5;">
+    @if (filled($contactTab))
+        Shown on the public <strong>Contact</strong> page when visitors select the <strong>{{ data_get($contactTab, 'label') }}</strong> tab (address + map below the form).
+    @else
+        This location slug is not linked to a Contact page tab. Contact tabs use slugs:
+        @foreach (ContactOffices::branchDefinitions() as $branch)
+            <code>{{ $branch['location_slug'] }}</code>@if (! $loop->last), @endif
+        @endforeach
+    @endif
+</p>
+<div class="grid grid-2">
+    <div style="grid-column:1/-1;">
+        <label for="contact_address">Office address (Contact page)</label>
+        <textarea id="contact_address" name="contact_address" rows="3" placeholder="e.g. 1110/B, Hasna Tower (6th Floor), Agrabad C/A, Chittagong.">{{ old('contact_address', $location->contact_address) }}</textarea>
+    </div>
+    <div style="grid-column:1/-1;">
+        <label for="contact_map_query">Map search query (optional)</label>
+        <input id="contact_map_query" name="contact_map_query" value="{{ old('contact_map_query', $location->contact_map_query) }}" placeholder="Full address or 22.3279216,91.8160141">
+        <div style="color:#64748b;font-size:12px;margin-top:6px;">Used when latitude/longitude are empty. Paste an address or coordinates <code>lat,lng</code>.</div>
+    </div>
+    <div>
+        <label for="contact_map_lat">Map latitude (optional)</label>
+        <input id="contact_map_lat" name="contact_map_lat" type="number" step="any" value="{{ old('contact_map_lat', $location->contact_map_lat) }}" placeholder="22.3279216">
+    </div>
+    <div>
+        <label for="contact_map_lng">Map longitude (optional)</label>
+        <input id="contact_map_lng" name="contact_map_lng" type="number" step="any" value="{{ old('contact_map_lng', $location->contact_map_lng) }}" placeholder="91.8160141">
+    </div>
+    <div>
+        <label for="contact_map_zoom">Map zoom (1–21)</label>
+        <input id="contact_map_zoom" name="contact_map_zoom" type="number" min="1" max="21" value="{{ old('contact_map_zoom', $location->contact_map_zoom ?? 18) }}" placeholder="18">
+    </div>
+    <div style="grid-column:1/-1;">
+        <label for="contact_map_embed">Google Maps embed iframe (optional)</label>
+        <textarea id="contact_map_embed" name="contact_map_embed" rows="3" placeholder="Paste iframe from Google Maps → Share → Embed a map">{{ old('contact_map_embed', $location->contact_map_embed) }}</textarea>
+        <div style="color:#64748b;font-size:12px;margin-top:6px;">If set, this overrides the search query and coordinates above.</div>
     </div>
 </div>
 

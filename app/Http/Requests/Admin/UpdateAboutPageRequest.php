@@ -41,6 +41,8 @@ class UpdateAboutPageRequest extends FormRequest
             'cta_heading' => ['nullable', 'string', 'max:2000'],
             'cta_button_label' => ['nullable', 'string', 'max:255'],
             'cta_video_url' => ['nullable', 'string', 'max:2048'],
+            'mission_vision_image_file' => ['nullable', 'image', 'max:5120'],
+            'remove_mission_vision_image' => ['sometimes', 'boolean'],
             'hero_background_file' => ['nullable', 'image', 'max:5120'],
             'trust_image_file' => ['nullable', 'image', 'max:5120'],
             'cta_background_file' => ['nullable', 'image', 'max:5120'],

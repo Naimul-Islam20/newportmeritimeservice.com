@@ -11,7 +11,7 @@
 </div>
 
 <p style="color:#64748b; font-size:14px; max-width:52rem; margin:0 0 16px 0;">
-    Everything on the public About Us page comes from this form and extra sections below. Empty fields are hidden on the site (no default text or stock images). <strong>Hero, intro side image, and banner background: upload images only.</strong> Video: <strong>YouTube link only</strong> (modal on the site).
+    Everything on the public About Us page comes from this form and extra sections below. Empty fields are hidden on the site (no default text or stock images). <strong>Hero, intro side image, Mission &amp; Vision side image, and banner background: upload images only.</strong> Video: <strong>YouTube link only</strong> (modal on the site).
 </p>
 
 <div class="card">
@@ -113,7 +113,25 @@
         </div>
 
         <h2 style="margin:24px 0 12px 0; font-size:15px;">Mission &amp; vision</h2>
+        <p style="margin:0 0 12px; color:#64748b; font-size:13px;">Shown on the homepage Mission &amp; Vision block (text left, image right).</p>
         <div class="grid grid-2">
+            <div style="grid-column: 1 / -1;">
+                <label for="mission_vision_image_file">Side image — upload image only</label>
+                <input id="mission_vision_image_file" name="mission_vision_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                @error('mission_vision_image_file') <div class="error">{{ $message }}</div> @enderror
+                @php $missionVisionPreview = \App\Models\AboutPage::imageSrc($aboutPage->mission_vision_image); @endphp
+                @if ($missionVisionPreview !== '')
+                    <div style="margin-top:8px;">
+                        <img src="{{ $missionVisionPreview }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
+                            <input type="checkbox" name="remove_mission_vision_image" value="1" @checked(old('remove_mission_vision_image'))>
+                            Remove current Mission &amp; Vision image
+                        </label>
+                    </div>
+                @elseif (filled($aboutPage->mission_vision_image))
+                    <p style="margin:8px 0 0; font-size:13px; color:#b45309;">Saved image path is missing on disk — upload again or check “Remove current Mission &amp; Vision image” and save.</p>
+                @endif
+            </div>
             <div>
                 <label for="mission_title">Mission title</label>
                 <input id="mission_title" name="mission_title" value="{{ old('mission_title', $aboutPage->mission_title) }}" placeholder="Optional">
