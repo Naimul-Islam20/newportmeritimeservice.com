@@ -12,7 +12,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.ship-supply-sub-menus.update', $subMenu) }}">
+    <form method="POST" action="{{ route('admin.ship-supply-sub-menus.update', $subMenu) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" name="menu_id" value="{{ $menu->id }}">
@@ -43,8 +43,20 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description (optional)</label>
-                <textarea id="description" name="description" rows="2">{{ old('description', $subMenu->description) }}</textarea>
+                <textarea id="description" name="description" rows="2" placeholder="Short text shown on the homepage card">{{ old('description', $subMenu->description) }}</textarea>
                 @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="icon_image">Icon Image (shown on homepage card)</label>
+                @if ($subMenu->iconImageUrl() !== '')
+                    <div style="margin-bottom:8px;">
+                        <img src="{{ $subMenu->iconImageUrl() }}" alt="Current icon" style="max-height:80px;max-width:120px;object-fit:contain;border:1px solid #e2e8f0;border-radius:6px;padding:4px;background:#f8fafc;">
+                        <div style="color:#64748b;font-size:12px;margin-top:2px;">Current icon — upload a new file to replace it.</div>
+                    </div>
+                @endif
+                <input id="icon_image" name="icon_image" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <div style="color:#64748b;font-size:12px;margin-top:4px;">Recommended: transparent PNG or SVG, square, ~80×80px. Max 2MB.</div>
+                @error('icon_image') <div class="error">{{ $message }}</div> @enderror
             </div>
         </div>
 

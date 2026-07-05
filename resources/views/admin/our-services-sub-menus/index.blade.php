@@ -10,8 +10,10 @@
 
 <div class="card">
     <p style="margin: 0 0 14px 0; color: #64748b; font-size: 13px;">
-        Items listed here appear in the site header under <strong>{{ $menu->label }}</strong>.
-        Active items show on the frontend; inactive items are hidden. Sort order controls the dropdown sequence.
+        Items listed here appear in the site header under <strong>{{ $menu->label }}</strong> and as cards in the
+        <strong>Our Services</strong> carousel on the home page.
+        Active items show on the frontend; inactive items are hidden. Sort order controls the dropdown and carousel sequence.
+        Edit each item to set its <strong>icon</strong>, <strong>description</strong>, and link.
     </p>
 
     <div class="table-wrap">

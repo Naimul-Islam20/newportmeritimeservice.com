@@ -37,15 +37,33 @@
                         $section->block_type === 'two_column' && $section->two_column_mode === 'both_sides_details' => '2 side details',
                         default => $section->block_type,
                     };
+                    $manageCardsUrl = ($section->block_type === 'carousel' && $section->variant === 'simple')
+                        ? match ($section->menu?->normalizedPath()) {
+                            '/our-services' => route('admin.our-services-sub-menus.index'),
+                            '/ship-supply' => route('admin.ship-supply-sub-menus.index'),
+                            default => null,
+                        }
+                        : null;
                 @endphp
                 <tr>
                     <td>{{ $section->id }}</td>
-                    <td>{{ $section->title ?? '—' }}</td>
+                    <td>
+                        {{ $section->title ?? '—' }}
+                        @if ($section->mini_title)
+                            <div style="color:#64748b;font-size:12px;margin-top:2px;">{{ $section->mini_title }}</div>
+                        @endif
+                        @if ($section->menu)
+                            <div style="color:#64748b;font-size:12px;margin-top:2px;">Menu: {{ $section->menu->label }}</div>
+                        @endif
+                    </td>
                     <td>{{ $sectionTypeLabel }}</td>
                     <td>{{ $section->variant ?? '—' }}</td>
                     <td>{{ $section->is_active ? 'Active' : 'Inactive' }}</td>
                     <td class="actions-cell">
                         <a class="btn btn-muted" href="{{ route('admin.home-sections.edit', $section) }}">Edit</a>
+                        @if ($manageCardsUrl)
+                            <a class="btn btn-primary" href="{{ $manageCardsUrl }}">Cards</a>
+                        @endif
                         @can('delete', $section)
                         <form method="POST" action="{{ route('admin.home-sections.destroy', $section) }}" style="display:inline;">
                             @csrf

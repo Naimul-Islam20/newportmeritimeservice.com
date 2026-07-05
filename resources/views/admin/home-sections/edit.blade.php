@@ -11,6 +11,22 @@
         Type: <strong>{{ $section->block_type }}</strong> — Variant: <strong>{{ $section->variant }}</strong>
     </div>
 
+    @php
+        $linkedMenu = $section->menu ?? $menus->firstWhere('id', $section->menu_id);
+        $manageCardsUrl = match ($linkedMenu?->normalizedPath()) {
+            '/our-services' => route('admin.our-services-sub-menus.index'),
+            '/ship-supply' => route('admin.ship-supply-sub-menus.index'),
+            default => null,
+        };
+    @endphp
+
+    @if ($section->variant === 'simple' && $manageCardsUrl)
+        <p style="margin: 0 0 14px; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; color: #475569; font-size: 13px; line-height: 1.55;">
+            Carousel cards are managed from the linked menu’s sub-items (label, icon, description, URL, sort order).
+            <a href="{{ $manageCardsUrl }}" style="font-weight: 600;">Manage carousel cards →</a>
+        </p>
+    @endif
+
     <form method="POST" action="{{ route('admin.home-sections.update', $section) }}">
         @csrf
         @method('PUT')

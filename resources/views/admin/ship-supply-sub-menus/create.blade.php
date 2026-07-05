@@ -7,7 +7,7 @@
 </div>
 
 <div class="card">
-    <form method="POST" action="{{ route('admin.ship-supply-sub-menus.store') }}">
+    <form method="POST" action="{{ route('admin.ship-supply-sub-menus.store') }}" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="menu_id" value="{{ $menu->id }}">
 
@@ -38,8 +38,14 @@
             </div>
             <div style="grid-column: 1 / -1;">
                 <label for="description">Description (optional)</label>
-                <textarea id="description" name="description" rows="2" placeholder="Short line under the page title">{{ old('description') }}</textarea>
+                <textarea id="description" name="description" rows="2" placeholder="Short text shown on the homepage card">{{ old('description') }}</textarea>
                 @error('description') <div class="error">{{ $message }}</div> @enderror
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="icon_image">Icon Image (shown on homepage card)</label>
+                <input id="icon_image" name="icon_image" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <div style="color:#64748b;font-size:12px;margin-top:4px;">Recommended: transparent PNG or SVG, square, ~80×80px. Max 2MB.</div>
+                @error('icon_image') <div class="error">{{ $message }}</div> @enderror
             </div>
         </div>
 

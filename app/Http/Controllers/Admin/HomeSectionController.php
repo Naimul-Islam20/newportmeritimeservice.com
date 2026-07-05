@@ -25,7 +25,7 @@ class HomeSectionController extends Controller
         $this->authorize('viewAny', HomeSection::class);
 
         return view('admin.home-sections.index', [
-            'sections' => HomeSection::query()->ordered()->get(),
+            'sections' => HomeSection::query()->with('menu')->ordered()->get(),
         ]);
     }
 
@@ -915,7 +915,7 @@ class HomeSectionController extends Controller
                 ->values();
 
             return view('admin.home-sections.edit', [
-                'section' => $home_section,
+                'section' => $home_section->loadMissing('menu'),
                 'menus' => $menus,
             ]);
         }
