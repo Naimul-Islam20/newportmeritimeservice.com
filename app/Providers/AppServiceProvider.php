@@ -16,6 +16,7 @@ use App\Models\HomeSection;
 use App\Models\HomeServiceAreaSetting;
 use App\Models\HomeVisualFramesSetting;
 use App\Models\Menu;
+use App\Models\NewsletterSubscription;
 use App\Models\OurStoryPage;
 use App\Models\OurTeamPage;
 use App\Models\QualityCertificate;
@@ -39,6 +40,7 @@ use App\Policies\HomeSectionPolicy;
 use App\Policies\HomeServiceAreaSettingPolicy;
 use App\Policies\HomeVisualFramesSettingPolicy;
 use App\Policies\MenuPolicy;
+use App\Policies\NewsletterSubscriptionPolicy;
 use App\Policies\OurStoryPagePolicy;
 use App\Policies\OurTeamPagePolicy;
 use App\Policies\QualityCertificatePolicy;
@@ -99,6 +101,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(HomeVisualFramesSetting::class, HomeVisualFramesSettingPolicy::class);
         Gate::policy(Menu::class, MenuPolicy::class);
         Gate::policy(QuoteRequest::class, QuoteRequestPolicy::class);
+        Gate::policy(NewsletterSubscription::class, NewsletterSubscriptionPolicy::class);
         Gate::policy(SiteDetail::class, SiteDetailPolicy::class);
         Gate::policy(SubMenu::class, SubMenuPolicy::class);
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuPageSectionController;
+use App\Http\Controllers\Admin\NewsletterSubscriptionController as AdminNewsletterSubscriptionController;
 use App\Http\Controllers\Admin\OurServicesSubMenuController;
 use App\Http\Controllers\Admin\OurStoryPageController;
 use App\Http\Controllers\Admin\OurTeamPageController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Site\BlogCommentController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MenuPageController;
+use App\Http\Controllers\Site\NewsletterSubscriptionController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Admin\HonorableClientController as AdminHonorableClientController;
 use App\Http\Controllers\Site\HonorableClientController;
@@ -71,6 +73,10 @@ Route::post('/get-a-quote', [QuoteRequestController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('quote.store');
 
+Route::post('/newsletter-registration', [NewsletterSubscriptionController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('newsletter.store');
+
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:10,1')
@@ -105,6 +111,10 @@ Route::prefix('admin')->group(function (): void {
         Route::resource('quote-requests', AdminQuoteRequestController::class)
             ->only(['index', 'show', 'destroy'])
             ->names('admin.quote-requests');
+
+        Route::resource('newsletter-subscriptions', AdminNewsletterSubscriptionController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->names('admin.newsletter-subscriptions');
 
         Route::resource('menus', MenuController::class)
             ->except(['show'])

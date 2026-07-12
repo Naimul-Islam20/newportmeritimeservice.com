@@ -604,6 +604,7 @@
                     <a class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
                     <a class="{{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">Contact form</a>
                     <a class="{{ request()->routeIs('admin.quote-requests.*') ? 'active' : '' }}" href="{{ route('admin.quote-requests.index') }}">Get a quote</a>
+                    <a class="{{ request()->routeIs('admin.newsletter-subscriptions.*') ? 'active' : '' }}" href="{{ route('admin.newsletter-subscriptions.index') }}">Newsletter</a>
                     <a class="{{ request()->routeIs('admin.home-sections.*') ? 'active' : '' }}" href="{{ route('admin.home-sections.index') }}">Home Sections</a>
                     <a class="{{ request()->routeIs('admin.site-details.*') ? 'active' : '' }}" href="{{ route('admin.site-details.edit') }}">Site Details</a>
                     <a class="{{ request()->routeIs('admin.about-page.*') ? 'active' : '' }}" href="{{ route('admin.about-page.edit') }}">About Us page</a>

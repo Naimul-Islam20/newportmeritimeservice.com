@@ -18,5 +18,9 @@
         <h3>Get a quote (unread)</h3>
         <p>{{ $unreadQuoteRequests }}</p>
     </div>
+    <div class="card">
+        <h3>Newsletter (unread)</h3>
+        <p>{{ $unreadNewsletterSubscriptions }}</p>
+    </div>
 </div>
 @endsection

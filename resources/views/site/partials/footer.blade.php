@@ -143,13 +143,20 @@
             </div>
 
             <div class="site-footer__col site-footer__col--newsletter">
-                <form action="{{ route('contact.create') }}" method="get" class="site-footer__newsletter">
+                @if (session('newsletter_status'))
+                    <p class="site-footer__newsletter-status" role="status">{{ session('newsletter_status') }}</p>
+                @endif
+                <form action="{{ route('newsletter.store') }}" method="post" class="site-footer__newsletter">
+                    @csrf
                     <label class="sr-only" for="footer-newsletter-email">Newsletter email</label>
-                    <input id="footer-newsletter-email" type="email" name="email" value="{{ request('email') }}" placeholder="Newsletter Registration" class="site-footer__newsletter-input">
+                    <input id="footer-newsletter-email" type="email" name="email" value="{{ old('email') }}" placeholder="Newsletter Registration" class="site-footer__newsletter-input" required>
                     <button type="submit" class="site-footer__newsletter-btn" aria-label="Newsletter registration">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
                     </button>
                 </form>
+                @error('email')
+                    <p class="site-footer__newsletter-error">{{ $message }}</p>
+                @enderror
                 <p class="site-footer__follow-label">Follow Us</p>
                 <div class="site-footer__socials">
                     @foreach ($socialNetworks as $key => $network)
