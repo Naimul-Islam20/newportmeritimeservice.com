@@ -18,7 +18,7 @@ class StoreQuoteRequest extends FormRequest
     {
         return [
             'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email:rfc,dns', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
             'phone' => ['required', 'string', 'max:40'],
             'company' => ['nullable', 'string', 'max:255'],
             'vessel_or_reference' => ['nullable', 'string', 'max:255'],

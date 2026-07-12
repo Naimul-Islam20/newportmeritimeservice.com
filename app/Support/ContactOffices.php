@@ -72,7 +72,7 @@ final class ContactOffices
                 'id' => 'chattogram',
                 'label' => 'Chattogram',
                 'location_slug' => 'chattogram-port',
-                'address' => '1110/B, Hasna Tower (6th Floor), Agrabad C/A, Chittagong.',
+                'address' => 'Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.',
             ],
             [
                 'id' => 'mongla',

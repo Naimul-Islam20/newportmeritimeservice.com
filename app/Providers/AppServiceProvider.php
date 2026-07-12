@@ -42,6 +42,7 @@ use App\Policies\MenuPolicy;
 use App\Policies\OurStoryPagePolicy;
 use App\Policies\OurTeamPagePolicy;
 use App\Policies\QualityCertificatePolicy;
+use App\Policies\QuoteRequestPolicy;
 use App\Policies\ServicePagePolicy;
 use App\Policies\ServiceSidebarSettingPolicy;
 use App\Policies\SiteDetailPolicy;

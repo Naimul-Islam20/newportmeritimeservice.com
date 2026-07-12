@@ -120,7 +120,7 @@
 <div class="grid grid-2">
     <div style="grid-column:1/-1;">
         <label for="contact_address">Office address (Contact page)</label>
-        <textarea id="contact_address" name="contact_address" rows="3" placeholder="e.g. 1110/B, Hasna Tower (6th Floor), Agrabad C/A, Chittagong.">{{ old('contact_address', $location->contact_address) }}</textarea>
+        <textarea id="contact_address" name="contact_address" rows="3" placeholder="e.g. Chattogram Port Authority, Bandar Area, Chattogram 4100, Bangladesh.">{{ old('contact_address', $location->contact_address) }}</textarea>
     </div>
     <div style="grid-column:1/-1;">
         <label for="contact_map_query">Map search query (optional)</label>
