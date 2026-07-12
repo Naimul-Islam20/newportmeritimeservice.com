@@ -9,6 +9,7 @@ use App\Models\SiteDetail;
 use App\Support\AuditLogger;
 use App\Support\ContactOffices;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ContactController extends Controller
@@ -29,7 +30,20 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(StoreContactMessageRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
+    {
+        if ($request->boolean('footer_newsletter')) {
+            return app(NewsletterSubscriptionController::class)->storeFromRequest($request);
+        }
+
+        $contactRequest = StoreContactMessageRequest::createFrom($request);
+        $contactRequest->setContainer(app())->setRedirector(app('redirect'));
+        $contactRequest->validateResolved();
+
+        return $this->storeContactMessage($contactRequest);
+    }
+
+    private function storeContactMessage(StoreContactMessageRequest $request): RedirectResponse
     {
         $payload = $request->safe()->only([
             'full_name',

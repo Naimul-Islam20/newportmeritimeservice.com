@@ -7,12 +7,32 @@ use App\Http\Requests\StoreNewsletterSubscriptionRequest;
 use App\Models\NewsletterSubscription;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class NewsletterSubscriptionController extends Controller
 {
     public function store(StoreNewsletterSubscriptionRequest $request): RedirectResponse
     {
-        $email = strtolower(trim((string) $request->validated('email')));
+        return $this->subscribe(strtolower(trim((string) $request->validated('email'))), $request);
+    }
+
+    public function storeFromRequest(Request $request): RedirectResponse
+    {
+        $validated = Validator::make(
+            $request->all(),
+            (new StoreNewsletterSubscriptionRequest)->rules(),
+        )->validate();
+
+        return $this->subscribe(strtolower(trim((string) $validated['email'])), $request);
+    }
+
+    private function subscribe(string $email, Request $request): RedirectResponse
+    {
+        if (! Schema::hasTable('newsletter_subscriptions')) {
+            return back()->with('newsletter_status', 'Newsletter registration is temporarily unavailable. Please try again later.');
+        }
 
         $subscription = NewsletterSubscription::query()->where('email', $email)->first();
 
