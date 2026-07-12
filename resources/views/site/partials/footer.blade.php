@@ -146,7 +146,7 @@
                 @if (session('newsletter_status'))
                     <p class="site-footer__newsletter-status" role="status">{{ session('newsletter_status') }}</p>
                 @endif
-                <form action="{{ route('newsletter.store') }}" method="post" class="site-footer__newsletter">
+                <form action="{{ url('/newsletter-registration') }}" method="post" class="site-footer__newsletter">
                     @csrf
                     <label class="sr-only" for="footer-newsletter-email">Newsletter email</label>
                     <input id="footer-newsletter-email" type="email" name="email" value="{{ old('email') }}" placeholder="Newsletter Registration" class="site-footer__newsletter-input" required>

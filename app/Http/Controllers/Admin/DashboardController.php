@@ -7,6 +7,7 @@ use App\Models\ContactMessage;
 use App\Models\NewsletterSubscription;
 use App\Models\QuoteRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -19,7 +20,9 @@ class DashboardController extends Controller
             'totalUsers' => User::count(),
             'unreadContactMessages' => ContactMessage::where('status', 'unread')->count(),
             'unreadQuoteRequests' => QuoteRequest::where('status', 'unread')->count(),
-            'unreadNewsletterSubscriptions' => NewsletterSubscription::where('status', 'unread')->count(),
+            'unreadNewsletterSubscriptions' => Schema::hasTable('newsletter_subscriptions')
+                ? NewsletterSubscription::where('status', 'unread')->count()
+                : 0,
         ]);
     }
 }
