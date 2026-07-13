@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreSubMenuRequest;
+use App\Http\Requests\Admin\UpdateShipSupplyLandingRequest;
 use App\Http\Requests\Admin\UpdateSubMenuRequest;
 use App\Models\Menu;
 use App\Models\SubMenu;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ShipSupplySubMenuController extends Controller
@@ -44,6 +46,60 @@ class ShipSupplySubMenuController extends Controller
             'menu' => $menu,
             'subMenus' => $subMenus,
         ]);
+    }
+
+    public function editLanding(): View
+    {
+        $menu = $this->menuOrFail();
+        $this->authorize('update', $menu);
+
+        return view('admin.ship-supply-sub-menus.landing', [
+            'menu' => $menu,
+        ]);
+    }
+
+    public function updateLanding(UpdateShipSupplyLandingRequest $request): RedirectResponse
+    {
+        $menu = $this->menuOrFail();
+        $this->authorize('update', $menu);
+
+        $previousCover = $menu->cover_image_path;
+
+        if ($request->hasFile('cover_image')) {
+            $path = $request->file('cover_image')->store('menus', 'public_site');
+            $this->deleteCoverImage($previousCover);
+            $menu->cover_image_path = $path;
+        } elseif ($request->boolean('remove_cover_image')) {
+            $this->deleteCoverImage($previousCover);
+            $menu->cover_image_path = null;
+        }
+
+        if ($menu->isDirty('cover_image_path')) {
+            $menu->save();
+
+            AuditLogger::log('admin.menu.updated', $menu, [
+                'label' => $menu->label,
+                'cover_image_path' => $menu->cover_image_path,
+            ], $request);
+        }
+
+        return redirect()
+            ->route('admin.ship-supply-landing.edit')
+            ->with('status', 'Products page background updated.');
+    }
+
+    private function deleteCoverImage(?string $path): void
+    {
+        if (! filled($path)) {
+            return;
+        }
+
+        if (Storage::disk('public_site')->exists($path)) {
+            Storage::disk('public_site')->delete($path);
+        }
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     public function create(): View

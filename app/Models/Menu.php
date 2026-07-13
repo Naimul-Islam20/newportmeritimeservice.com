@@ -270,7 +270,8 @@ class Menu extends Model
     {
         return match ($this->normalizedPath()) {
             '/career' => request()->routeIs('admin.career-page.*'),
-            '/ship-supply' => request()->routeIs('admin.ship-supply-sub-menus.*'),
+            '/ship-supply' => request()->routeIs('admin.ship-supply-sub-menus.*')
+                || request()->routeIs('admin.ship-supply-landing.*'),
             '/our-services' => request()->routeIs('admin.our-services-sub-menus.*')
                 || request()->routeIs('admin.service-pages.*')
                 || request()->routeIs('admin.service-sidebar.*'),

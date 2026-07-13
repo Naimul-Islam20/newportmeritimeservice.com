@@ -3,9 +3,14 @@
 @section('content')
 <div class="header">
     <h1>Ship Supply — sub menus</h1>
-    @can('create', \App\Models\SubMenu::class)
-    <a href="{{ route('admin.ship-supply-sub-menus.create') }}" class="btn btn-primary">Create</a>
-    @endcan
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        @can('update', $menu)
+        <a href="{{ route('admin.ship-supply-landing.edit') }}" class="btn btn-primary">Products page background</a>
+        @endcan
+        @can('create', \App\Models\SubMenu::class)
+        <a href="{{ route('admin.ship-supply-sub-menus.create') }}" class="btn btn-muted">Create sub menu</a>
+        @endcan
+    </div>
 </div>
 
 <div class="card">

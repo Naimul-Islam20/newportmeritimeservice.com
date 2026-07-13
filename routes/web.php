@@ -158,6 +158,10 @@ Route::prefix('admin')->group(function (): void {
         Route::delete('who-we-are/sub-menus/{sub_menu}', [WhoWeAreSubMenuController::class, 'destroy'])
             ->name('admin.who-we-are-sub-menus.destroy');
 
+        Route::get('ship-supply/landing', [ShipSupplySubMenuController::class, 'editLanding'])
+            ->name('admin.ship-supply-landing.edit');
+        Route::put('ship-supply/landing', [ShipSupplySubMenuController::class, 'updateLanding'])
+            ->name('admin.ship-supply-landing.update');
         Route::get('ship-supply/sub-menus', [ShipSupplySubMenuController::class, 'index'])
             ->name('admin.ship-supply-sub-menus.index');
         Route::get('ship-supply/sub-menus/create', [ShipSupplySubMenuController::class, 'create'])

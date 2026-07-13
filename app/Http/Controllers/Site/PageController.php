@@ -75,11 +75,14 @@ class PageController extends Controller
             return null;
         }
 
+        $cover = $menu->coverImageUrl();
+
         return view('site.pages.menu-page', [
             'title' => SiteDetail::pageTitle($menu->label),
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,
+            'heroImageUrl' => $cover !== '' ? $cover : null,
             'pageContent' => $menu->page_content,
             'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
             'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
@@ -114,12 +117,14 @@ class PageController extends Controller
             return null;
         }
 
+        $cover = $menu->coverImageUrl();
+
         return view('site.pages.menu-page', [
             'title' => SiteDetail::pageTitle($menu->label),
             'metaDescription' => $menu->description ?: null,
             'heading' => $menu->label,
             'lead' => $menu->description ?: null,
-            'heroImageUrl' => null,
+            'heroImageUrl' => $cover !== '' ? $cover : null,
             'pageContent' => $menu->page_content,
             'pageSections' => $menu->pageSections()->ordered()->where('is_active', true)->get(),
             'submenuPaginator' => $menu->submenuPaginatorForPublicParentPage(),
