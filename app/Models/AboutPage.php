@@ -25,6 +25,8 @@ class AboutPage extends Model
         'mission_body',
         'vision_title',
         'vision_body',
+        'mission_image',
+        'vision_image',
         'mission_vision_image',
         'cta_eyebrow',
         'cta_heading',
@@ -62,7 +64,7 @@ class AboutPage extends Model
             return (object) $out;
         }
 
-        $imageKeys = ['hero_background', 'trust_image', 'mission_vision_image', 'cta_background'];
+        $imageKeys = ['hero_background', 'trust_image', 'mission_image', 'vision_image', 'mission_vision_image', 'cta_background'];
 
         foreach ((new self)->getFillable() as $key) {
             $v = $row->{$key};
@@ -129,12 +131,34 @@ class AboutPage extends Model
         ];
     }
 
-    /** Side image for the Mission & Vision block (home + about sections). */
+    /** Side image for the Mission & Vision block (legacy single image). */
     public static function missionVisionImageForPublic(): string
     {
         $about = self::resolvedForPublic();
 
         return self::imageSrc($about->mission_vision_image ?? null);
+    }
+
+    public static function missionImageForPublic(): string
+    {
+        $about = self::resolvedForPublic();
+        $mission = self::imageSrc($about->mission_image ?? null);
+        if ($mission !== '') {
+            return $mission;
+        }
+
+        return self::missionVisionImageForPublic();
+    }
+
+    public static function visionImageForPublic(): string
+    {
+        $about = self::resolvedForPublic();
+        $vision = self::imageSrc($about->vision_image ?? null);
+        if ($vision !== '') {
+            return $vision;
+        }
+
+        return self::missionVisionImageForPublic();
     }
 
     /** @return array<string, mixed>|null */

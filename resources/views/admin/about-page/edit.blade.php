@@ -113,23 +113,36 @@
         </div>
 
         <h2 style="margin:24px 0 12px 0; font-size:15px;">Mission &amp; vision</h2>
-        <p style="margin:0 0 12px; color:#64748b; font-size:13px;">Shown on the homepage Mission &amp; Vision block (text left, image right).</p>
+        <p style="margin:0 0 12px; color:#64748b; font-size:13px;">Shown on the homepage Mission &amp; Vision cards (separate image per card).</p>
         <div class="grid grid-2">
-            <div style="grid-column: 1 / -1;">
-                <label for="mission_vision_image_file">Side image — upload image only</label>
-                <input id="mission_vision_image_file" name="mission_vision_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-                @error('mission_vision_image_file') <div class="error">{{ $message }}</div> @enderror
-                @php $missionVisionPreview = \App\Models\AboutPage::imageSrc($aboutPage->mission_vision_image); @endphp
-                @if ($missionVisionPreview !== '')
+            <div>
+                <label for="mission_image_file">Mission card image</label>
+                <input id="mission_image_file" name="mission_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                @error('mission_image_file') <div class="error">{{ $message }}</div> @enderror
+                @php $missionPreview = \App\Models\AboutPage::imageSrc($aboutPage->mission_image); @endphp
+                @if ($missionPreview !== '')
                     <div style="margin-top:8px;">
-                        <img src="{{ $missionVisionPreview }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <img src="{{ $missionPreview }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
                         <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
-                            <input type="checkbox" name="remove_mission_vision_image" value="1" @checked(old('remove_mission_vision_image'))>
-                            Remove current Mission &amp; Vision image
+                            <input type="checkbox" name="remove_mission_image" value="1" @checked(old('remove_mission_image'))>
+                            Remove current mission image
                         </label>
                     </div>
-                @elseif (filled($aboutPage->mission_vision_image))
-                    <p style="margin:8px 0 0; font-size:13px; color:#b45309;">Saved image path is missing on disk — upload again or check “Remove current Mission &amp; Vision image” and save.</p>
+                @endif
+            </div>
+            <div>
+                <label for="vision_image_file">Vision card image</label>
+                <input id="vision_image_file" name="vision_image_file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                @error('vision_image_file') <div class="error">{{ $message }}</div> @enderror
+                @php $visionPreview = \App\Models\AboutPage::imageSrc($aboutPage->vision_image); @endphp
+                @if ($visionPreview !== '')
+                    <div style="margin-top:8px;">
+                        <img src="{{ $visionPreview }}" alt="" style="max-width:220px;height:auto;border-radius:8px;border:1px solid #e5e7eb;">
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#64748b; cursor:pointer;">
+                            <input type="checkbox" name="remove_vision_image" value="1" @checked(old('remove_vision_image'))>
+                            Remove current vision image
+                        </label>
+                    </div>
                 @endif
             </div>
             <div>
