@@ -69,9 +69,22 @@ class SubMenu extends Model
 
     /**
      * Same background URL as the submenu page hero (cover upload, else default cover asset).
+     * Award specialty pages use their public page hero so landing cards match the destination.
      */
     public function pageHeroBackgroundUrl(): string
     {
+        if ($this->isCertificationsMembershipNavItem()) {
+            $hero = CertificatePage::singleton()->heroBackgroundUrl();
+
+            return $hero !== ''
+                ? $hero
+                : 'https://images.unsplash.com/photo-1586528116311-ad8ed7c80bc2?q=80&w=2070&auto=format&fit=crop';
+        }
+
+        if ($this->isHonorableClientNavItem()) {
+            return HonorableClientPage::singleton()->resolvedHeroBackgroundUrl();
+        }
+
         $cover = $this->coverImageUrl();
 
         if ($cover !== '') {
@@ -170,6 +183,12 @@ class SubMenu extends Model
         }
         if ($path !== null && preg_match('#^/where-we-are/([^/]+)$#', $path, $m)) {
             return route('where-we-are.location', $m[1]);
+        }
+        if ($path === '/quality-certificates-memberships') {
+            return route('quality-certificates');
+        }
+        if ($path === '/award/honorable-client') {
+            return route('honorable-clients');
         }
 
         return $this->resolvedHref();

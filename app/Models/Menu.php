@@ -394,6 +394,27 @@ class Menu extends Model
     }
 
     /**
+     * Active top-level Award dropdown items (Certifications, Honorable Client, …).
+     *
+     * @return \Illuminate\Support\Collection<int, SubMenu>
+     */
+    public static function awardNavSubMenus(): \Illuminate\Support\Collection
+    {
+        $awardMenu = self::awardMenu();
+
+        if (! $awardMenu) {
+            return collect();
+        }
+
+        return SubMenu::query()
+            ->where('menu_id', $awardMenu->id)
+            ->whereNull('parent_sub_menu_id')
+            ->where('is_active', true)
+            ->ordered()
+            ->get();
+    }
+
+    /**
      * Strip BLOG post links from submenu lists used in header / tabs.
      */
     public static function withHeaderNavSubMenus(?self $menu): ?self

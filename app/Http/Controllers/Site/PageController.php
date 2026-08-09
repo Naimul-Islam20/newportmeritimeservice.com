@@ -267,6 +267,7 @@ class PageController extends Controller
                 '/our-team-management',
                 '/locations',
                 '/career',
+                '/award',
             ],
             ServicePage::dedicatedPaths(),
         )));
@@ -420,6 +421,25 @@ class PageController extends Controller
 
     public function award(Request $request): View
     {
+        $menu = Menu::awardMenu();
+        $awardSubs = Menu::awardNavSubMenus();
+
+        if ($menu && $awardSubs->isNotEmpty()) {
+            $cover = $menu->coverImageUrl();
+
+            return view('site.pages.award', [
+                'title' => SiteDetail::pageTitle($menu->label),
+                'metaDescription' => $menu->description
+                    ?: 'Explore our certifications, memberships, and honorable clients.',
+                'heading' => $menu->label,
+                'lead' => $menu->description
+                    ?: 'Choose a category to explore our awards and recognitions.',
+                'heroImageUrl' => $cover !== '' ? $cover : null,
+                'breadcrumbs' => $menu->heroBreadcrumbs(),
+                'awardSubMenus' => $awardSubs,
+            ]);
+        }
+
         if ($v = $this->menuPageIfExists($request)) {
             return $v;
         }

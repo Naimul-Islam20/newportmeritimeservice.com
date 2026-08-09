@@ -38,7 +38,6 @@
     $companyLinkMenus = $menus->skip($menuHalf);
     $targetUrls = [
         '/about-us', 'about-us',
-        '/where-we-are', 'where-we-are',
         '/contact', 'contact',
         '/get-a-quote', 'get-a-quote'
     ];
@@ -54,7 +53,6 @@
 
     $staticCompanyLinks = collect([
         ['label' => $getLabel(route('about-us'), 'About Us'), 'url' => route('about-us')],
-        ['label' => $getLabel(route('where-we-are'), 'Where We Are'), 'url' => route('where-we-are')],
         ['label' => $getLabel(route('contact.create'), 'Contact'), 'url' => route('contact.create')],
         ['label' => $getLabel(route('quote.request'), 'Get a Quote'), 'url' => route('quote.request')],
     ])->filter(function($link) use ($allDynamicUrls) {
