@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Recaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreQuoteRequest extends FormRequest
@@ -24,6 +25,17 @@ class StoreQuoteRequest extends FormRequest
             'vessel_or_reference' => ['nullable', 'string', 'max:255'],
             'request_details' => ['required', 'string', 'max:5000'],
             'timeline' => ['nullable', 'string', 'max:255'],
+            'g-recaptcha-response' => ['required', new Recaptcha],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'g-recaptcha-response.required' => 'Please complete the captcha.',
         ];
     }
 }

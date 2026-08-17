@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Quote request notification
+    |--------------------------------------------------------------------------
+    |
+    | New Get a quote submissions are emailed to this address.
+    |
+    */
+
+    'quote_notification_address' => env('QUOTE_NOTIFICATION_EMAIL', 'info@newportmaritimeservice.com'),
+
 ];

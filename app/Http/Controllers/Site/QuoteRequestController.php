@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuoteRequest;
+use App\Mail\QuoteRequestSubmitted;
 use App\Models\QuoteRequest;
+use App\Models\SiteDetail;
 use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 class QuoteRequestController extends Controller
 {
     public function create(): View
     {
         return view('site.pages.quote', [
-            'title' => \App\Models\SiteDetail::pageTitle('Get a quote'),
+            'title' => SiteDetail::pageTitle('Get a quote'),
             'metaDescription' => 'Request a quote for ship supply, port services, or logistics support.',
         ]);
     }
@@ -33,6 +38,15 @@ class QuoteRequestController extends Controller
 
         $quoteRequest = QuoteRequest::create($payload);
         AuditLogger::log('quote.submitted.web', $quoteRequest, [], $request);
+
+        try {
+            Mail::to(config('mail.quote_notification_address'))->send(new QuoteRequestSubmitted($quoteRequest));
+        } catch (Throwable $e) {
+            Log::error('Failed to email quote request notification.', [
+                'quote_request_id' => $quoteRequest->id,
+                'exception' => $e,
+            ]);
+        }
 
         return back()->with('status', 'Thank you! Your quote request has been received. We will get back to you soon.');
     }
