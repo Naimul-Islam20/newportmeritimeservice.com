@@ -10,13 +10,7 @@ class Recaptcha implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $host = request()->getHost();
-        $isLocalHost = in_array($host, ['127.0.0.1', 'localhost'], true);
-
         $secret = config('services.recaptcha.secret');
-        if ((! is_string($secret) || $secret === '') && $isLocalHost) {
-            $secret = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
-        }
 
         if (! is_string($secret) || $secret === '') {
             $fail('Captcha is not configured.');

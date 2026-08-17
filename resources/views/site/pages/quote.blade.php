@@ -98,9 +98,7 @@
                             @enderror
                         </div>
 
-                        @php($localHost = request()->getHost())
                         @php($recaptchaSiteKey = config('services.recaptcha.site_key'))
-                        @php($recaptchaSiteKey = $recaptchaSiteKey ?: (in_array($localHost, ['127.0.0.1', 'localhost'], true) ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' : null))
 
                         @if ($recaptchaSiteKey)
                             <div>
@@ -130,8 +128,7 @@
     </section>
 @endsection
 
-@php($scriptKey = config('services.recaptcha.site_key') ?: (in_array(request()->getHost(), ['127.0.0.1', 'localhost'], true) ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' : null))
-@if ($scriptKey)
+@if (config('services.recaptcha.site_key'))
     @push('scripts')
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     @endpush
