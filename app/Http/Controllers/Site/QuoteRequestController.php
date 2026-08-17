@@ -40,11 +40,13 @@ class QuoteRequestController extends Controller
         AuditLogger::log('quote.submitted.web', $quoteRequest, [], $request);
 
         try {
-            Mail::to(config('mail.quote_notification_address'))->send(new QuoteRequestSubmitted($quoteRequest));
+            Mail::send(new QuoteRequestSubmitted($quoteRequest));
         } catch (Throwable $e) {
             Log::error('Failed to email quote request notification.', [
                 'quote_request_id' => $quoteRequest->id,
-                'exception' => $e,
+                'recipient' => config('mail.quote_notification_address'),
+                'mailer' => config('mail.default'),
+                'exception' => $e->getMessage(),
             ]);
         }
 

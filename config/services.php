@@ -36,8 +36,14 @@ return [
     ],
 
     'recaptcha' => [
-        'site_key' => env('RECAPTCHA_SITE_KEY'),
-        'secret' => env('RECAPTCHA_SECRET_KEY'),
+        // Production keys from .env. On local, Google test keys are used automatically
+        // (live keys only work on domains registered in reCAPTCHA admin).
+        'site_key' => env('APP_ENV') === 'local' && ! filter_var(env('RECAPTCHA_USE_LIVE_KEYS', false), FILTER_VALIDATE_BOOL)
+            ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+            : env('RECAPTCHA_SITE_KEY'),
+        'secret' => env('APP_ENV') === 'local' && ! filter_var(env('RECAPTCHA_USE_LIVE_KEYS', false), FILTER_VALIDATE_BOOL)
+            ? '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+            : env('RECAPTCHA_SECRET_KEY'),
     ],
 
 ];

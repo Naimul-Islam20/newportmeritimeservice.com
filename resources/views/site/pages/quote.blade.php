@@ -98,12 +98,20 @@
                             @enderror
                         </div>
 
-                        <div>
-                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-                            @error('g-recaptcha-response')
-                                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        @php($localHost = request()->getHost())
+                        @php($recaptchaSiteKey = config('services.recaptcha.site_key'))
+                        @php($recaptchaSiteKey = $recaptchaSiteKey ?: (in_array($localHost, ['127.0.0.1', 'localhost'], true) ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' : null))
+
+                        @if ($recaptchaSiteKey)
+                            <div>
+                                <div class="g-recaptcha" data-sitekey="{{ $recaptchaSiteKey }}"></div>
+                                @error('g-recaptcha-response')
+                                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        @else
+                            <p class="text-sm text-red-600">Captcha is not configured. Set RECAPTCHA_SITE_KEY in .env.</p>
+                        @endif
 
                         <div class="flex flex-wrap gap-4">
                             <button type="submit"
@@ -122,6 +130,9 @@
     </section>
 @endsection
 
-@push('scripts')
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-@endpush
+@php($scriptKey = config('services.recaptcha.site_key') ?: (in_array(request()->getHost(), ['127.0.0.1', 'localhost'], true) ? '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' : null))
+@if ($scriptKey)
+    @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endpush
+@endif
