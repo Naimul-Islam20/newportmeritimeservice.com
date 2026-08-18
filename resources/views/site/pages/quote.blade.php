@@ -98,17 +98,13 @@
                             @enderror
                         </div>
 
-                        @php($recaptchaSiteKey = config('services.recaptcha.site_key'))
-
-                        @if ($recaptchaSiteKey)
+                        @if (config('services.recaptcha.site_key'))
                             <div>
-                                <div class="g-recaptcha" data-sitekey="{{ $recaptchaSiteKey }}"></div>
+                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                                 @error('g-recaptcha-response')
                                     <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                        @else
-                            <p class="text-sm text-red-600">Captcha is not configured. Set RECAPTCHA_SITE_KEY in .env.</p>
                         @endif
 
                         <div class="flex flex-wrap gap-4">

@@ -44,7 +44,7 @@ class QuoteRequestController extends Controller
         } catch (Throwable $e) {
             Log::error('Failed to email quote request notification.', [
                 'quote_request_id' => $quoteRequest->id,
-                'recipient' => config('mail.quote_notification_address'),
+                'recipient' => config('mail.quote_notification_addresses'),
                 'mailer' => config('mail.default'),
                 'exception' => $e->getMessage(),
             ]);

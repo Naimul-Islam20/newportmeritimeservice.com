@@ -18,10 +18,14 @@ class QuoteRequestSubmitted extends Mailable
 
     public function envelope(): Envelope
     {
-        $recipient = config('mail.quote_notification_address') ?: 'info@newportmaritimeservice.com';
+        $recipients = config('mail.quote_notification_addresses', []);
+
+        if ($recipients === []) {
+            $recipients = ['info@newportmaritimeservice.com'];
+        }
 
         return new Envelope(
-            to: [new Address($recipient)],
+            to: array_map(fn (string $email) => new Address($email), $recipients),
             subject: 'New quote request from '.$this->quoteRequest->full_name,
             replyTo: [
                 new Address($this->quoteRequest->email, $this->quoteRequest->full_name),

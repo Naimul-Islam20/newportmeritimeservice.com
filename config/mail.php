@@ -126,4 +126,9 @@ return [
 
     'quote_notification_address' => env('QUOTE_NOTIFICATION_EMAIL', 'info@newportmaritimeservice.com'),
 
+    'quote_notification_addresses' => array_values(array_filter(array_map(
+        trim(...),
+        explode(',', (string) env('QUOTE_NOTIFICATION_EMAIL', 'info@newportmaritimeservice.com'))
+    ))),
+
 ];
