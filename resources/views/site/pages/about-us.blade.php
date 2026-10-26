@@ -5,7 +5,6 @@
 
 @section('content')
 @php
-    $aboutVideo = \App\Models\AboutPage::videoModalPayload($about->cta_video_url ?? null);
     $hasHeroBg = \App\Models\AboutPage::imageSrc($about->hero_background ?? null) !== '';
     $hasHeroTitle = filled($about->hero_title ?? null);
     $hasHero = $hasHeroBg || $hasHeroTitle;
@@ -13,9 +12,6 @@
     $hasStat2 = filled($about->stat2_value ?? null) || filled($about->stat2_label ?? null);
     $hasStat3 = filled($about->stat3_value ?? null) || filled($about->stat3_label ?? null);
     $hasStats = $hasStat1 || $hasStat2 || $hasStat3;
-    $hasCtaBg = \App\Models\AboutPage::imageSrc($about->cta_background ?? null) !== '';
-    $hasCtaText = filled($about->cta_eyebrow ?? null) || filled($about->cta_heading ?? null) || filled($about->cta_button_label ?? null);
-    $hasCta = $hasCtaBg || $hasCtaText || $aboutVideo['type'] !== 'none';
 @endphp
 
 @if ($hasHero)
@@ -75,32 +71,4 @@
 @endif
 
 @include('site.partials.page-sections-loop', ['pageSections' => $pageSections ?? []])
-
-@if ($hasCta)
-<section class="relative min-h-[500px] w-full overflow-hidden bg-secondary py-24 lg:py-32">
-    @if ($hasCtaBg)
-        <div class="absolute inset-0">
-            <img src="{{ \App\Models\AboutPage::imageSrc($about->cta_background) }}" alt="" class="h-full w-full object-cover opacity-40">
-            <div class="absolute inset-0 bg-secondary/60"></div>
-        </div>
-    @endif
-
-    <div class="relative z-10 site-container flex flex-col justify-center">
-        @if (filled($about->cta_eyebrow ?? null))
-            <span class="text-sm font-bold uppercase tracking-[0.2em] text-primary">{{ $about->cta_eyebrow }}</span>
-        @endif
-        @if (filled($about->cta_heading ?? null))
-            <h2 @class(['max-w-4xl font-sans text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl', 'mt-6' => filled($about->cta_eyebrow ?? null)])>
-                {{ $about->cta_heading }}
-            </h2>
-        @endif
-
-        @if (filled($about->cta_button_label ?? null))
-            <div class="mt-12">
-                <span class="inline-flex items-center gap-4 text-lg font-bold tracking-wider text-white">{{ $about->cta_button_label }}</span>
-            </div>
-        @endif
-    </div>
-</section>
-@endif
 @endsection

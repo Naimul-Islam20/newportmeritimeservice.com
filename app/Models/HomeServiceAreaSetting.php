@@ -53,7 +53,7 @@ class HomeServiceAreaSetting extends Model
             'title' => 'Locations',
             'map_image_path' => null,
             'highlight_title' => 'End to end supply',
-            'highlight_description' => 'We pride ourselves on our delivery and operate 365 days, 24 hours non-stop in all of the ports and straits of Turkey and the ARA area.',
+            'highlight_description' => "We operate 24/7, 365 days a year across Bangladesh's principal commercial ports — Chattogram, Mongla, Payra and Matarbari — providing fast, reliable vessel supply and technical support.",
             'steps' => [
                 'Getting Order',
                 "Preparing order and\npackaging process",
